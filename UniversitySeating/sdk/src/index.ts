@@ -15,7 +15,7 @@ export function main() {
               Vector3.create(1,1,1) //Scale
   )
 
-  new SeatManager()
+  new SeatManager() 
 
   
   setupUi()
