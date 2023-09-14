@@ -26,17 +26,23 @@ export class SeatManager {
 
     static hideAvatarEntity: Entity = engine.addEntity()
 
+    static connectedToWeb3: boolean = false
+
     constructor() {
         executeTask(async () => {
             let userData = await getUserData({})
-            
-            SeatManager.myAddress = userData.data?.publicKey
+            if (userData.data.hasConnectedWeb3) {
+                SeatManager.myAddress = userData.data?.publicKey
+                SeatManager.connectedToWeb3 = true
+            } else {
+                SeatManager.myAddress = "Test123"
+            }
             this.load()
-          }) 
-    }  
+        })
+    }
 
-    load(){
-        SeatingData.seats.forEach(chair => { 
+    load() {
+        SeatingData.seats.forEach(chair => {
             SeatManager.seats.push(new Seat(chair.id, chair.position))
         });
 
@@ -61,21 +67,23 @@ export class SeatManager {
             console.log("Seat " + data.id + " is released")
         })
 
-        // Hide not seated avatars
-        AvatarModifierArea.create(SeatManager.hideAvatarEntity, {
-        area: Vector3.create(5, 4, 8.5),
-        modifiers: [AvatarModifierType.AMT_HIDE_AVATARS],
-        excludeIds: SeatManager.seatedAvatarList.sort(),
-        })
+        // Hide not seated avatars - don't do this with out web3
+        if (SeatManager.connectedToWeb3) {
+            AvatarModifierArea.create(SeatManager.hideAvatarEntity, {
+                area: Vector3.create(5, 4, 8.5),
+                modifiers: [AvatarModifierType.AMT_HIDE_AVATARS],
+                excludeIds: SeatManager.seatedAvatarList.sort(),
+            })
 
-        //MeshRenderer.setBox(hideAvatarEntity)
+            //MeshRenderer.setBox(hideAvatarEntity)
 
-        Transform.create(SeatManager.hideAvatarEntity, {
-        position: Vector3.create(22, 2, 16),
-        //scale: Vector3.create(5, 4, 8.5),
-        })
+            Transform.create(SeatManager.hideAvatarEntity, {
+                position: Vector3.create(22, 2, 16),
+                //scale: Vector3.create(5, 4, 8.5),
+            })
 
-        SeatManager.addAddress(SeatManager.myAddress)
+            SeatManager.addAddress(SeatManager.myAddress)
+        }
 
         engine.addSystem(this.update)
     }
@@ -88,7 +96,7 @@ export class SeatManager {
 
             // Brodcast my seat to everyone
             if (SeatManager.mySeatID != -1) {
-                SeatManager.sceneMessageBus.emit("ClaimedSeat", { id: SeatManager.mySeatID, address: SeatManager.myAddress})
+                SeatManager.sceneMessageBus.emit("ClaimedSeat", { id: SeatManager.mySeatID, address: SeatManager.myAddress })
             }
         }
 
@@ -97,7 +105,7 @@ export class SeatManager {
             let match = SeatManager.compareVectors(SeatManager.seatedPosition, Transform.get(engine.PlayerEntity).position)
             if (SeatManager.seated && !match) {
                 // Give up my seat as I have moved from it
-                SeatManager.sceneMessageBus.emit("UnClaimedSeat", { id: SeatManager.mySeatID, address: SeatManager.myAddress})
+                SeatManager.sceneMessageBus.emit("UnClaimedSeat", { id: SeatManager.mySeatID, address: SeatManager.myAddress })
 
                 // Put the collider back on the seat so it can be selected again in the future
                 SeatManager.seats.forEach(seat => {
@@ -112,27 +120,27 @@ export class SeatManager {
         }
     }
 
-    static addAddress(_address:string){
-        if(!SeatManager.seatedAvatarList.includes(_address)){
+    static addAddress(_address: string) {
+        if (!SeatManager.seatedAvatarList.includes(_address)) {
             SeatManager.seatedAvatarList.push(_address)
-            if(AvatarModifierArea.getMutableOrNull(SeatManager.hideAvatarEntity) != null){
+            if (AvatarModifierArea.getMutableOrNull(SeatManager.hideAvatarEntity) != null) {
                 AvatarModifierArea.getMutable(SeatManager.hideAvatarEntity).excludeIds = SeatManager.seatedAvatarList.sort()
             }
         }
     }
 
-    static removeAddress(_address:string){
+    static removeAddress(_address: string) {
 
-        if(_address == SeatManager.myAddress){
+        if (_address == SeatManager.myAddress) {
             return // Never remove your own address so you will always be visible for yourself
         }
 
 
         let seatIndex = SeatManager.seatedAvatarList.indexOf(_address)
 
-        if(seatIndex>-1){
-            SeatManager.seatedAvatarList.splice(seatIndex,1)
-            if(AvatarModifierArea.getMutableOrNull(SeatManager.hideAvatarEntity) != null){
+        if (seatIndex > -1) {
+            SeatManager.seatedAvatarList.splice(seatIndex, 1)
+            if (AvatarModifierArea.getMutableOrNull(SeatManager.hideAvatarEntity) != null) {
                 AvatarModifierArea.getMutable(SeatManager.hideAvatarEntity).excludeIds = SeatManager.seatedAvatarList.sort()
             }
         }
@@ -164,7 +172,7 @@ export class SeatManager {
                     seat.claimed = true
                     SeatManager.mySeatID = _seatID
                     seat.sitDown()
-                    SeatManager.sceneMessageBus.emit("ClaimedSeat", { id: SeatManager.mySeatID, address: SeatManager.myAddress})
+                    SeatManager.sceneMessageBus.emit("ClaimedSeat", { id: SeatManager.mySeatID, address: SeatManager.myAddress })
                 } else {
                     announcement.value = "Seat already taken"
                     announcement.show()
