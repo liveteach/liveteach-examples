@@ -35,12 +35,12 @@ export class SeatManager {
                 SeatManager.myAddress = userData.data?.publicKey
                 SeatManager.connectedToWeb3 = true
             } else {
-                SeatManager.myAddress = "Test123"
+                SeatManager.myAddress = userData.data.userId
             }
             this.load()
         })
     }
-
+ 
     load() {
         SeatingData.seats.forEach(chair => {
             SeatManager.seats.push(new Seat(chair.id, chair.position))

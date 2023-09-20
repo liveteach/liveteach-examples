@@ -4,10 +4,12 @@ import { VCModel } from "./vcModel";
 import { Vector3 } from '@dcl/sdk/math'
 import * as ui from 'dcl-ui-toolkit'
 import { setupUi } from "./ui";
+import { TeacherAssigner } from "./teacherAssigner";
+import { UserManager } from "./user";
 
 export function main() {
 
-  
+  new UserManager()
  
   new VCModel("models/UniSeatsTesting.glb", // Model path
               Vector3.create(16,0,16), //Position
@@ -17,6 +19,7 @@ export function main() {
 
   new SeatManager() 
 
+  new TeacherAssigner()
   
   setupUi()
 }
