@@ -25,7 +25,7 @@ export class VideoContent extends ScreenContent {
     }
     stop() {
         VideoPlayer.getMutable(this.videoEntity).playing = false
-        this.isCompleted = true
+        this.isShowing = false
     }
     pause() {
         throw new Error("Method not implemented.");

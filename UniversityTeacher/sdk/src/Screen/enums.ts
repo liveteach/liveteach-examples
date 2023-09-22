@@ -1,6 +1,6 @@
 export enum ScreenContentType {
-    text,
+    none,
     image,
-    audio,
-    video
+    video,
+    model
 }

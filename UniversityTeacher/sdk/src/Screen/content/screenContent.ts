@@ -19,11 +19,13 @@ export abstract class ScreenContent {
     configuration: ScreenConfig
     currentLength:number = 0
     isShowing:boolean = false
-    isCompleted:boolean = false
     contentType: ScreenContentType;
 
     constructor(_contentType:ScreenContentType, _screenConfig:ScreenConfig){
         this.contentType = _contentType
+        if(_screenConfig.length==undefined){
+            _screenConfig.length = -1 //default
+        }
         this.configuration = _screenConfig
     }
 
@@ -35,11 +37,11 @@ export abstract class ScreenContent {
 
 
     update(_dt:number){
-        if(this.configuration.length!=-1 && this.isShowing && !this.isCompleted){
+        if(this.configuration.length!=-1 && this.isShowing){
             // Length isn't unlimited so time how long this is displayed for
             this.currentLength+=_dt
             if(this.currentLength>=this.configuration.length){
-                this.isCompleted = true
+                this.isShowing = false
                 this.stop()
                 this.currentLength = 0
             }

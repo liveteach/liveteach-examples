@@ -1,10 +1,10 @@
 import { ScreenContentType } from "../enums";
 import { ScreenConfig, ScreenContent } from "./screenContent";
 
-export class ImageContent extends ScreenContent {
+export class ModelContent extends ScreenContent {
 
     constructor(_screenConfig:ScreenConfig){
-        super(ScreenContentType.image, _screenConfig)
+        super(ScreenContentType.model, _screenConfig)
     }
 
     play() {
