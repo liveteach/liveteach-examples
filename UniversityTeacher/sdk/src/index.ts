@@ -2,11 +2,15 @@ import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
 import { ScreenManager } from "./Screen/screenManager";
 import { Podium } from "./podium";
 import { Vector3 } from "@dcl/sdk/math";
+import { setupUi } from "./ui";
+import { Toaster } from "./NotificationSystem/Toaster";
+import { AudioManager } from "./audioManager";
 
 
 export function main() {
     new ScreenManager()
-
+    new Toaster()
+    new AudioManager()
     new Podium()
 
     let floor: Entity = engine.addEntity()
@@ -14,4 +18,6 @@ export function main() {
         position: Vector3.create(8,0,8)
     })
     GltfContainer.create(floor, {src: "models/Floor.glb"})
+
+    setupUi()
 }

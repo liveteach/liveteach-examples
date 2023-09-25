@@ -62,7 +62,7 @@ export class Podium {
         )
 
         // Next Button
-        this.nextButton = engine.addEntity()
+        this.nextButton = engine.addEntity() 
         Transform.create(this.nextButton, {
             parent: this.entity,
             position: Vector3.create(0.2, 1.5, -0.12),

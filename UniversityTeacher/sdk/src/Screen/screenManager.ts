@@ -8,6 +8,7 @@ import { DisplayPanel } from "./displayPanel";
 import { ModelContent } from "./content/modelContent";
 import { ScreenContentType } from "./enums";
 import { ContentList } from "./content/contentList";
+import { Toaster } from "../NotificationSystem/Toaster";
 
 export class ScreenManager {
 
@@ -35,26 +36,42 @@ export class ScreenManager {
     }
 
     static next() {
+        if(!this.instance.poweredOn){
+            return
+        }
         ScreenManager.instance.currentContent.next()
         ScreenManager.instance.playContent()
+        Toaster.popToast("Dave put his hand up")
     }
 
-    static previous() {
+    static previous() { 
+        if(!this.instance.poweredOn){
+            return
+        }
         ScreenManager.instance.currentContent.previous()
-        ScreenManager.instance.playContent()
+        ScreenManager.instance.playContent() 
     }
 
     static toStart() {
+        if(!this.instance.poweredOn){
+            return
+        }
         ScreenManager.instance.currentContent.toStart()
         ScreenManager.instance.playContent()
     }
 
     static toEnd() {
+        if(!this.instance.poweredOn){
+            return
+        }
         ScreenManager.instance.currentContent.toEnd()
         ScreenManager.instance.playContent()
     }
 
     static showPresentation() {
+        if(!this.instance.poweredOn){
+            return
+        }
         if(ScreenManager.instance.currentContent!=undefined){
             ScreenManager.instance.currentContent.stop()
         }
@@ -63,6 +80,9 @@ export class ScreenManager {
     }
 
     static showVideo() {
+        if(!this.instance.poweredOn){
+            return
+        }
         if(ScreenManager.instance.currentContent!=undefined){
             ScreenManager.instance.currentContent.stop() 
         }
@@ -71,6 +91,9 @@ export class ScreenManager {
     }
 
     static showModel() {
+        if(!this.instance.poweredOn){
+            return
+        }
         if(ScreenManager.instance.currentContent!=undefined){
             ScreenManager.instance.currentContent.stop()
         }
