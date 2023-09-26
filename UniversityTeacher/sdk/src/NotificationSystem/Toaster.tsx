@@ -3,61 +3,104 @@ import { Color4 } from "@dcl/sdk/math"
 import ReactEcs, { Label, PositionUnit, UiEntity } from "@dcl/sdk/react-ecs"
 import { AudioManager } from "./../audioManager"
 import * as utils from '@dcl-sdk/utils'
+import { Toast } from "./Toast"
 
 export class Toaster {
 
-    static message: string = ""
+    static toasts: Toast[] = []
 
-    static growingToast: boolean = false
-    static toastGrowSpeed:number = 500
-    static toastShrinkSpeed:number = 200
-    static maxToastHeight: number = 50
-    static minToastHeight: number = -150
-    static currentToastHeight: number = Toaster.minToastHeight
-
-    static toastHasToasted: boolean = false
-
-    constructor() { 
-        engine.addSystem(this.update) 
+    constructor() {
+        engine.addSystem(this.update)
     }
 
     update(dt: number) {
-        if(Toaster.growingToast){
-            Toaster.currentToastHeight+= dt * Toaster.toastGrowSpeed
-            if(Toaster.currentToastHeight > Toaster.maxToastHeight){
-                Toaster.currentToastHeight = Toaster.maxToastHeight
-            }
-        } else {
-            Toaster.currentToastHeight-= dt * Toaster.toastShrinkSpeed
-            if(Toaster.currentToastHeight<=Toaster.minToastHeight){
-                Toaster.currentToastHeight= Toaster.minToastHeight
-            }
-        }
+        Toaster.toasts.forEach((toast, index) => {
 
-        console.log(Toaster.currentToastHeight)
+            if (index == 0) {
+                if (!toast.timerRunning) {
+                    toast.runTimer()
+                }
+            }
+
+            toast.timeActive += dt * 1000
+            if (toast.timeActive > 2000) {
+                toast.timeActive = 2000 // Cap at 2000
+            }
+
+            if (toast.growingToast) {
+                toast.currentToastHeight += dt * toast.toastGrowSpeed
+                if (toast.currentToastHeight > toast.maxToastHeight) {
+                    toast.currentToastHeight = toast.maxToastHeight
+                }
+            } else {
+                toast.currentToastHeight -= dt * toast.toastShrinkSpeed
+                if (toast.currentToastHeight <= toast.minToastHeight) {
+                    toast.currentToastHeight = toast.minToastHeight
+                }
+            }
+
+            if (toast.reduceWidth) {
+                toast.toastWidth -= dt * 400
+            }
+
+            // If toast has toasted get rid of it
+            if (toast.toastHasToasted) {
+                Toaster.toasts.splice(index, 1)
+            }
+        });
+        Toaster.toasts.forEach((toast, index) => {
+            // If toast has toasted get rid of it
+            if (toast.toastHasToasted) {
+                Toaster.toasts.splice(index, 1)
+            }
+        })
 
     }
 
     static popToast(_text: string) {
-        Toaster.message = _text
-        Toaster.growingToast = true
+        this.toasts.push(new Toast(_text))
 
         utils.timers.setTimeout(() => {
             AudioManager.playNotification()
-        },250)
-
-        utils.timers.setTimeout(() => {
-            Toaster.hideToast()
-        },4000) 
+        }, 250)
     }
 
-    static hideToast() {
-        Toaster.growingToast = false
+    static createToasts() {
+        return Array.from(Toaster.toasts, (toast, index) =>
+            <UiEntity
+                key={"toastSubContainer"}
+                uiTransform={{
+                    position: { bottom: toast.currentToastHeight },
+                    width: toast.toastWidth,
+                    height: 150,
+                    justifyContent: 'center',
+                }}
+                uiBackground={{
+                    textureMode: 'nine-slices',
+                    texture: { src: "images/ui/notificationBackgroundSmall.png" },
+                    textureSlices: {
+                        top: 0.5,
+                        bottom: 0.5,
+                        left: 0.5,
+                        right: 0.5
+                    }
+                }}
+            >
+                <Label
+                    key={"toastMessage"}
+                    value={toast.message}
+                    color={Color4.fromInts(255, 255, 255, 255)}
+                    fontSize={24}
+                    font="serif"
+                //textAlign="middle-center"
+                >
+                </Label>
+
+            </UiEntity>
+        )
     }
 
 }
-
-
 
 export const ToastUI = () => (
     <UiEntity
@@ -65,38 +108,10 @@ export const ToastUI = () => (
         uiTransform={{
             positionType: "absolute",
             width: "100%",
-            justifyContent: 'center',
-            position: { bottom: Toaster.currentToastHeight }
+            justifyContent: 'flex-start',
+            position: { bottom: 50 }
         }}
     >
-        <UiEntity
-            key={"toastSubContainer"}
-            uiTransform={{
-                position: { bottom: 0 },
-                width: 400,
-                height: 150,
-                justifyContent: 'center',
-            }}
-            uiBackground={{
-                textureMode: 'nine-slices',
-                texture: { src: "images/ui/notificationBackgroundSmall.png" },
-                textureSlices: {
-                    top: 0.5,
-                    bottom: 0.5,
-                    left: 0.5,
-                    right: 0.5
-                }
-            }}
-        >
-        <Label
-            key={"toastMessage"}
-            value={Toaster.message}
-            color={Color4.fromInts(255, 255, 255, 255)}
-            fontSize={24}
-            font="serif"
-            //textAlign="middle-center"
-        >
-        </Label>
-        </UiEntity>
+        {Toaster.createToasts()}
     </UiEntity>
 )
