@@ -2,7 +2,7 @@ import { ClassController } from "./classroomControllers/classController";
 import { ClassControllerFactory, ClassControllerType } from "./factories/classControllerFactory";
 import { MessageBus } from '@dcl/sdk/message-bus'
 import { SmartContractManager } from "./smartContractManager";
-import { StudentClassInfo, StudentExitInfo, StudentJoinInfo } from "./classroom";
+import { Classroom, StudentClassInfo, StudentExitInfo, StudentJoinInfo } from "./classroom";
 import { ClassroomFactory } from "./factories/classroomFactory";
 
 export abstract class ClassroomManager {
@@ -28,9 +28,14 @@ export abstract class ClassroomManager {
             return
         }
 
-        if (ClassroomManager.classController && ClassroomManager.classController.isTeacher()  && type === ClassControllerType.STUDENT) {
+        if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && type === ClassControllerType.STUDENT) {
             ClassroomManager.classController.deactivateClassroom()
         }
+
+        if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && type === ClassControllerType.TEACHER) {
+            ClassroomManager.classController.exitClass()
+        }
+
         ClassroomManager.classController = ClassControllerFactory.Create(type)
     }
 
@@ -64,17 +69,17 @@ export abstract class ClassroomManager {
         ClassroomManager.messageBus.on('activate_class', (info: StudentClassInfo) => {
             if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
                 let classFound: boolean = false
-                for (let i = 0; i < ClassroomManager.classController.contentList.length; i++) {
-                    if (ClassroomManager.classController.contentList[i].teacherID == info.teacherID) {
-                        ClassroomManager.classController.contentList[i].classID = info.classID
-                        ClassroomManager.classController.contentList[i].className = info.className
+                for (let i = 0; i < ClassroomManager.classController.classList.length; i++) {
+                    if (ClassroomManager.classController.classList[i].teacherID == info.teacherID) {
+                        ClassroomManager.classController.classList[i].classID = info.classID
+                        ClassroomManager.classController.classList[i].className = info.className
                         classFound = true
                         console.log("Class updated - " + info.teacherName + " is now teaching " + info.className)
                         break
                     }
                 }
                 if (!classFound) {
-                    ClassroomManager.classController.contentList.push(ClassroomFactory.Create(info))
+                    ClassroomManager.classController.classList.push(ClassroomFactory.Create(info))
                     console.log("Class activated - " + info.teacherName + " is teaching " + info.className)
                 }
             }
@@ -82,11 +87,11 @@ export abstract class ClassroomManager {
 
         ClassroomManager.messageBus.on('deactivate_class', (info: StudentClassInfo) => {
             if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
-                for (let i = 0; i < ClassroomManager.classController.contentList.length; i++) {
-                    if (ClassroomManager.classController.contentList[i].teacherID == info.teacherID) {
-                        ClassroomManager.classController.contentList.splice(i, 1)
-                        if(ClassroomManager.classController.selectedContentIndex == i) {
-                            ClassroomManager.classController.selectedContentIndex = Math.max(0, i - 1)
+                for (let i = 0; i < ClassroomManager.classController.classList.length; i++) {
+                    if (ClassroomManager.classController.classList[i].teacherID == info.teacherID) {
+                        ClassroomManager.classController.classList.splice(i, 1)
+                        if (ClassroomManager.classController.selectedClassIndex == i) {
+                            ClassroomManager.classController.selectedClassIndex = Math.max(0, i - 1)
                         }
                         console.log(info.teacherName + " deactivated " + info.className)
                         break
@@ -96,26 +101,42 @@ export abstract class ClassroomManager {
         })
 
         ClassroomManager.messageBus.on('start_class', (info: StudentClassInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
+            if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
                 console.log(info.teacherName + " started teaching " + info.className)
             }
         })
 
         ClassroomManager.messageBus.on('end_class', (info: StudentClassInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
+            if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
                 console.log(info.teacherName + " stopped teaching " + info.className)
             }
         })
 
         ClassroomManager.messageBus.on('join_class', (info: StudentJoinInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.classController.contentList[ClassroomManager.classController.selectedContentIndex].teacherID == info.teacherID) {
+            if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
+                (ClassroomManager.classController.activeClass as Classroom).students.push({
+                    studentID: info.studentID,
+                    studentName: info.studentName
+                })
                 console.log(info.studentName + " joined your class")
+            }
+            else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID && SmartContractManager.blockchain.userData.userId != info.studentID) {
+                console.log(info.studentName + " joined the class")
             }
         })
 
         ClassroomManager.messageBus.on('exit_class', (info: StudentExitInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.classController.contentList[ClassroomManager.classController.selectedContentIndex].teacherID == info.teacherID) {
-                console.log(info.studentName + " left your class")
+            if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
+                for (let i = 0; i < (ClassroomManager.classController.activeClass as Classroom).students.length; i++) {
+                    if ((ClassroomManager.classController.activeClass as Classroom).students[i].studentID == info.studentID) {
+                        (ClassroomManager.classController.activeClass as Classroom).students.splice(i, 1)
+                        console.log(info.studentName + " left your class")
+                        break
+                    }
+                }
+            }
+            else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID && SmartContractManager.blockchain.userData.userId != info.studentID) {
+                console.log(info.studentName + " left the class")
             }
         })
     }

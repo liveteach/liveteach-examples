@@ -1,10 +1,10 @@
-import { Classroom } from "../classroom"
+import { Classroom, StudentClassInfo } from "../classroom"
 
 export abstract class ClassController {
     inSession: boolean = false
-    activated: boolean = false
-    contentList: Classroom[] = []
-    selectedContentIndex: number = 0
+    classList: Classroom[] = []
+    selectedClassIndex: number = 0
+    activeClass: Classroom | StudentClassInfo = null
 
     constructor() {
 
@@ -15,6 +15,10 @@ export abstract class ClassController {
     }
 
     isStudent(): boolean {
+        return false
+    }
+
+    isInClass(): boolean {
         return false
     }
 

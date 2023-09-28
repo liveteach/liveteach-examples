@@ -33,7 +33,7 @@ export class ControllerUI {
                     color={Color4.Black()}
                     variant={ClassroomManager.classController?.isTeacher() ? 'primary' : 'secondary'}
                     uiTransform={{ width: 80, height: 40, margin: 4 }}
-                    onMouseDown={() => { ControllerUI.ToggleTeacher() }}
+                    onMouseDown={() => { ControllerUI.SetTeacher() }}
                 />
                 <Button
                     value="Student"
@@ -41,7 +41,7 @@ export class ControllerUI {
                     color={Color4.Black()}
                     variant={ClassroomManager.classController?.isStudent() ? 'primary' : 'secondary'}
                     uiTransform={{ width: 80, height: 40, margin: 4 }}
-                    onMouseDown={() => { ControllerUI.ToggleStudent() }}
+                    onMouseDown={() => { ControllerUI.SetStudent() }}
                 />
             </UiEntity>
             <UiEntity // CLASSROOM ACTIVATION
@@ -57,13 +57,13 @@ export class ControllerUI {
                     value="Activate Classroom"
                     fontSize={16}
                     color={Color4.Black()}
-                    variant={ClassroomManager.classController?.activated ? 'primary' : 'secondary'}
+                    variant={ClassroomManager.classController?.isInClass() ? 'primary' : 'secondary'}
                     uiTransform={{ width: 160, height: 40, margin: 4 }}
                     onMouseDown={() => { ControllerUI.ToggleActivateClass() }}
                 />
                 <Label
                     value={ControllerUI.activationMessage}
-                    color={ClassroomManager.classController?.activated ? Color4.Green() : Color4.Red()}
+                    color={ClassroomManager.classController?.isInClass() ? Color4.Green() : Color4.Red()}
                     uiTransform={{ width: 160, height: 40, margin: 4 }}
                     fontSize={16}
                     font="serif"
@@ -76,19 +76,19 @@ export class ControllerUI {
                     height: "200px",
                     width: "500px",
                     positionType: 'absolute',
-                    display: (ClassroomManager.classController?.isTeacher() && ClassroomManager.classController?.activated) || (ClassroomManager.classController?.isStudent() && ClassroomManager.classController?.contentList?.length > 0) ? "flex" : "none"
+                    display: (ClassroomManager.classController?.isTeacher() && ClassroomManager.classController?.isInClass()) || (ClassroomManager.classController?.isStudent() && ClassroomManager.classController?.classList?.length > 0) ? "flex" : "none"
                 }}
             >
                 <Button
                     value="<"
                     fontSize={16}
                     color={Color4.Black()}
-                    variant={ControllerUI.CanPrevContent() ? 'primary' : 'secondary'}
+                    variant={ControllerUI.CanPrevClass() ? 'primary' : 'secondary'}
                     uiTransform={{ width: 40, height: 40, margin: 4 }}
-                    onMouseDown={() => { ControllerUI.PrevContent() }}
+                    onMouseDown={() => { ControllerUI.PrevClass() }}
                 />
                 <Button
-                    value={ControllerUI.GetSelectedContent()}
+                    value={ControllerUI.GetSelectedClass()}
                     fontSize={16}
                     color={Color4.Black()}
                     variant='secondary'
@@ -98,9 +98,9 @@ export class ControllerUI {
                     value=">"
                     fontSize={16}
                     color={Color4.Black()}
-                    variant={ControllerUI.CanNextContent() ? 'primary' : 'secondary'}
+                    variant={ControllerUI.CanNextClass() ? 'primary' : 'secondary'}
                     uiTransform={{ width: 40, height: 40, margin: 4 }}
-                    onMouseDown={() => { ControllerUI.NextContent() }}
+                    onMouseDown={() => { ControllerUI.NextClass() }}
                 />
             </UiEntity>
             <UiEntity // START CLASS / JOIN CLASS
@@ -109,14 +109,14 @@ export class ControllerUI {
                     height: "200px",
                     width: "500px",
                     positionType: 'absolute',
-                    display: (ClassroomManager.classController?.isTeacher() && ClassroomManager.classController?.activated) || (ClassroomManager.classController?.isStudent() && ClassroomManager.classController?.contentList?.length > 0) ? "flex" : "none"
+                    display: (ClassroomManager.classController?.isTeacher() && ClassroomManager.classController?.isInClass()) || (ClassroomManager.classController?.isStudent() && ClassroomManager.classController?.classList?.length > 0) ? "flex" : "none"
                 }}
             >
                 <Button
-                    value={ClassroomManager.classController?.isTeacher() ? (ClassroomManager.classController?.inSession ? "End Class" : "Start Class") : (ClassroomManager.classController?.activated ? "Exit Class" : "Join Class")}
+                    value={ClassroomManager.classController?.isTeacher() ? (ClassroomManager.classController?.inSession ? "End Class" : "Start Class") : (ClassroomManager.classController?.isInClass() ? "Exit Class" : "Join Class")}
                     fontSize={16}
                     color={Color4.Black()}
-                    variant={(ClassroomManager.classController?.isTeacher() && ClassroomManager.classController?.inSession) || (ClassroomManager.classController?.isStudent() && ClassroomManager.classController?.activated) ? 'primary' : 'secondary'}
+                    variant={(ClassroomManager.classController?.isTeacher() && ClassroomManager.classController?.inSession) || (ClassroomManager.classController?.isStudent() && ClassroomManager.classController?.isInClass()) ? 'primary' : 'secondary'}
                     uiTransform={{ width: 160, height: 40, margin: 4 }}
                     onMouseDown={() => { ClassroomManager.classController?.isTeacher() ? ControllerUI.ToggleStartClass() : ControllerUI.ToggleJoinClass() }}
                 />
@@ -124,55 +124,71 @@ export class ControllerUI {
         </UiEntity>
     )
 
-    private static GetSelectedContent(): string {
-        if (ClassroomManager.classController && ClassroomManager.classController.contentList.length > 0) {
-            return ClassroomManager.classController.contentList[ClassroomManager.classController.selectedContentIndex].className
+    private static GetSelectedClass(): string {
+        if (ClassroomManager.classController && ClassroomManager.classController.classList.length > 0) {
+            return ClassroomManager.classController.classList[ClassroomManager.classController.selectedClassIndex].className
         }
         return ""
     }
 
-    private static CanPrevContent(): boolean {
-        if (ClassroomManager.classController && ClassroomManager.classController.selectedContentIndex > 0) {
+    private static CanPrevClass(): boolean {
+        if (ClassroomManager.classController && ClassroomManager.classController.selectedClassIndex > 0) {
             return true
         }
         return false
     }
 
-    private static CanNextContent(): boolean {
-        if (ClassroomManager.classController && ClassroomManager.classController.selectedContentIndex < ClassroomManager.classController.contentList.length - 1) {
+    private static CanNextClass(): boolean {
+        if (ClassroomManager.classController && ClassroomManager.classController.selectedClassIndex < ClassroomManager.classController.classList.length - 1) {
             return true
         }
         return false
     }
 
-    private static PrevContent(): void {
-        if (ControllerUI.CanPrevContent()) {
-            ClassroomManager.classController.selectedContentIndex--
+    private static PrevClass(): void {
+        if (ControllerUI.CanPrevClass()) {
+            ClassroomManager.classController.selectedClassIndex--
             if (ClassroomManager.classController?.isTeacher()) {
+                if (ClassroomManager.classController.inSession) {
+                    ClassroomManager.classController.endClass()
+                }
                 ClassroomManager.classController.setClass()
+            }
+            else {
+                if (ClassroomManager.classController.isInClass()) {
+                    ClassroomManager.classController.exitClass()
+                }
             }
         }
     }
 
-    private static NextContent(): void {
-        if (ControllerUI.CanNextContent()) {
-            ClassroomManager.classController.selectedContentIndex++
+    private static NextClass(): void {
+        if (ControllerUI.CanNextClass()) {
+            ClassroomManager.classController.selectedClassIndex++
             if (ClassroomManager.classController?.isTeacher()) {
+                if (ClassroomManager.classController.inSession) {
+                    ClassroomManager.classController.endClass()
+                }
                 ClassroomManager.classController.setClass()
+            }
+            else {
+                if (ClassroomManager.classController.isInClass()) {
+                    ClassroomManager.classController.exitClass()
+                }
             }
         }
     }
 
-    private static ToggleTeacher(): void {
+    private static SetTeacher(): void {
         ClassroomManager.SetClassController(ClassControllerType.TEACHER)
     }
 
-    private static ToggleStudent(): void {
+    private static SetStudent(): void {
         ClassroomManager.SetClassController(ClassControllerType.STUDENT)
     }
 
     private static ToggleActivateClass(): void {
-        if (ClassroomManager.classController.activated) {
+        if (ClassroomManager.classController.isInClass()) {
             ClassroomManager.classController.deactivateClassroom()
         }
         else {
@@ -190,7 +206,7 @@ export class ControllerUI {
     }
 
     private static ToggleJoinClass(): void {
-        if (ClassroomManager.classController.activated) {
+        if (ClassroomManager.classController.isInClass()) {
             ClassroomManager.classController.exitClass()
         }
         else {

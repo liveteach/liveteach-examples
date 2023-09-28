@@ -5,6 +5,8 @@ import { ClassroomManager } from "../classroomManager";
 import { SmartContractManager } from "../smartContractManager";
 
 export class TeacherClassController extends ClassController {
+    activated: boolean = false
+
     constructor() {
         super()
     }
@@ -16,6 +18,10 @@ export class TeacherClassController extends ClassController {
     override isStudent(): boolean {
         return false
     }
+    
+    override isInClass(): boolean {
+        return this.activated
+    }
 
     override activateClassroom(): void {
         const self = this
@@ -24,9 +30,9 @@ export class TeacherClassController extends ClassController {
                 const classroomID = await SmartContractManager.ActicateClassroom("location")
                 //TODO: Validate ID
                 self.activated = true
-                ControllerUI.activationMessage = "activated"
-                self.contentList = await SmartContractManager.FetchClassContent()
+                self.classList = await SmartContractManager.FetchClassContent()
                 self.setClass()
+                ControllerUI.activationMessage = "activated"
             } catch (error) {
                 ControllerUI.activationMessage = error.toString()
             }
@@ -38,13 +44,19 @@ export class TeacherClassController extends ClassController {
         executeTask(async function () {
             try {
                 self.activated = false
-                ControllerUI.activationMessage = "deactivated"
-                ClassroomManager.EmitClassDeactivation({
-                    teacherID: self.contentList[self.selectedContentIndex].teacherID,
-                    teacherName: self.contentList[self.selectedContentIndex].teacherName,
-                    classID: self.contentList[self.selectedContentIndex].classID,
-                    className: self.contentList[self.selectedContentIndex].className
-                })
+                if(self.activeClass) {
+                    ClassroomManager.EmitClassDeactivation({
+                        teacherID: self.activeClass.teacherID,
+                        teacherName: self.activeClass.teacherName,
+                        classID: self.activeClass.classID,
+                        className: self.activeClass.className
+                    })
+                    self.activeClass = null
+                    ControllerUI.activationMessage = "deactivated"
+                }
+                else {
+                    ControllerUI.activationMessage = ""
+                }
             } catch (error) {
                 ControllerUI.activationMessage = error.toString()
             }
@@ -52,11 +64,12 @@ export class TeacherClassController extends ClassController {
     }
 
     override setClass(): void {
+        this.activeClass = this.classList[this.selectedClassIndex]
         ClassroomManager.EmitClassActivation({
-            teacherID: this.contentList[this.selectedContentIndex].teacherID,
-            teacherName: this.contentList[this.selectedContentIndex].teacherName,
-            classID: this.contentList[this.selectedContentIndex].classID,
-            className: this.contentList[this.selectedContentIndex].className
+            teacherID: this.activeClass.teacherID,
+            teacherName: this.activeClass.teacherName,
+            classID: this.activeClass.classID,
+            className: this.activeClass.className
         })
     }
 
@@ -68,10 +81,10 @@ export class TeacherClassController extends ClassController {
                 if (success) {
                     self.inSession = true
                     ClassroomManager.EmitClassStart({
-                        teacherID: this.contentList[this.selectedContentIndex].teacherID,
-                        teacherName: this.contentList[this.selectedContentIndex].teacherName,
-                        classID: this.contentList[this.selectedContentIndex].classID,
-                        className: this.contentList[this.selectedContentIndex].className
+                        teacherID: self.activeClass.teacherID,
+                        teacherName: self.activeClass.teacherName,
+                        classID: self.activeClass.classID,
+                        className: self.activeClass.className
                     })
                 }
             } catch (error) {
@@ -86,10 +99,10 @@ export class TeacherClassController extends ClassController {
             try {
                 self.inSession = false
                 ClassroomManager.EmitClassEnd({
-                    teacherID: this.contentList[this.selectedContentIndex].teacherID,
-                    teacherName: this.contentList[this.selectedContentIndex].teacherName,
-                    classID: this.contentList[this.selectedContentIndex].classID,
-                    className: this.contentList[this.selectedContentIndex].className
+                    teacherID: self.activeClass.teacherID,
+                    teacherName: self.activeClass.teacherName,
+                    classID: self.activeClass.classID,
+                    className: self.activeClass.className
                 })
             } catch (error) {
 

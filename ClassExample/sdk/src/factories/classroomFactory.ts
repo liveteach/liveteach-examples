@@ -6,6 +6,7 @@ export abstract class ClassroomFactory {
         let classroom: Classroom = Object.assign(new Classroom(), JSON.parse(_config))
         classroom.teacherID = SmartContractManager.blockchain.userData.userId
         classroom.teacherName = SmartContractManager.blockchain.userData.displayName
+        classroom.students = []
         return classroom
     }
 
@@ -15,6 +16,7 @@ export abstract class ClassroomFactory {
         classroom.teacherName = _info.teacherName ?? ""
         classroom.classID = _info.classID ?? ""
         classroom.className = _info.className ?? ""
+        classroom.students = []
         return classroom
     }
 }

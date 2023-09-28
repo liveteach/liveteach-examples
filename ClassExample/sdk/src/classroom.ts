@@ -5,6 +5,7 @@ export class Classroom {
     className: string
     capacity: number
     duration: number
+    students: StudentInfo[]
 }
 
 export type StudentClassInfo = {
@@ -14,9 +15,11 @@ export type StudentClassInfo = {
     className: string
 }
 
-export type StudentJoinInfo = StudentClassInfo & {
+export type StudentInfo = {
     studentID: string
     studentName: string
 }
+
+export type StudentJoinInfo = StudentClassInfo & StudentInfo
 
 export type StudentExitInfo = StudentJoinInfo
