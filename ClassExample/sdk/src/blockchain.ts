@@ -1,20 +1,20 @@
 
 import { GetUserDataResponse, UserData, getUserData } from "~system/UserIdentity"
-import { RequestManager, ContractFactory, BigNumber } from 'eth-connect'
+import { RequestManager, ContractFactory } from 'eth-connect'
 import { createEthereumProvider } from '@dcl/sdk/ethereum-provider'
-import { Entity, InputAction, MeshCollider, MeshRenderer, PBMeshRenderer, PBMeshRenderer_BoxMesh, PointerEventType, PointerEvents, Transform, executeTask, pointerEventsSystem, } from '@dcl/sdk/ecs'
-import { setupUI, updateEthBalance, updateEthGasPrice, updateUserData } from "./ui"
+import { Entity, InputAction, MeshCollider, MeshRenderer, Transform, executeTask, pointerEventsSystem, } from '@dcl/sdk/ecs'
+import { updateEthBalance, updateEthGasPrice, updateUserData } from "./ui/ui"
 import landABI from "./contracts/LANDRegistry.json"
 import estateABI from "./contracts/EstateRegistry.json"
 import { Vector3 } from "@dcl/sdk/math"
 import {TextEncoder} from 'text-encoding'
 export class BlockChain {
     userData:UserData
+
     constructor() {
         Object.assign(globalThis, {
             TextEncoder: TextEncoder
         })
-        setupUI() 
         this.getUserData()
         this.getGasPrice()
     }
