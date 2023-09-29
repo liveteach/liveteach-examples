@@ -1,7 +1,7 @@
 import { MessageBus } from "@dcl/sdk/message-bus"
 import { ClassroomManager } from "./classroomManager"
 import { DebugPanel } from "./ui/debugPanel"
-import { TeacherClassroom, StudentClassroom, TeacherCommInfo, StudentCommInfo } from "./classroom"
+import { TeacherClassroom, TeacherCommInfo, StudentCommInfo } from "./classroom"
 import { ClassroomFactory } from "./factories/classroomFactory"
 import { Color4 } from "@dcl/sdk/math"
 import { ClassMemberData } from "./classMemberData"
@@ -21,13 +21,13 @@ export class CommunicationManager {
                             ClassroomManager.classController.classList[i].classID = info.classID
                             ClassroomManager.classController.classList[i].className = info.className
                             classFound = true
-                            console.log("Class updated - " + info.teacherName + " is now teaching " + info.className)
+                            CommunicationManager.EmitLog(info.teacherName + " activated " + info.className, info.guid, true, false)
                             break
                         }
                     }
                     if (!classFound) {
                         ClassroomManager.classController.classList.push(ClassroomFactory.CreateStudentClassroom(info))
-                        console.log("Class activated - " + info.teacherName + " is teaching " + info.className)
+                        CommunicationManager.EmitLog(info.teacherName + " activated " + info.className, info.guid, true, false)
                     }
                 }
             })
@@ -40,7 +40,7 @@ export class CommunicationManager {
                             if (ClassroomManager.classController.selectedClassIndex == i) {
                                 ClassroomManager.classController.selectedClassIndex = Math.max(0, i - 1)
                             }
-                            console.log(info.teacherName + " deactivated " + info.className)
+                            CommunicationManager.EmitLog(info.teacherName + " deactivated " + info.className, info.guid, true, false)
                             break
                         }
                     }
@@ -49,13 +49,13 @@ export class CommunicationManager {
 
             CommunicationManager.messageBus.on('start_class', (info: StudentCommInfo) => {
                 if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID) {
-                    console.log(info.teacherName + " started teaching " + info.className)
+                    CommunicationManager.EmitLog(info.teacherName + " started teaching " + info.className, info.guid, true, true)
                 }
             })
 
             CommunicationManager.messageBus.on('end_class', (info: StudentCommInfo) => {
                 if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID) {
-                    console.log(info.teacherName + " stopped teaching " + info.className)
+                    CommunicationManager.EmitLog(info.teacherName + " stopped teaching " + info.className, info.guid, true, true)
                 }
             })
 
@@ -65,10 +65,10 @@ export class CommunicationManager {
                         studentID: info.studentID,
                         studentName: info.studentName
                     })
-                    console.log(info.studentName + " joined your class")
+                    CommunicationManager.EmitLog(info.studentName + " left class " + info.className, info.guid, false, true)
                 }
                 else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID && ClassMemberData.GetUserId() != info.studentID) {
-                    console.log(info.studentName + " joined the class")
+                    CommunicationManager.EmitLog(info.studentName + " left class " + info.className, info.guid, true, false)
                 }
             })
 
@@ -88,41 +88,48 @@ export class CommunicationManager {
             })
 
             CommunicationManager.messageBus.on('log', (info: any) => {
-                DebugPanel.LogClassEvent(info.message, info.color, info.isTeacher)
+                const logColor = info.studentEvent ? (info.highPriority ? Color4.Blue() : Color4.Green()) : (info.highPriority ? Color4.Red() : Color4.Yellow())
+                DebugPanel.LogClassEvent(info.message, logColor, info.classroomGuid, info.studentEvent)
             })
         }
     }
 
     static EmitClassActivation(_info: StudentCommInfo): void {
         CommunicationManager.messageBus.emit('activate_class', _info)
-        CommunicationManager.EmitLog(_info.teacherName + " activated class " + _info.className, Color4.Yellow(), ClassroomManager.classController?.isTeacher())
+        CommunicationManager.EmitLog(_info.teacherName + " activated class " + _info.className, _info.guid, false, false)
     }
 
     static EmitClassDeactivation(_info: StudentCommInfo): void {
         CommunicationManager.messageBus.emit('deactivate_class', _info)
+        CommunicationManager.EmitLog(_info.teacherName + " deactivated class " + _info.className, _info.guid, false, false)
     }
 
     static EmitClassStart(_info: StudentCommInfo): void {
         CommunicationManager.messageBus.emit('start_class', _info)
+        CommunicationManager.EmitLog(_info.teacherName + " started class " + _info.className, _info.guid, false, true)
     }
 
     static EmitClassEnd(_info: StudentCommInfo): void {
         CommunicationManager.messageBus.emit('end_class', _info)
+        CommunicationManager.EmitLog(_info.teacherName + " ended class " + _info.className, _info.guid, false, true)
     }
 
     static EmitClassJoin(_info: TeacherCommInfo): void {
         CommunicationManager.messageBus.emit('join_class', _info)
+        CommunicationManager.EmitLog(_info.studentName + " joined class " + _info.className, _info.guid, true, true)
     }
 
     static EmitClassExit(_info: TeacherCommInfo): void {
         CommunicationManager.messageBus.emit('exit_class', _info)
+        CommunicationManager.EmitLog(_info.studentName + " left class " + _info.className, _info.guid, true, true)
     }
 
-    static EmitLog(_message: string, _color: Color4, _isTeacher: boolean): void {
+    static EmitLog(_message: string, _classroomGuid: string, _studentEvent: boolean, _highPriority: boolean): void {
         CommunicationManager.messageBus.emit('log', {
             message: _message,
-            color: _color,
-            isTeacher: _isTeacher
+            classroomGuid: _classroomGuid,
+            studentEvent: _studentEvent,
+            highPriority: _highPriority
         })
     }
 }

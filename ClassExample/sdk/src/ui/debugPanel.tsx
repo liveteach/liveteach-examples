@@ -1,7 +1,6 @@
 import { Color4 } from "@dcl/sdk/math"
 import ReactEcs, { Label, UiEntity } from "@dcl/sdk/react-ecs"
 import { ClassroomManager } from "../classroomManager"
-import { MeshRenderer, Transform, engine } from "@dcl/sdk/ecs"
 
 enum LogLevel {
     DEVELOPER,
@@ -66,15 +65,18 @@ export class DebugPanel {
         DebugPanel.visibility = false
     }
 
-    static LogClassEvent(_message: string, _color: Color4, _isTeacher: boolean): void {
+    static LogClassEvent(_message: string, _color: Color4, _classroomGuid: string, _studentEvent: boolean): void {
         const logLevel = DebugPanel.GetLogLevel()
-        if (DebugPanel.log.length >= DebugPanel.LOG_LIMIT) {
-            DebugPanel.log.splice(0, 1)
+
+        if (logLevel == LogLevel.DEVELOPER || ((ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == _classroomGuid) && (logLevel == LogLevel.TEACHER || (logLevel == LogLevel.STUDENT && _studentEvent)))) {
+            if (DebugPanel.log.length >= DebugPanel.LOG_LIMIT) {
+                DebugPanel.log.splice(0, 1)
+            }
+            DebugPanel.log.push({
+                message: _message,
+                color: _color
+            })
         }
-        DebugPanel.log.push({
-            message: _message,
-            color: _color
-        })
     }
 
     private static GennerateLog() {
