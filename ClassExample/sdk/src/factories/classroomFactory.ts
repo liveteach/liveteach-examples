@@ -1,22 +1,22 @@
-import { Classroom, StudentClassInfo } from "../classroom";
-import { SmartContractManager } from "../smartContractManager";
+import { ClassMemberData } from "../classMemberData";
+import { TeacherClassroom, StudentClassroom } from "../classroom";
 
 export abstract class ClassroomFactory {
-    static CreateFromConfig(_config: string) : Classroom {
-        let classroom: Classroom = Object.assign(new Classroom(), JSON.parse(_config))
-        classroom.teacherID = SmartContractManager.blockchain.userData.userId
-        classroom.teacherName = SmartContractManager.blockchain.userData.displayName
+    static CreateTeacherClassrom(_config: string, _guid) : TeacherClassroom {
+        let classroom: TeacherClassroom = Object.assign(new TeacherClassroom(), JSON.parse(_config))
+        classroom.guid = _guid
+        classroom.teacherID = ClassMemberData.GetUserId()
+        classroom.teacherName = ClassMemberData.GetDisplayName()
         classroom.students = []
         return classroom
     }
 
-    static Create(_info: StudentClassInfo) : Classroom {
-        let classroom = new Classroom()
+    static CreateStudentClassroom(_info: StudentClassroom) : StudentClassroom {
+        let classroom = new StudentClassroom()
         classroom.teacherID = _info.teacherID ?? ""
         classroom.teacherName = _info.teacherName ?? ""
         classroom.classID = _info.classID ?? ""
         classroom.className = _info.className ?? ""
-        classroom.students = []
         return classroom
     }
 }

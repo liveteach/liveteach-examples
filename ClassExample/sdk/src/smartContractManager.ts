@@ -1,5 +1,5 @@
 import { ClassroomFactory } from "./factories/classroomFactory"
-import { Classroom } from "./classroom"
+import { TeacherClassroom } from "./classroom"
 import { BlockChain } from "./blockchain"
 import * as biologyConfig from "./classroomConfigs/biologyConfig.json"
 import * as frenchConfig from "./classroomConfigs/frenchConfig.json"
@@ -17,11 +17,11 @@ export class SmartContractManager {
         }
     }
 
-    static async ActicateClassroom(_location: string): Promise<string> {
+    static async ActivateClassroom(_location: string): Promise<string> {
         if (!SmartContractManager.blockchain.userData || !SmartContractManager.blockchain.userData.userId) return ""
 
         if (SmartContractManager.USE_LOCAL_DATA) {
-            return "CLASSROOM_ID_TEST"
+            return SmartContractManager.blockchain.userData.userId // Use the teacher's userId as the classroom guid
         }
         else {
             //TODO
@@ -29,13 +29,22 @@ export class SmartContractManager {
         }
     }
 
-    static async FetchClassContent(): Promise<Classroom[]> {
+    static async DectivateClassroom(_location: string): Promise<void> {
         if (SmartContractManager.USE_LOCAL_DATA) {
-            const biologyContent = ClassroomFactory.CreateFromConfig(JSON.stringify(biologyConfig.classroom))
-            const frenchContent = ClassroomFactory.CreateFromConfig(JSON.stringify(frenchConfig.classroom))
-            const historyContent = ClassroomFactory.CreateFromConfig(JSON.stringify(historyConfig.classroom))
-            const mathContent = ClassroomFactory.CreateFromConfig(JSON.stringify(mathConfig.classroom))
-            const physicsContent = ClassroomFactory.CreateFromConfig(JSON.stringify(physicsConfig.classroom))
+
+        }
+        else {
+            //TODO
+        }
+    }
+
+    static async FetchClassContent(_guid: string): Promise<TeacherClassroom[]> {
+        if (SmartContractManager.USE_LOCAL_DATA) {
+            const biologyContent = ClassroomFactory.CreateTeacherClassrom(JSON.stringify(biologyConfig.classroom), _guid)
+            const frenchContent = ClassroomFactory.CreateTeacherClassrom(JSON.stringify(frenchConfig.classroom), _guid)
+            const historyContent = ClassroomFactory.CreateTeacherClassrom(JSON.stringify(historyConfig.classroom), _guid)
+            const mathContent = ClassroomFactory.CreateTeacherClassrom(JSON.stringify(mathConfig.classroom), _guid)
+            const physicsContent = ClassroomFactory.CreateTeacherClassrom(JSON.stringify(physicsConfig.classroom), _guid)
             return [biologyContent, frenchContent, historyContent, mathContent, physicsContent]
         }
         else {
@@ -44,13 +53,20 @@ export class SmartContractManager {
         }
     }
 
-    static async StartClassroom(): Promise<boolean> {
+    static async StartClass(): Promise<void> {
         if (SmartContractManager.USE_LOCAL_DATA) {
-            return true
+
         }
         else {
             SmartContractManager.blockchain.startClass()
-            return false
+        }
+    }
+
+    static async EndClass(): Promise<void> {
+        if (SmartContractManager.USE_LOCAL_DATA) {
+        }
+        else {
+            //TODO
         }
     }
 }

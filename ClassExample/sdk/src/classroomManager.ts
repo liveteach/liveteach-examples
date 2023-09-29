@@ -1,20 +1,18 @@
 import { ClassController } from "./classroomControllers/classController";
 import { ClassControllerFactory, ClassControllerType } from "./factories/classControllerFactory";
-import { MessageBus } from '@dcl/sdk/message-bus'
 import { SmartContractManager } from "./smartContractManager";
-import { Classroom, StudentClassInfo, StudentExitInfo, StudentJoinInfo } from "./classroom";
-import { ClassroomFactory } from "./factories/classroomFactory";
+import { CommunicationManager } from "./communicationManager";
+import { TeacherClassroom, StudentClassroom } from "./classroom";
+import { ClassMemberData } from "./classMemberData";
+import { executeTask } from "@dcl/sdk/ecs";
 
 export abstract class ClassroomManager {
-    static messageBus: MessageBus
     static classController: ClassController
+    static activeClassroom: TeacherClassroom | StudentClassroom = null
 
     static Initialise(): void {
         SmartContractManager.Initialise()
-
-        if (ClassroomManager.messageBus === undefined || ClassroomManager.messageBus === null) {
-            ClassroomManager.InitialisePeerToPeer()
-        }
+        CommunicationManager.Initialise()
     }
 
     static SetClassController(type: ClassControllerType): void {
@@ -39,105 +37,92 @@ export abstract class ClassroomManager {
         ClassroomManager.classController = ClassControllerFactory.Create(type)
     }
 
-    static EmitClassActivation(_info: StudentClassInfo): void {
-        ClassroomManager.messageBus.emit('activate_class', _info)
-    }
+    static SetTeacherClassroom(_info: TeacherClassroom): void {
+        ClassroomManager.activeClassroom = _info
 
-    static EmitClassDeactivation(_info: StudentClassInfo): void {
-        ClassroomManager.messageBus.emit('deactivate_class', _info)
-    }
-
-    static EmitClassStart(_info: StudentClassInfo): void {
-        ClassroomManager.messageBus.emit('start_class', _info)
-    }
-
-    static EmitClassEnd(_info: StudentClassInfo): void {
-        ClassroomManager.messageBus.emit('end_class', _info)
-    }
-
-    static EmitClassJoin(_info: StudentJoinInfo): void {
-        ClassroomManager.messageBus.emit('join_class', _info)
-    }
-
-    static EmitClassExit(_info: StudentExitInfo): void {
-        ClassroomManager.messageBus.emit('exit_class', _info)
-    }
-
-    private static InitialisePeerToPeer(): void {
-        ClassroomManager.messageBus = new MessageBus()
-
-        ClassroomManager.messageBus.on('activate_class', (info: StudentClassInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
-                let classFound: boolean = false
-                for (let i = 0; i < ClassroomManager.classController.classList.length; i++) {
-                    if (ClassroomManager.classController.classList[i].teacherID == info.teacherID) {
-                        ClassroomManager.classController.classList[i].classID = info.classID
-                        ClassroomManager.classController.classList[i].className = info.className
-                        classFound = true
-                        console.log("Class updated - " + info.teacherName + " is now teaching " + info.className)
-                        break
-                    }
-                }
-                if (!classFound) {
-                    ClassroomManager.classController.classList.push(ClassroomFactory.Create(info))
-                    console.log("Class activated - " + info.teacherName + " is teaching " + info.className)
-                }
-            }
+        CommunicationManager.EmitClassActivation({
+            guid: ClassroomManager.activeClassroom.guid,
+            teacherID: ClassroomManager.activeClassroom.teacherID,
+            teacherName: ClassroomManager.activeClassroom.teacherName,
+            classID: ClassroomManager.activeClassroom.classID,
+            className: ClassroomManager.activeClassroom.className
         })
+    }
 
-        ClassroomManager.messageBus.on('deactivate_class', (info: StudentClassInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
-                for (let i = 0; i < ClassroomManager.classController.classList.length; i++) {
-                    if (ClassroomManager.classController.classList[i].teacherID == info.teacherID) {
-                        ClassroomManager.classController.classList.splice(i, 1)
-                        if (ClassroomManager.classController.selectedClassIndex == i) {
-                            ClassroomManager.classController.selectedClassIndex = Math.max(0, i - 1)
-                        }
-                        console.log(info.teacherName + " deactivated " + info.className)
-                        break
-                    }
-                }
-            }
-        })
+    static async ActivateClassroom(): Promise<void | TeacherClassroom[]> {
+        return SmartContractManager.ActivateClassroom("location") //TODO: use actual location
+            .then(function (classroomGuid) {
+                //TODO: Validate ID
+                return SmartContractManager.FetchClassContent(classroomGuid)
+            })
+    }
 
-        ClassroomManager.messageBus.on('start_class', (info: StudentClassInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
-                console.log(info.teacherName + " started teaching " + info.className)
-            }
-        })
-
-        ClassroomManager.messageBus.on('end_class', (info: StudentClassInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
-                console.log(info.teacherName + " stopped teaching " + info.className)
-            }
-        })
-
-        ClassroomManager.messageBus.on('join_class', (info: StudentJoinInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
-                (ClassroomManager.classController.activeClass as Classroom).students.push({
-                    studentID: info.studentID,
-                    studentName: info.studentName
+    static async DeactivateClassroom(): Promise<void> {
+        return SmartContractManager.DectivateClassroom("location") //TODO: use actual location
+            .then(function () {
+                CommunicationManager.EmitClassDeactivation({
+                    guid: ClassroomManager.activeClassroom.guid,
+                    teacherID: ClassroomManager.activeClassroom.teacherID,
+                    teacherName: ClassroomManager.activeClassroom.teacherName,
+                    classID: ClassroomManager.activeClassroom.classID,
+                    className: ClassroomManager.activeClassroom.className
                 })
-                console.log(info.studentName + " joined your class")
-            }
-            else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID && SmartContractManager.blockchain.userData.userId != info.studentID) {
-                console.log(info.studentName + " joined the class")
-            }
-        })
+                ClassroomManager.activeClassroom = null
+            })
+    }
 
-        ClassroomManager.messageBus.on('exit_class', (info: StudentExitInfo) => {
-            if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID) {
-                for (let i = 0; i < (ClassroomManager.classController.activeClass as Classroom).students.length; i++) {
-                    if ((ClassroomManager.classController.activeClass as Classroom).students[i].studentID == info.studentID) {
-                        (ClassroomManager.classController.activeClass as Classroom).students.splice(i, 1)
-                        console.log(info.studentName + " left your class")
-                        break
-                    }
-                }
-            }
-            else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.classController.activeClass && ClassroomManager.classController.activeClass.teacherID == info.teacherID && SmartContractManager.blockchain.userData.userId != info.studentID) {
-                console.log(info.studentName + " left the class")
-            }
+    static async StartClass(): Promise<void> {
+        return SmartContractManager.StartClass()
+            .then(function () {
+                CommunicationManager.EmitClassStart({
+                    guid: ClassroomManager.activeClassroom.guid,
+                    teacherID: ClassroomManager.activeClassroom.teacherID,
+                    teacherName: ClassroomManager.activeClassroom.teacherName,
+                    classID: ClassroomManager.activeClassroom.classID,
+                    className: ClassroomManager.activeClassroom.className
+                })
+            })
+    }
+
+    static async EndClass(): Promise<void> {
+        return SmartContractManager.EndClass()
+            .then(function () {
+                CommunicationManager.EmitClassEnd({
+                    guid: ClassroomManager.activeClassroom.guid,
+                    teacherID: ClassroomManager.activeClassroom.teacherID,
+                    teacherName: ClassroomManager.activeClassroom.teacherName,
+                    classID: ClassroomManager.activeClassroom.classID,
+                    className: ClassroomManager.activeClassroom.className
+                })
+            })
+    }
+
+    static JoinClass(_info: StudentClassroom): void {
+        ClassroomManager.activeClassroom = _info
+
+        CommunicationManager.EmitClassJoin({
+            guid: ClassroomManager.activeClassroom.guid,
+            teacherID: ClassroomManager.activeClassroom.teacherID,
+            teacherName: ClassroomManager.activeClassroom.teacherName,
+            classID: ClassroomManager.activeClassroom.classID,
+            className: ClassroomManager.activeClassroom.className,
+            studentID: ClassMemberData.GetUserId(),
+            studentName: ClassMemberData.GetDisplayName()
         })
+    }
+
+    static ExitClass(): void {
+        if (ClassroomManager.activeClassroom) {
+            CommunicationManager.EmitClassExit({
+                guid: ClassroomManager.activeClassroom.guid,
+                teacherID: ClassroomManager.activeClassroom.teacherID,
+                teacherName: ClassroomManager.activeClassroom.teacherName,
+                classID: ClassroomManager.activeClassroom.classID,
+                className: ClassroomManager.activeClassroom.className,
+                studentID: ClassMemberData.GetUserId(),
+                studentName: ClassMemberData.GetDisplayName()
+            })
+            ClassroomManager.activeClassroom = null
+        }
     }
 }

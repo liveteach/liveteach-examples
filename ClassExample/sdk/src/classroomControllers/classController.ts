@@ -1,10 +1,9 @@
-import { Classroom, StudentClassInfo } from "../classroom"
+import { TeacherClassroom, StudentClassroom } from "../classroom"
 
 export abstract class ClassController {
     inSession: boolean = false
-    classList: Classroom[] = []
+    classList: (TeacherClassroom | StudentClassroom)[] = []
     selectedClassIndex: number = 0
-    activeClass: Classroom | StudentClassInfo = null
 
     constructor() {
 
@@ -24,7 +23,7 @@ export abstract class ClassController {
 
     activateClassroom(): void { }
     deactivateClassroom(): void { }
-    setClass(): void { }
+    setClassroom(): void { }
     fetchClassroomContent(): void { }
     startClass(): void { }
     endClass(): void { }

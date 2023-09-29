@@ -1,4 +1,5 @@
-export class Classroom {
+export class TeacherClassroom {
+    guid: string
     teacherID: string
     teacherName: string
     classID: string
@@ -8,7 +9,8 @@ export class Classroom {
     students: StudentInfo[]
 }
 
-export type StudentClassInfo = {
+export class StudentClassroom {
+    guid: string
     teacherID: string
     teacherName: string
     classID: string
@@ -20,6 +22,5 @@ export type StudentInfo = {
     studentName: string
 }
 
-export type StudentJoinInfo = StudentClassInfo & StudentInfo
-
-export type StudentExitInfo = StudentJoinInfo
+export type TeacherCommInfo = StudentClassroom & StudentInfo
+export type StudentCommInfo = StudentClassroom

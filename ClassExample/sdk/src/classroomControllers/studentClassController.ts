@@ -1,5 +1,4 @@
 import { ClassroomManager } from "../classroomManager";
-import { SmartContractManager } from "../smartContractManager";
 import { ClassController } from "./classController";
 
 export class StudentClassController extends ClassController {
@@ -17,37 +16,14 @@ export class StudentClassController extends ClassController {
     }
 
     override isInClass(): boolean {
-        return (this.activeClass !== undefined && this.activeClass !== null)
+        return (ClassroomManager.activeClassroom !== undefined && ClassroomManager.activeClassroom !== null)
     }
 
     override joinClass(): void {
-        this.activeClass = {
-            teacherID: this.classList[this.selectedClassIndex].teacherID,
-            teacherName: this.classList[this.selectedClassIndex].teacherName,
-            classID: this.classList[this.selectedClassIndex].classID,
-            className: this.classList[this.selectedClassIndex].className,
-        }
-        ClassroomManager.EmitClassJoin({
-            studentID: SmartContractManager.blockchain.userData.userId,
-            studentName: SmartContractManager.blockchain.userData.displayName,
-            teacherID: this.activeClass.teacherID,
-            teacherName: this.activeClass.teacherName,
-            classID: this.activeClass.classID,
-            className: this.activeClass.className
-        })
+        ClassroomManager.JoinClass(this.classList[this.selectedClassIndex])
     }
 
     override exitClass(): void {
-        if(this.activeClass) {
-            ClassroomManager.EmitClassExit({
-                studentID: SmartContractManager.blockchain.userData.userId,
-                studentName: SmartContractManager.blockchain.userData.displayName,
-                teacherID: this.activeClass.teacherID,
-                teacherName: this.activeClass.teacherName,
-                classID: this.activeClass.classID,
-                className: this.activeClass.className
-            })
-            this.activeClass = null
-        }
+        ClassroomManager.ExitClass()
     }
 }

@@ -4,7 +4,7 @@ import { ClassroomManager } from "../classroomManager";
 import { ClassControllerType } from "../factories/classControllerFactory";
 
 export class ControllerUI {
-    static visibility: boolean = false
+    private static visibility: boolean = false
     static activationMessage: string = ""
 
     private static component = () => (
@@ -152,7 +152,7 @@ export class ControllerUI {
                 if (ClassroomManager.classController.inSession) {
                     ClassroomManager.classController.endClass()
                 }
-                ClassroomManager.classController.setClass()
+                ClassroomManager.classController.setClassroom()
             }
             else {
                 if (ClassroomManager.classController.isInClass()) {
@@ -169,7 +169,7 @@ export class ControllerUI {
                 if (ClassroomManager.classController.inSession) {
                     ClassroomManager.classController.endClass()
                 }
-                ClassroomManager.classController.setClass()
+                ClassroomManager.classController.setClassroom()
             }
             else {
                 if (ClassroomManager.classController.isInClass()) {

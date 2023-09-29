@@ -1,8 +1,10 @@
 import { executeTask } from "@dcl/sdk/ecs";
 import { ClassController } from "./classController";
 import { ControllerUI } from "../ui/controllerUI";
-import { ClassroomManager } from "../classroomManager";
 import { SmartContractManager } from "../smartContractManager";
+import { CommunicationManager } from "../communicationManager";
+import { ClassroomManager } from "../classroomManager";
+import { TeacherClassroom } from "../classroom";
 
 export class TeacherClassController extends ClassController {
     activated: boolean = false
@@ -18,95 +20,60 @@ export class TeacherClassController extends ClassController {
     override isStudent(): boolean {
         return false
     }
-    
+
     override isInClass(): boolean {
         return this.activated
     }
 
     override activateClassroom(): void {
         const self = this
-        executeTask(async function () {
-            try {
-                const classroomID = await SmartContractManager.ActicateClassroom("location")
-                //TODO: Validate ID
+        ClassroomManager.ActivateClassroom()
+            .then(function (classList) {
                 self.activated = true
-                self.classList = await SmartContractManager.FetchClassContent()
-                self.setClass()
+                self.classList = classList as TeacherClassroom[]
+                self.setClassroom()
                 ControllerUI.activationMessage = "activated"
-            } catch (error) {
+            })
+            .catch(function (error) {
                 ControllerUI.activationMessage = error.toString()
-            }
-        })
+            })
     }
 
     override deactivateClassroom(): void {
         const self = this
-        executeTask(async function () {
-            try {
+        ClassroomManager.DeactivateClassroom()
+            .then(function () {
                 self.activated = false
-                if(self.activeClass) {
-                    ClassroomManager.EmitClassDeactivation({
-                        teacherID: self.activeClass.teacherID,
-                        teacherName: self.activeClass.teacherName,
-                        classID: self.activeClass.classID,
-                        className: self.activeClass.className
-                    })
-                    self.activeClass = null
-                    ControllerUI.activationMessage = "deactivated"
-                }
-                else {
-                    ControllerUI.activationMessage = ""
-                }
-            } catch (error) {
+                ControllerUI.activationMessage = "deactivated"
+            })
+            .catch(function (error) {
                 ControllerUI.activationMessage = error.toString()
-            }
-        })
+            })
     }
 
-    override setClass(): void {
-        this.activeClass = this.classList[this.selectedClassIndex]
-        ClassroomManager.EmitClassActivation({
-            teacherID: this.activeClass.teacherID,
-            teacherName: this.activeClass.teacherName,
-            classID: this.activeClass.classID,
-            className: this.activeClass.className
-        })
+    override setClassroom(): void {
+        ClassroomManager.SetTeacherClassroom(this.classList[this.selectedClassIndex] as TeacherClassroom)
     }
 
     override startClass(): void {
         const self = this
-        executeTask(async function () {
-            try {
-                const success = await SmartContractManager.StartClassroom()
-                if (success) {
-                    self.inSession = true
-                    ClassroomManager.EmitClassStart({
-                        teacherID: self.activeClass.teacherID,
-                        teacherName: self.activeClass.teacherName,
-                        classID: self.activeClass.classID,
-                        className: self.activeClass.className
-                    })
-                }
-            } catch (error) {
+        ClassroomManager.StartClass()
+            .then(function () {
+                self.inSession = true
+            })
+            .catch(function (error) {
 
-            }
-        })
+            })
     }
 
     override endClass(): void {
         const self = this
-        executeTask(async function () {
-            try {
+        ClassroomManager.EndClass()
+            .then(function () {
                 self.inSession = false
-                ClassroomManager.EmitClassEnd({
-                    teacherID: self.activeClass.teacherID,
-                    teacherName: self.activeClass.teacherName,
-                    classID: self.activeClass.classID,
-                    className: self.activeClass.className
-                })
-            } catch (error) {
+            })
+            .catch(function (error) {
 
-            }
-        })
+            })
     }
 }
