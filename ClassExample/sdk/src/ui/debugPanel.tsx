@@ -68,7 +68,7 @@ export class DebugPanel {
     static LogClassEvent(_message: string, _color: Color4, _classroomGuid: string, _studentEvent: boolean): void {
         const logLevel = DebugPanel.GetLogLevel()
 
-        if (logLevel == LogLevel.DEVELOPER || ((ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == _classroomGuid) && (logLevel == LogLevel.TEACHER || (logLevel == LogLevel.STUDENT && _studentEvent)))) {
+        if (logLevel == LogLevel.DEVELOPER || ((ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == _classroomGuid) && ((logLevel == LogLevel.TEACHER && !_studentEvent) || (logLevel == LogLevel.STUDENT && _studentEvent)))) {
             if (DebugPanel.log.length >= DebugPanel.LOG_LIMIT) {
                 DebugPanel.log.splice(0, 1)
             }

@@ -4,7 +4,6 @@ import { SmartContractManager } from "./smartContractManager";
 import { CommunicationManager } from "./communicationManager";
 import { TeacherClassroom, StudentClassroom } from "./classroom";
 import { ClassMemberData } from "./classMemberData";
-import { executeTask } from "@dcl/sdk/ecs";
 
 export abstract class ClassroomManager {
     static classController: ClassController
