@@ -4,7 +4,6 @@ import { DebugPanel } from "./ui/debugPanel"
 import { TeacherClassroom, TeacherCommInfo, StudentCommInfo } from "./classroom"
 import { ClassroomFactory } from "./factories/classroomFactory"
 import { Color4 } from "@dcl/sdk/math"
-import { ClassMemberData } from "./classMemberData"
 
 export class CommunicationManager {
     static messageBus: MessageBus
@@ -17,17 +16,15 @@ export class CommunicationManager {
                 if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
                     let classFound: boolean = false
                     for (let i = 0; i < ClassroomManager.classController.classList.length; i++) {
-                        if (ClassroomManager.classController.classList[i].teacherID == info.teacherID) {
+                        if (ClassroomManager.classController.classList[i].guid == info.guid) {
                             ClassroomManager.classController.classList[i].classID = info.classID
                             ClassroomManager.classController.classList[i].className = info.className
                             classFound = true
-                            CommunicationManager.EmitLog(info.teacherName + " activated " + info.className, info.guid, true, false)
                             break
                         }
                     }
                     if (!classFound) {
                         ClassroomManager.classController.classList.push(ClassroomFactory.CreateStudentClassroom(info))
-                        CommunicationManager.EmitLog(info.teacherName + " activated " + info.className, info.guid, true, false)
                     }
                 }
             })
@@ -35,12 +32,11 @@ export class CommunicationManager {
             CommunicationManager.messageBus.on('deactivate_class', (info: StudentCommInfo) => {
                 if (ClassroomManager.classController && ClassroomManager.classController.isStudent()) {
                     for (let i = 0; i < ClassroomManager.classController.classList.length; i++) {
-                        if (ClassroomManager.classController.classList[i].teacherID == info.teacherID) {
+                        if (ClassroomManager.classController.classList[i].guid == info.guid) {
                             ClassroomManager.classController.classList.splice(i, 1)
                             if (ClassroomManager.classController.selectedClassIndex == i) {
                                 ClassroomManager.classController.selectedClassIndex = Math.max(0, i - 1)
                             }
-                            CommunicationManager.EmitLog(info.teacherName + " deactivated " + info.className, info.guid, true, false)
                             break
                         }
                     }
@@ -48,42 +44,36 @@ export class CommunicationManager {
             })
 
             CommunicationManager.messageBus.on('start_class', (info: StudentCommInfo) => {
-                if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID) {
+                if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == info.guid) {
                     CommunicationManager.EmitLog(info.teacherName + " started teaching " + info.className, info.guid, true, true)
                 }
             })
 
             CommunicationManager.messageBus.on('end_class', (info: StudentCommInfo) => {
-                if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID) {
+                if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == info.guid) {
                     CommunicationManager.EmitLog(info.teacherName + " stopped teaching " + info.className, info.guid, true, true)
                 }
             })
 
             CommunicationManager.messageBus.on('join_class', (info: TeacherCommInfo) => {
-                if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID) {
+                if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == info.guid) {
                     (ClassroomManager.activeClassroom as TeacherClassroom).students.push({
                         studentID: info.studentID,
                         studentName: info.studentName
                     })
-                    CommunicationManager.EmitLog(info.studentName + " left class " + info.className, info.guid, false, true)
-                }
-                else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID && ClassMemberData.GetUserId() != info.studentID) {
-                    CommunicationManager.EmitLog(info.studentName + " left class " + info.className, info.guid, true, false)
+                    CommunicationManager.EmitLog(info.studentName + " joined class " + info.className, info.guid, false, true)
                 }
             })
 
             CommunicationManager.messageBus.on('exit_class', (info: TeacherCommInfo) => {
-                if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID) {
+                if (ClassroomManager.classController && ClassroomManager.classController.isTeacher() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == info.guid) {
                     for (let i = 0; i < (ClassroomManager.activeClassroom as TeacherClassroom).students.length; i++) {
                         if ((ClassroomManager.activeClassroom as TeacherClassroom).students[i].studentID == info.studentID) {
                             (ClassroomManager.activeClassroom as TeacherClassroom).students.splice(i, 1)
-                            console.log(info.studentName + " left your class")
+                            CommunicationManager.EmitLog(info.studentName + " left class " + info.className, info.guid, false, true)
                             break
                         }
                     }
-                }
-                else if (ClassroomManager.classController && ClassroomManager.classController.isStudent() && ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.teacherID == info.teacherID && ClassMemberData.GetUserId() != info.studentID) {
-                    console.log(info.studentName + " left the class")
                 }
             })
 

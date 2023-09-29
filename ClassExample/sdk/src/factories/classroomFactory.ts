@@ -13,6 +13,7 @@ export abstract class ClassroomFactory {
 
     static CreateStudentClassroom(_info: StudentClassroom) : StudentClassroom {
         let classroom = new StudentClassroom()
+        classroom.guid = _info.guid ?? ""
         classroom.teacherID = _info.teacherID ?? ""
         classroom.teacherName = _info.teacherName ?? ""
         classroom.classID = _info.classID ?? ""
