@@ -17,7 +17,7 @@ export class BlockChain {
             TextEncoder: TextEncoder
         })
         this.getUserData()
-        this.getGasPrice()
+        //this.getGasPrice()
     }
 
     createSphere() {

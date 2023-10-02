@@ -1,7 +1,7 @@
 import { ClassController } from "./classroomControllers/classController";
 import { ClassControllerFactory, ClassControllerType } from "./factories/classControllerFactory";
 import { SmartContractManager } from "./smartContractManager";
-import { CommunicationManager } from "./communicationManager";
+import { CommunicationManager } from "./comms/communicationManager";
 import { TeacherClassroom, StudentClassroom } from "./classroom";
 import { ClassMemberData } from "./classMemberData";
 
