@@ -13,7 +13,7 @@ let ethGasPrice: string = ""
 let ethBalance: string = ""
 
 const uiComponent = () => [
-    gameUI(),
+    //gameUI(),
     ControllerUI.Render(),
     DebugPanel.Render()
 ]
