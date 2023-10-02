@@ -2,7 +2,7 @@ import { executeTask } from "@dcl/sdk/ecs";
 import { ClassController } from "./classController";
 import { ControllerUI } from "../ui/controllerUI";
 import { SmartContractManager } from "../smartContractManager";
-import { CommunicationManager } from "../communicationManager";
+import { CommunicationManager } from "../comms/communicationManager";
 import { ClassroomManager } from "../classroomManager";
 import { TeacherClassroom } from "../classroom";
 
