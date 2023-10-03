@@ -3,7 +3,6 @@ import { Vector3 } from "@dcl/sdk/math";
 import { ReferenceServerController } from "./messaging/ReferenceServerController";
 import { VegasCityServerComms } from "./messaging/VegasCityServerComms";
 import { ClickableBoxes } from "./ClickableBoxes";
-import { DelayedTask } from "@vegascity/vegas-city-library/src/tasks";
 
 export class Scene{
 
