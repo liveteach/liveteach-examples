@@ -1,10 +1,10 @@
-import { EnvironmentType, Helper } from "@vegascity/vegas-city-library/src/core";
 import { UserData } from "~system/UserIdentity"
 import { GetCurrentRealmResponse } from "~system/EnvironmentApi";
 import * as ui from 'dcl-ui-toolkit'
 import { DelayedTask } from "@vegascity/vegas-city-library/src/tasks";
 import { Scene } from "../Scene";
 import { ClickableBoxes } from "../ClickableBoxes";
+import * as utils from '@dcl-sdk/utils'
 
 export class ReferenceServerController {
     
@@ -93,9 +93,9 @@ export class ReferenceServerController {
     showMessage(msg: string){
         this.announcement.value = JSON.stringify(msg)
         this.announcement.show()
-        new DelayedTask(() => {
+        utils.timers.setTimeout(() => {
             this.announcement.hide()
-        }, 3)
+        }, 3000);
     }
 
     getWebSocketMessage(_type: string, topic: string, message: string, from:string): string {
@@ -114,20 +114,6 @@ export class ReferenceServerController {
             }
         }
         return JSON.stringify(msg)
-    }
-
-    getServerUrl(_environment: EnvironmentType): string {
-         
-        switch (_environment) {
-            case EnvironmentType.Localhost:
-                return "ws://localhost:3000" 
-            case EnvironmentType.Test:
-                return "wss://liveteach.vegascity.cloud/websocket"
-            case EnvironmentType.Live:
-                return "wss://liveteach.vegascity.cloud/websocket"
-            default:
-                throw Error("Live server URL is not defined")
-        }
     }
 
     subscribeToTopic(guid:string){
