@@ -1,7 +1,6 @@
 import { UserData } from "~system/UserIdentity"
 import { GetCurrentRealmResponse } from "~system/EnvironmentApi";
 import * as ui from 'dcl-ui-toolkit'
-import { DelayedTask } from "@vegascity/vegas-city-library/src/tasks";
 import { Scene } from "../Scene";
 import { ClickableBoxes } from "../ClickableBoxes";
 import * as utils from '@dcl-sdk/utils'
