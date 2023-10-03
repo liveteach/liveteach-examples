@@ -24,8 +24,6 @@
     "trailingComma": "none"
   },
   "dependencies": {
-    "@vegascity/vegas-city-library": "^2.0.40",
-    "@vegascity/vegas-city-logger": "^3.0.4",
     "dcl-ui-toolkit": "^0.9.1"
   }
 }
