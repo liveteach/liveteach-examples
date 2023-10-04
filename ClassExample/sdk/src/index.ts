@@ -1,8 +1,5 @@
+import { setupUI } from "./ui";
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
 
-import { ClassroomManager } from "./classroomManager";
-import { ControllerUI } from "./ui/controllerUI";
-import { setupUI } from "./ui/ui";
-
-setupUI() 
+setupUI()
 ClassroomManager.Initialise()
-ControllerUI.Show()
