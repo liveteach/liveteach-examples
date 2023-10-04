@@ -15,7 +15,7 @@ export function main() {
       setupUi();
 
       // We can simply change the Url here to inject into the ReferenceServerController to use either the Node implementation or Java
-       let serverUrl = "ws://localhost:3000" //Node
+      let serverUrl = "ws://localhost:3000" //Node
       //let serverUrl = "ws://localhost:8080/websocket"; //Java
 
       // Check if userData is not null before accessing its properties
@@ -23,7 +23,9 @@ export function main() {
 
       if (userData) {
         const ws = new ReferenceServerController(userData.data, userType, serverUrl);
-        const serverComms = new VegasCityServerComms(userData.data);
+
+        //enable servcomms if using java
+        const serverComms = new VegasCityServerComms(userData.data,userType);
         new Scene(ws, serverComms);
       }
     } catch (error) {

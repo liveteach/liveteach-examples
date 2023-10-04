@@ -56,11 +56,12 @@ export class ClickableBoxes{
               opts: { button: InputAction.IA_PRIMARY, hoverText: _this.hoverText },
             },
             function () {
+
                 // For Node implementation
                 ws.sendCommand("message", _this.channel, _this.message, _this.user)
 
                 // For java Implementation
-                //serverComms.sendMessage(_this.message)
+                //serverComms.sendMessage(_this.message,_this.channel, _this.user)
             }
         )
     }
