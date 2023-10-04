@@ -128,10 +128,10 @@ export class DebugPanel {
         DebugPanel.visibility = false
     }
 
-    static LogClassEvent(_message: string, _color: Color4, _classroomGuid: string, _studentEvent: boolean): void {
+    static LogClassEvent(_message: string, _color: Color4, _classroomGuid: string, _studentEvent: boolean, _global: boolean): void {
         const logLevel = DebugPanel.GetLogLevel()
 
-        if (logLevel == LogLevel.DEVELOPER || ((ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == _classroomGuid) && ((logLevel == LogLevel.TEACHER && !_studentEvent) || (logLevel == LogLevel.STUDENT && _studentEvent)))) {
+        if (logLevel == LogLevel.DEVELOPER || ((_global || (ClassroomManager.activeClassroom && ClassroomManager.activeClassroom.guid == _classroomGuid)) && ((logLevel == LogLevel.TEACHER && !_studentEvent) || (logLevel == LogLevel.STUDENT && _studentEvent)))) {
             DebugPanel.log.push({
                 message: _message,
                 color: _color
