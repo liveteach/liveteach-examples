@@ -63,7 +63,7 @@ export class ReferenceServerController {
             case "guid":
                 Scene.teacherGuid = message.data
                 this.showMessage(message)
-                this.subscribeToTopic(message.data)
+                this.subscribeToTopic(message.data) // this will error with the java implementation best to comment out
             break;
             case "activate_class":
                this.showMessage(message)
@@ -86,6 +86,9 @@ export class ReferenceServerController {
             case "log":
                 this.showMessage(message)
             break;
+            case "sync":
+                console.log(message)
+                break;
         }
     }
 
