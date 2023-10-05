@@ -25,6 +25,10 @@
   },
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.2",
+    "@dclu/dclu-liveteach": "^1.4.0",
     "dcl-ui-toolkit": "^0.9.1"
-  }
+  },
+  "bundledDependencies": [
+    "dcl-ui-toolkit"
+  ]
 }
