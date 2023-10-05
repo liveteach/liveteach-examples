@@ -37,12 +37,7 @@ export class Seat {
             },
             function () {
                 // Only try to sit in a seat if I havent got one already
-                debugger
-
-                debugger
                 console.log(SeatManager.mySeatID)
-
-                debugger
                 if (SeatManager.mySeatID == -1) {
                     // Is this seat free?
                     SeatManager.checkIfSeatIsFree(self.id)
@@ -65,10 +60,9 @@ export class Seat {
             let teleportPosition: Vector3 = Vector3.add(Transform.get(this.entity).position, multipliedVector)
             movePlayerTo({ newRelativePosition: teleportPosition, cameraTarget: Vector3.create(16, 2, 16) })
             AnimationHelper.sit()
-            debugger
-            console.log("Bob error 1")
+
             UserManager.myself.userType = UserType.student
-            console.log("Bob error 2")
+
             utils.timers.setTimeout(() => {
                 AnimationHelper.sit()
                 utils.timers.setTimeout(() => {
