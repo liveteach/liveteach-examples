@@ -1,4 +1,4 @@
-import { engine } from "@dcl/sdk/ecs";
+import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
 import { ScreenContent } from "./content/screenContent";
 import { ScreenDisplay } from "./screenDisplay";
@@ -9,6 +9,7 @@ import { ModelContent } from "./content/modelContent";
 import { ScreenContentType } from "./enums";
 import { ContentList } from "./content/contentList";
 import { Toaster } from "../NotificationSystem/Toaster";
+import { Podium } from "../podium";
 
 export class ScreenManager {
 
@@ -21,7 +22,7 @@ export class ScreenManager {
     modelContent: ContentList
 
 
-    poweredOn: boolean = false
+    poweredOn: boolean = true
 
     static instance: ScreenManager
 
@@ -41,7 +42,6 @@ export class ScreenManager {
         }
         ScreenManager.instance.currentContent.next()
         ScreenManager.instance.playContent()
-        Toaster.popToast("Dave put his hand up")
     }
 
     static previous() { 
@@ -101,7 +101,7 @@ export class ScreenManager {
         ScreenManager.instance.playContent()
     }
 
-    static powerToggle() {
+    static powerToggle(_podium:Podium) {
         let instance = ScreenManager.instance
 
         instance.poweredOn = !instance.poweredOn
@@ -115,12 +115,48 @@ export class ScreenManager {
             } else if (instance.modelContent != undefined) {
                 ScreenManager.showModel()
             }
+        } else if (!instance.poweredOn){
+            ScreenManager.instance.hideContent()
+        } else if(instance.poweredOn){
+            ScreenManager.instance.unHideContent()
+        }
+
+        if(instance.poweredOn){
+            GltfContainer.createOrReplace(_podium.entity, { src: "models/podium.glb" })
+            _podium.previousButton.show()
+            _podium.nextButton.show()
+            _podium.endButton.show()
+            _podium.startButton.show()
+            _podium.presentationButton.show()
+            _podium.videoButton.show()
+            _podium.modelButton.show()
+        } else {
+            GltfContainer.createOrReplace(_podium.entity, { src: "models/podium_off.glb" })
+            _podium.previousButton.hide()
+            _podium.nextButton.hide()
+            _podium.endButton.hide()
+            _podium.startButton.hide()
+            _podium.presentationButton.hide()
+            _podium.videoButton.hide()
+            _podium.modelButton.hide()
         }
     }
 
     playContent() {
         this.screenDisplays.forEach(display => {
             display.startContent(this.currentContent.getContent())
+        });
+    }
+
+    hideContent(){
+        this.screenDisplays.forEach(display => {
+            display.hideContent()
+        });
+    }
+
+    unHideContent(){
+        this.screenDisplays.forEach(display => {
+            display.unHideContent()
         });
     }
 

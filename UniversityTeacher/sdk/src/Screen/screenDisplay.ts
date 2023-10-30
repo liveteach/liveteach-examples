@@ -9,6 +9,7 @@ export class ScreenDisplay {
 
     entity: Entity
     static videoTexture: TextureUnion
+    static currentContent: ScreenContent
 
     constructor(_position: Vector3, _rotation: Vector3, _scale: Vector3, _parent?: Entity) {
         this.entity = engine.addEntity()
@@ -32,8 +33,17 @@ export class ScreenDisplay {
 
     }
 
+    hideContent(){
+        Transform.getMutable(this.entity).scale.x = 0
+    }
+
+    unHideContent(){
+        this.startContent(ScreenDisplay.currentContent)
+    }
+
     startContent(_content: ScreenContent) {
         _content.isShowing = true
+        ScreenDisplay.currentContent = _content
         switch (_content.contentType) {
             case ScreenContentType.image:
                 Material.setPbrMaterial(this.entity, {
