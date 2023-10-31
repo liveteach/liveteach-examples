@@ -1,11 +1,8 @@
-import { ReactEcsRenderer } from "@dcl/sdk/react-ecs";
-import { SeatManager } from "./seatManager";
-import { VCModel } from "./vcModel";
-import { Vector3 } from '@dcl/sdk/math'
-import * as ui from 'dcl-ui-toolkit'
+
+import { Model } from "./model";
+import { Quaternion, Vector3 } from '@dcl/sdk/math'
 import { setupUi } from "./ui";
 import { TeacherAssigner } from "./teacherAssigner";
-import { UserManager } from "./user";
 
 import * as dclu from '@dclu/dclu-liveteach'
 import { SeatingData } from "@dclu/dclu-liveteach/src/seating";
@@ -18,7 +15,7 @@ export function main() {
   })
 
 
-  new VCModel("models/UniSeatsTesting.glb", // Model path
+  new Model("models/UniSeatsTesting.glb", // Model path
               Vector3.create(16,0,16), //Position
               Vector3.create(0,0,0), //Rotation
               Vector3.create(1,1,1) //Scale
@@ -125,13 +122,24 @@ export function main() {
       rotation: Vector3.create(-89.999995674289, -0.0, -0.0)	},
   ]
 
+  // Apply offset
+  let offset = Vector3.create(16, 0.3, 16)
+  seatingData.seats.forEach(seat => {
+    seat.position = Vector3.add(seat.position,offset)
+  });
+
+  // Debugging
+  // seatingData.seats.forEach(seat => {
+  //   let entity: ecs.Entity = ecs.engine.addEntity()
+  //   ecs.Transform.create(entity, {position:seat.position, rotation: Quaternion.fromEulerDegrees(seat.rotation.x,seat.rotation.y,seat.rotation.z)})
+  //   ecs.MeshRenderer.setBox(entity)
+  // });
 
   new dclu.seating.SeatingController(seatingData)
 
- // new SeatManager() 
 
  // new TeacherAssigner()
   
-  //setupUi()
+  setupUi()
 }
  
