@@ -2,8 +2,7 @@ import { UserData } from "~system/UserIdentity"
 import { signedFetch } from "~system/SignedFetch"
 import { GetCurrentRealmResponse, getCurrentRealm } from "~system/EnvironmentApi";
 import { executeTask } from "@dcl/sdk/ecs"
-import { Scene } from "../Scene";
-
+import { ReferenceServerWebsocketManager } from "@dclu/dclu-liveteach/src/classroom/websocket/ReferenceServerWebsocketManager";
 export class VegasCityServerComms {
     static serverUrl: string = "http://localhost:8080/"
     private static realm: GetCurrentRealmResponse | null = null
@@ -31,7 +30,7 @@ export class VegasCityServerComms {
                     classId: "b8b3ca99-87d1-4133-90da-529537ef42c9",
                     message:message,
                     user: walletAddress,
-                    guid: Scene.teacherGuid,
+                    guid: ReferenceServerWebsocketManager.guid,
                     topic: topic,
                     from: from
                 }
