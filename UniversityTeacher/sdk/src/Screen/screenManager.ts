@@ -196,7 +196,7 @@ export class ScreenManager {
         ], ScreenContentType.image)
 
         this.videoContent = new ContentList([
-            new VideoContent({ sourcePath: "video/pexels-artem-podrez.mp4", ratio: 1.7 }),
+            new VideoContent({ sourcePath: "video/pexels-artem-podrez_small.mp4", ratio: 1.7 }),
             new VideoContent({ sourcePath: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8", ratio: 1.7 })
         ], ScreenContentType.video)
 
