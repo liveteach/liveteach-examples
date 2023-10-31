@@ -156,8 +156,8 @@ export class ScreenManager {
     }
 
     hideContent() {
-        ScreenManager.screenDisplays.forEach(display => {
-            display.hideContent()
+        ScreenManager.screenDisplays.forEach((display,index) => {
+            display.hideContent(index)
         });
     }
 
