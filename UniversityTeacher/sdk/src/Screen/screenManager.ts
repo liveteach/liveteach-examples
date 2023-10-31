@@ -129,7 +129,7 @@ export class ScreenManager {
         }
 
         if (instance.poweredOn) {
-            GltfContainer.createOrReplace(_podium.entity, { src: "models/podium.glb" })
+            GltfContainer.createOrReplace(_podium.buttonsEntity, { src: "models/podium_buttons_on.glb" })
             _podium.previousButton.show()
             _podium.nextButton.show()
             _podium.endButton.show()
@@ -138,7 +138,7 @@ export class ScreenManager {
             _podium.videoButton.show()
             _podium.modelButton.show()
         } else {
-            GltfContainer.createOrReplace(_podium.entity, { src: "models/podium_off.glb" })
+            GltfContainer.createOrReplace(_podium.buttonsEntity, { src: "models/podium_buttons_off.glb" })
             _podium.previousButton.hide()
             _podium.nextButton.hide()
             _podium.endButton.hide()
