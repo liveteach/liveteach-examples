@@ -1,6 +1,5 @@
 import { engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
-import { ScreenContent } from "./content/screenContent";
 import { ScreenDisplay } from "./screenDisplay";
 import { Vector3 } from "@dcl/sdk/math";
 import { VideoContent } from "./content/videoContent";
@@ -9,6 +8,7 @@ import { ModelContent } from "./content/modelContent";
 import { ScreenContentType } from "./enums";
 import { ContentList } from "./content/contentList";
 import { Toaster } from "../NotificationSystem/Toaster";
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom";
 
 export class ScreenManager {
 
@@ -36,24 +36,24 @@ export class ScreenManager {
     }
 
     static next() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.next()
         ScreenManager.instance.playContent()
-        Toaster.popToast("Dave put his hand up")
+        //Toaster.popToast("Dave put his hand up")
     }
 
-    static previous() { 
-        if(!this.instance.poweredOn){
+    static previous() {
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.previous()
-        ScreenManager.instance.playContent() 
+        ScreenManager.instance.playContent()
     }
 
     static toStart() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.toStart()
@@ -61,7 +61,7 @@ export class ScreenManager {
     }
 
     static toEnd() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.toEnd()
@@ -69,10 +69,10 @@ export class ScreenManager {
     }
 
     static showPresentation() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
-        if(ScreenManager.instance.currentContent!=undefined){
+        if (ScreenManager.instance.currentContent != undefined) {
             ScreenManager.instance.currentContent.stop()
         }
         ScreenManager.instance.currentContent = ScreenManager.instance.imageContent
@@ -80,21 +80,21 @@ export class ScreenManager {
     }
 
     static showVideo() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
-        if(ScreenManager.instance.currentContent!=undefined){
-            ScreenManager.instance.currentContent.stop() 
+        if (ScreenManager.instance.currentContent != undefined) {
+            ScreenManager.instance.currentContent.stop()
         }
         ScreenManager.instance.currentContent = ScreenManager.instance.videoContent
         ScreenManager.instance.playContent()
     }
 
     static showModel() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
-        if(ScreenManager.instance.currentContent!=undefined){
+        if (ScreenManager.instance.currentContent != undefined) {
             ScreenManager.instance.currentContent.stop()
         }
         ScreenManager.instance.currentContent = ScreenManager.instance.modelContent
@@ -119,9 +119,27 @@ export class ScreenManager {
     }
 
     playContent() {
+        const content = this.currentContent.getContent()
         this.screenDisplays.forEach(display => {
-            display.startContent(this.currentContent.getContent())
+            display.startContent(content)
         });
+
+        switch (content.contentType) {
+            case ScreenContentType.image:
+                ClassroomManager.DisplayImage({
+                    src: ScreenManager.instance.currentContent.getContent().configuration.sourcePath,
+                    "caption": "caption",
+                    ratio: ScreenManager.instance.currentContent.getContent().configuration.ratio
+                })
+                break
+            case ScreenContentType.video:
+                ClassroomManager.PlayVideo({
+                    src: ScreenManager.instance.currentContent.getContent().configuration.sourcePath,
+                    "caption": "caption",
+                    ratio: ScreenManager.instance.currentContent.getContent().configuration.ratio
+                })
+                break
+        }
     }
 
     loadContent() {

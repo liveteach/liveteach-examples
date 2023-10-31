@@ -1,14 +1,15 @@
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math";
-import { Entity, Material, MeshRenderer, PBMaterial, TextureUnion, Transform, VideoPlayer, VideoTexture, engine } from "@dcl/sdk/ecs"
+import { Entity, Material, MeshRenderer, TextureUnion, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs"
 import { ScreenContent } from "./content/screenContent";
 import { ScreenContentType } from "./enums";
-import { ImageContent } from "./content/imageContent";
 import { VideoContent } from "./content/videoContent";
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom";
 
 export class ScreenDisplay {
 
     entity: Entity
     static videoTexture: TextureUnion
+    static instances: ScreenDisplay[] = []
 
     constructor(_position: Vector3, _rotation: Vector3, _scale: Vector3, _parent?: Entity) {
         this.entity = engine.addEntity()
@@ -29,6 +30,9 @@ export class ScreenDisplay {
         }
 
         MeshRenderer.setPlane(this.entity)
+        VideoPlayer.create(this.entity)
+
+        ScreenDisplay.instances.push(this)
 
     }
 

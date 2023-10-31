@@ -5,6 +5,11 @@ import { Vector3 } from "@dcl/sdk/math";
 import { setupUi } from "./ui";
 import { Toaster } from "./NotificationSystem/Toaster";
 import { AudioManager } from "./audioManager";
+import { ControllerUI } from "@dclu/dclu-liveteach/src/classroom/ui/controllerUI";
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
+import { PeerToPeerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/peerToPeerChannel";
+import { ScreenDisplay } from "./Screen/screenDisplay";
+import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 
 
 export function main() {
@@ -20,4 +25,7 @@ export function main() {
     GltfContainer.create(floor, {src: "models/Floor.glb"})
 
     setupUi()
+    const communicationChannel = new PeerToPeerChannel()
+    ClassroomManager.Initialise(classroomConfig, communicationChannel, ScreenDisplay.instances.map((screenDisplay) => screenDisplay.entity))
+    ControllerUI.Show()
 }
