@@ -13,7 +13,7 @@ import { Podium } from "../podium";
 
 export class ScreenManager {
 
-    screenDisplays: ScreenDisplay[] = []
+    static screenDisplays: ScreenDisplay[] = []
 
     currentContent: ContentList
 
@@ -37,23 +37,23 @@ export class ScreenManager {
     }
 
     static next() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.next()
         ScreenManager.instance.playContent()
     }
 
-    static previous() { 
-        if(!this.instance.poweredOn){
+    static previous() {
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.previous()
-        ScreenManager.instance.playContent() 
+        ScreenManager.instance.playContent()
     }
 
     static toStart() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.toStart()
@@ -61,7 +61,7 @@ export class ScreenManager {
     }
 
     static toEnd() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
         ScreenManager.instance.currentContent.toEnd()
@@ -69,10 +69,10 @@ export class ScreenManager {
     }
 
     static showPresentation() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
-        if(ScreenManager.instance.currentContent!=undefined){
+        if (ScreenManager.instance.currentContent != undefined) {
             ScreenManager.instance.currentContent.stop()
         }
         ScreenManager.instance.currentContent = ScreenManager.instance.imageContent
@@ -80,28 +80,28 @@ export class ScreenManager {
     }
 
     static showVideo() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
-        if(ScreenManager.instance.currentContent!=undefined){
-            ScreenManager.instance.currentContent.stop() 
+        if (ScreenManager.instance.currentContent != undefined) {
+            ScreenManager.instance.currentContent.stop()
         }
         ScreenManager.instance.currentContent = ScreenManager.instance.videoContent
         ScreenManager.instance.playContent()
     }
 
     static showModel() {
-        if(!this.instance.poweredOn){
+        if (!this.instance.poweredOn) {
             return
         }
-        if(ScreenManager.instance.currentContent!=undefined){
+        if (ScreenManager.instance.currentContent != undefined) {
             ScreenManager.instance.currentContent.stop()
         }
         ScreenManager.instance.currentContent = ScreenManager.instance.modelContent
         ScreenManager.instance.playContent()
     }
 
-    static powerToggle(_podium:Podium) {
+    static powerToggle(_podium: Podium) {
         let instance = ScreenManager.instance
 
         instance.poweredOn = !instance.poweredOn
@@ -115,13 +115,16 @@ export class ScreenManager {
             } else if (instance.modelContent != undefined) {
                 ScreenManager.showModel()
             }
-        } else if (!instance.poweredOn){
+        } else if (!instance.poweredOn) {
+            if (ScreenManager.instance.currentContent != undefined) {
+                ScreenManager.instance.currentContent.stop()
+            }
             ScreenManager.instance.hideContent()
-        } else if(instance.poweredOn){
+        } else if (instance.poweredOn) {
             ScreenManager.instance.unHideContent()
         }
 
-        if(instance.poweredOn){
+        if (instance.poweredOn) {
             GltfContainer.createOrReplace(_podium.entity, { src: "models/podium.glb" })
             _podium.previousButton.show()
             _podium.nextButton.show()
@@ -143,19 +146,19 @@ export class ScreenManager {
     }
 
     playContent() {
-        this.screenDisplays.forEach(display => {
+        ScreenManager.screenDisplays.forEach(display => {
             display.startContent(this.currentContent.getContent())
         });
     }
 
-    hideContent(){
-        this.screenDisplays.forEach(display => {
+    hideContent() {
+        ScreenManager.screenDisplays.forEach(display => {
             display.hideContent()
         });
     }
 
-    unHideContent(){
-        this.screenDisplays.forEach(display => {
+    unHideContent() {
+        ScreenManager.screenDisplays.forEach(display => {
             display.unHideContent()
         });
     }
@@ -176,16 +179,20 @@ export class ScreenManager {
         ], ScreenContentType.video)
 
         this.modelContent = new ContentList([
-            new ModelContent({ sourcePath: "models/LessonModels/model1.glb" }),
-            new ModelContent({ sourcePath: "models/LessonModels/model2.glb" }),
-            new ModelContent({ sourcePath: "models/LessonModels/model3.glb" }),
-            new ModelContent({ sourcePath: "models/LessonModels/model4.glb" })
+            new ModelContent({ sourcePath: "models/LessonModels/pizza.glb", modelScale: Vector3.create(3, 3, 3), unique: false, spin: true, spinSpeed: 4 }),
+            new ModelContent({ sourcePath: "models/LessonModels/cake.glb", modelScale: Vector3.create(0.3, 0.3, 0.3), unique: true, overiddenPosition: Vector3.create(0, 0, 0), spin: true, spinSpeed: 40 })
         ], ScreenContentType.model)
     }
 
     createScreens() {
+        new DisplayPanel(Vector3.create(3, 0, 8.1), Vector3.create(0, 180, 0), Vector3.create(0.5, 0.5, 0.5))
+        ScreenManager.screenDisplays.push(new ScreenDisplay(Vector3.create(3, 1.3, 8.05), Vector3.create(0, 0, 0), Vector3.create(1.42, 1.42, 1.42), false))
+
         new DisplayPanel(Vector3.create(8, 0, 8.1), Vector3.create(0, 180, 0), Vector3.create(1, 1, 1))
-        this.screenDisplays.push(new ScreenDisplay(Vector3.create(8, 2.6, 8), Vector3.create(0, 0, 0), Vector3.create(2.84, 2.84, 2.84)))
+        ScreenManager.screenDisplays.push(new ScreenDisplay(Vector3.create(8, 2.6, 8), Vector3.create(0, 0, 0), Vector3.create(2.84, 2.84, 2.84), false))
+
+        new DisplayPanel(Vector3.create(13.1, 0, 8.1), Vector3.create(0, 225, 0), Vector3.create(1, 1, 1))
+        ScreenManager.screenDisplays.push(new ScreenDisplay(Vector3.create(13, 2.6, 8), Vector3.create(0, 45, 0), Vector3.create(2.84, 2.84, 2.84), false))
     }
 
     update(_dt: number) {
@@ -197,5 +204,10 @@ export class ScreenManager {
                 instance.currentContent.next()
             }
         }
-    }
+
+        ScreenManager.screenDisplays.forEach(display => {
+            display.update(_dt)
+        });
+
+    } 
 }

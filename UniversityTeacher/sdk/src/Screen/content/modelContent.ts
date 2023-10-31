@@ -3,6 +3,7 @@ import { ScreenConfig, ScreenContent } from "./screenContent";
 
 export class ModelContent extends ScreenContent {
 
+    
     constructor(_screenConfig:ScreenConfig){
         super(ScreenContentType.model, _screenConfig)
     }
@@ -21,4 +22,4 @@ export class ModelContent extends ScreenContent {
         super.update(_dt)
     }
 
-}
+} 
