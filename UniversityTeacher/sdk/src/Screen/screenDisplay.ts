@@ -15,7 +15,6 @@ export class ScreenDisplay {
     podiumnScreen: boolean = false
 
     modelEntity: Entity
-    uniqueModelEntity: Entity
     parent: Entity
 
     constructor(_position: Vector3, _rotation: Vector3, _scale: Vector3, _podiumnScreen: boolean, _parent?: Entity) {
@@ -45,9 +44,15 @@ export class ScreenDisplay {
 
     }
 
-    hideContent() {
+    hideContent(index: number) {
         console.log("hide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.Zero()
+
+        if(index==0 && ScreenDisplay.currentContent!=undefined){
+            if(ScreenDisplay.currentContent.configuration.unique){
+                Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
+            }
+        }
     }
 
     unHideContent(index: number) {
