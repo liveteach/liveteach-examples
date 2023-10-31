@@ -2,7 +2,7 @@ import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 
 
-export class VCModel {
+export class Model {
 
     entity:Entity
     constructor(_modelPath:string, _position:Vector3,_rotation:Vector3,_scale:Vector3){
