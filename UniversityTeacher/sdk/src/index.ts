@@ -8,9 +8,8 @@ import { AudioManager } from "./audioManager";
 import { ControllerUI } from "@dclu/dclu-liveteach/src/classroom/ui/controllerUI";
 import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
 import { PeerToPeerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/peerToPeerChannel";
-import { ScreenDisplay } from "./Screen/screenDisplay";
 import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
-
+import { VideoContent } from "./Screen/content/videoContent";
 
 export function main() {
     new ScreenManager()
@@ -20,12 +19,19 @@ export function main() {
 
     let floor: Entity = engine.addEntity()
     Transform.create(floor, {
-        position: Vector3.create(8,0,8)
+        position: Vector3.create(8, 0, 8)
     })
-    GltfContainer.create(floor, {src: "models/Floor.glb"})
+    GltfContainer.create(floor, { src: "models/Floor.glb" })
 
     setupUi()
     const communicationChannel = new PeerToPeerChannel()
-    ClassroomManager.Initialise(classroomConfig, communicationChannel, ScreenManager.screenDisplays.map((screenDisplay) => screenDisplay.entity))
+    ClassroomManager.Initialise(classroomConfig, communicationChannel, ScreenManager.screenDisplays.map((screenDisplay) => screenDisplay.entity),
+        ScreenManager.instance.videoContent.content.map((content) => {
+            return {
+                src: content.configuration.sourcePath,
+                entity: (content as VideoContent).videoEntity
+            }
+        }))
+
     ControllerUI.Show()
 }

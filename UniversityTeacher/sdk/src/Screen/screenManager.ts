@@ -1,4 +1,4 @@
-import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
+import { GltfContainer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
 import { ScreenDisplay } from "./screenDisplay";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
@@ -158,16 +158,17 @@ export class ScreenManager {
         switch (content.contentType) {
             case ScreenContentType.image:
                 ClassroomManager.DisplayImage({
-                    src: ScreenManager.instance.currentContent.getContent().configuration.sourcePath,
+                    src: content.configuration.sourcePath,
                     "caption": "caption",
-                    ratio: ScreenManager.instance.currentContent.getContent().configuration.ratio
+                    ratio: content.configuration.ratio
                 })
                 break
             case ScreenContentType.video:
                 ClassroomManager.PlayVideo({
-                    src: ScreenManager.instance.currentContent.getContent().configuration.sourcePath,
+                    src: content.configuration.sourcePath,
                     "caption": "caption",
-                    ratio: ScreenManager.instance.currentContent.getContent().configuration.ratio
+                    ratio: content.configuration.ratio,
+                    position: VideoPlayer.getMutable((content as VideoContent).videoEntity).position
                 })
                 break
         }
