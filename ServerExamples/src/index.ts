@@ -1,6 +1,6 @@
 import { GetUserDataResponse, getUserData } from '~system/UserIdentity'
 import { setupUi } from "./ui"
-import { VegasCityServerComms } from "./messaging/VegasCityServerComms"
+import { RestServerComms } from "./messaging/RestServerComms"
 import { executeTask } from "@dcl/sdk/ecs"
 import { UserData } from "~system/Players"
 import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
@@ -49,7 +49,7 @@ export function main() {
             ClassroomManager.Initialise(config, communicationChannel, [])
 
             ControllerUI.Show()
-            //const serverComms = new VegasCityServerComms(userData.data,userType);
+            //const serverComms = new RestServerComms(userData.data,userType);
             //new Scene(serverComms)
         }
       } catch (error) {

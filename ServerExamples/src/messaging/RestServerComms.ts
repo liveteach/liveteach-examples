@@ -3,19 +3,19 @@ import { signedFetch } from "~system/SignedFetch"
 import { GetCurrentRealmResponse, getCurrentRealm } from "~system/EnvironmentApi";
 import { executeTask } from "@dcl/sdk/ecs"
 import { ReferenceServerWebsocketManager } from "@dclu/dclu-liveteach/src/classroom/websocket/ReferenceServerWebsocketManager";
-export class VegasCityServerComms {
+export class RestServerComms {
     static serverUrl: string = "http://localhost:8080/"
     private static realm: GetCurrentRealmResponse | null = null
     public static user: UserData
     private static userType: string
     
-    public static instance:VegasCityServerComms
+    public static instance:RestServerComms
 
     constructor(user: UserData, userType: string){
-        VegasCityServerComms.serverUrl = VegasCityServerComms.serverUrl
-        VegasCityServerComms.instance = this
-        VegasCityServerComms.user = user
-        VegasCityServerComms.userType = userType
+        RestServerComms.serverUrl = RestServerComms.serverUrl
+        RestServerComms.instance = this
+        RestServerComms.user = user
+        RestServerComms.userType = userType
         if(userType === "teacher"){
             this.getGuid()
         }
@@ -23,7 +23,7 @@ export class VegasCityServerComms {
     }
 
     public sendMessage(message: string, topic: string, from: string) {
-        let walletAddress: string = VegasCityServerComms.user.publicKey || "GUEST_" + VegasCityServerComms.user.userId
+        let walletAddress: string = RestServerComms.user.publicKey || "GUEST_" + RestServerComms.user.userId
         return executeTask(async ()=>{
             try {
                 let reqObj = {
@@ -36,7 +36,7 @@ export class VegasCityServerComms {
                 }
 
                 let response = await signedFetch({
-                    url: VegasCityServerComms.serverUrl +"api/" + VegasCityServerComms.userType +"/command", 
+                    url: RestServerComms.serverUrl +"api/" + RestServerComms.userType +"/command", 
                     init:{
                         headers: { "Content-Type": "application/json" },
                         method: "POST",
@@ -53,11 +53,11 @@ export class VegasCityServerComms {
     }
 
     public getGuid() {
-        let walletAddress: string = VegasCityServerComms.user.publicKey || "GUEST_" + VegasCityServerComms.user.userId
+        let walletAddress: string = RestServerComms.user.publicKey || "GUEST_" + RestServerComms.user.userId
         return executeTask(async ()=>{
             try {
                 let response = await signedFetch({
-                    url: VegasCityServerComms.serverUrl +"api/teacher/guid?message=" + walletAddress, 
+                    url: RestServerComms.serverUrl +"api/teacher/guid?message=" + walletAddress, 
                     init:{
                         headers: { "Content-Type": "application/json" },
                         method: "GET"
