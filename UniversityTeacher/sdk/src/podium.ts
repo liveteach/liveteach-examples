@@ -6,6 +6,7 @@ import { PodiumButton } from "./podiumButton";
 
 export class Podium {
     entity: Entity
+    buttonsEntity: Entity
 
     previousButton: PodiumButton
     nextButton: PodiumButton
@@ -18,6 +19,7 @@ export class Podium {
 
     constructor() {
         this.entity = engine.addEntity()
+        this.buttonsEntity = engine.addEntity()
 
         Transform.create(this.entity, {
             position: Vector3.create(8, 0, 3),
@@ -26,6 +28,12 @@ export class Podium {
         })
 
         GltfContainer.create(this.entity, { src: "models/podium.glb" })
+
+        Transform.create(this.buttonsEntity,{
+            parent:this.entity
+        })
+
+        GltfContainer.create(this.buttonsEntity, {src: "models/podium_buttons_on.glb"})
 
 
         // Podium screen
