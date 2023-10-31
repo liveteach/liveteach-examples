@@ -1,6 +1,5 @@
 import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
-import { ScreenContent } from "./content/screenContent";
 import { ScreenDisplay } from "./screenDisplay";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import { VideoContent } from "./content/videoContent";
@@ -165,6 +164,23 @@ export class ScreenManager {
         ScreenManager.screenDisplays.forEach((display,index) => {
             display.unHideContent(index)
         });
+
+        switch (content.contentType) {
+            case ScreenContentType.image:
+                ClassroomManager.DisplayImage({
+                    src: ScreenManager.instance.currentContent.getContent().configuration.sourcePath,
+                    "caption": "caption",
+                    ratio: ScreenManager.instance.currentContent.getContent().configuration.ratio
+                })
+                break
+            case ScreenContentType.video:
+                ClassroomManager.PlayVideo({
+                    src: ScreenManager.instance.currentContent.getContent().configuration.sourcePath,
+                    "caption": "caption",
+                    ratio: ScreenManager.instance.currentContent.getContent().configuration.ratio
+                })
+                break
+        }
     }
 
     loadContent() {

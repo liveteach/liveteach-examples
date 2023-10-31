@@ -41,6 +41,9 @@ export class ScreenDisplay {
         Transform.create(this.entity, { parent: this.baseScreenEntity, scale: _scale })
 
         MeshRenderer.setPlane(this.entity)
+        VideoPlayer.create(this.entity)
+
+        ScreenDisplay.instances.push(this)
 
     }
 
