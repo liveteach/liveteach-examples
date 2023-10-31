@@ -29,10 +29,11 @@ export class Podium {
 
 
         // Podium screen
-        ScreenManager.instance.screenDisplays.push(
+        ScreenManager.screenDisplays.push(
             new ScreenDisplay(Vector3.create(0.35, 1.7, -0.06),
                 Vector3.create(45, 90, 0),
                 Vector3.create(0.2, 0.2, 0.2),
+                true,
                 this.entity))
 
         // Podium controls
