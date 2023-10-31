@@ -69,6 +69,7 @@ export class ScreenManager {
     }
 
     static showPresentation() {
+        console.log("show presentation")
         if (!this.instance.poweredOn) {
             return
         }
@@ -80,6 +81,7 @@ export class ScreenManager {
     }
 
     static showVideo() {
+        console.log("show video")
         if (!this.instance.poweredOn) {
             return
         }
@@ -91,6 +93,7 @@ export class ScreenManager {
     }
 
     static showModel() {
+        console.log("show model")
         if (!this.instance.poweredOn) {
             return
         }
@@ -115,6 +118,7 @@ export class ScreenManager {
             } else if (instance.modelContent != undefined) {
                 ScreenManager.showModel()
             }
+            ScreenManager.instance.unHideContent()
         } else if (!instance.poweredOn) {
             if (ScreenManager.instance.currentContent != undefined) {
                 ScreenManager.instance.currentContent.stop()

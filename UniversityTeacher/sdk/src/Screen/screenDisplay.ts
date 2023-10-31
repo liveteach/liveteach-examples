@@ -45,15 +45,18 @@ export class ScreenDisplay {
     }
 
     hideContent(){
+        console.log("hide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.Zero()
     }
 
     unHideContent(){
+        console.log("unhide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.One()
         this.startContent(ScreenDisplay.currentContent)
     }
 
     startContent(_content: ScreenContent) {
+        console.log("start content")
         _content.isShowing = true
         ScreenDisplay.currentContent = _content
         switch (_content.contentType) {
