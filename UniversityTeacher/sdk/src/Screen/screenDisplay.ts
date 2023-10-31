@@ -13,11 +13,12 @@ export class ScreenDisplay {
     static videoTexture: TextureUnion
     static currentContent: ScreenContent
     podiumnScreen: boolean = false
-    
+
     modelEntity: Entity
+    uniqueModelEntity: Entity
     parent: Entity
 
-    constructor(_position: Vector3, _rotation: Vector3, _scale: Vector3, _podiumnScreen:boolean, _parent?: Entity) {
+    constructor(_position: Vector3, _rotation: Vector3, _scale: Vector3, _podiumnScreen: boolean, _parent?: Entity) {
         this.baseEntity = engine.addEntity()
         this.baseScreenEntity = engine.addEntity()
         this.entity = engine.addEntity()
@@ -37,25 +38,25 @@ export class ScreenDisplay {
             })
         }
 
-        Transform.create(this.baseScreenEntity, {parent: this.baseEntity, scale: Vector3.One()})
-        Transform.create(this.entity, {parent: this.baseScreenEntity, scale: _scale})
+        Transform.create(this.baseScreenEntity, { parent: this.baseEntity, scale: Vector3.One() })
+        Transform.create(this.entity, { parent: this.baseScreenEntity, scale: _scale })
 
         MeshRenderer.setPlane(this.entity)
 
     }
 
-    hideContent(){
+    hideContent() {
         console.log("hide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.Zero()
     }
 
-    unHideContent(){
+    unHideContent(index: number) {
         console.log("unhide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.One()
-        this.startContent(ScreenDisplay.currentContent)
+        this.startContent(ScreenDisplay.currentContent, index)
     }
 
-    startContent(_content: ScreenContent) {
+    startContent(_content: ScreenContent, index: number) {
         console.log("start content")
         _content.isShowing = true
         ScreenDisplay.currentContent = _content
@@ -79,7 +80,7 @@ export class ScreenDisplay {
                 } else {
                     Transform.getMutable(this.entity).scale.x = Transform.getMutable(this.entity).scale.y
                 }
-                if(this.modelEntity!=undefined){
+                if (this.modelEntity != undefined) {
                     Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
                 }
                 break
@@ -103,39 +104,63 @@ export class ScreenDisplay {
                     Transform.getMutable(this.entity).scale.x = Transform.getMutable(this.entity).scale.y
                 }
 
-                if(this.modelEntity!=undefined){
+                if (this.modelEntity != undefined) {
                     Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
                 }
                 break
             case ScreenContentType.model:
                 Transform.getMutable(this.baseScreenEntity).scale = Vector3.Zero()
-                if(this.podiumnScreen){
-                    // Podium screens won't show the 3d model as it will block the teacher controls.
-                    return
+
+                if (_content.configuration.unique) {
+                    if (index == 0) {
+                        // Only show unique content once so only apply to index 0
+                        if (this.modelEntity == undefined) {
+                            this.modelEntity = engine.addEntity()
+                        }
+                        Transform.createOrReplace(this.modelEntity, {
+                            position: _content.configuration.overiddenPosition,
+                            rotation: _content.configuration.overiddenRotation,
+                            scale: _content.configuration.modelScale
+                        }
+                        )
+                        GltfContainer.createOrReplace(this.modelEntity, { src: _content.configuration.sourcePath })
+                    } else {
+                        if(this.modelEntity !=undefined){
+                            Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
+                        }
+                    }
+                } else {
+                    if (this.podiumnScreen) {
+                        // Podium screens won't show the 3d model as it will block the teacher controls.
+                        return
+                    }
+
+                    if (this.modelEntity == undefined) {
+                        this.modelEntity = engine.addEntity()
+                    }
+                    Transform.createOrReplace(this.modelEntity, {
+                        parent: this.baseEntity,
+                        position: Vector3.create(0, -0.3, -2.5),
+                        rotation: Quaternion.fromEulerDegrees(0, 0, 0),
+                        scale: _content.configuration.modelScale
+                    }
+                    )
+                    GltfContainer.createOrReplace(this.modelEntity, { src: _content.configuration.sourcePath })
                 }
-                if(this.modelEntity==undefined){
-                    this.modelEntity = engine.addEntity()
-                }
-                Transform.createOrReplace(this.modelEntity, {
-                    parent: this.baseEntity,
-                    position: Vector3.create(0,-0.3,-2.5),
-                    rotation: Quaternion.fromEulerDegrees(0,0,0),
-                    scale: _content.configuration.modelScale}
-                )
-                GltfContainer.createOrReplace(this.modelEntity, {src:_content.configuration.sourcePath})
         }
-    }
+    } 
 
-    update(_dt:number){
-        if(this.modelEntity!=undefined && ScreenDisplay.currentContent.configuration.spin != undefined){
-            if(ScreenDisplay.currentContent.configuration.spin){
-             let yRotation:number = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).y
+    update(_dt: number) {
+        if (this.modelEntity != undefined && ScreenDisplay.currentContent.configuration.spin != undefined) {
+            if (ScreenDisplay.currentContent.configuration.spin) {
+                let yRotation: number = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).y
+                let xRotation = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).x
+                let zRotation = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).z
 
-             yRotation+=_dt*ScreenDisplay.currentContent.configuration.spinSpeed
-             
-             Transform.getMutable(this.modelEntity).rotation = Quaternion.fromEulerDegrees(0,yRotation,0)
+                yRotation += _dt * ScreenDisplay.currentContent.configuration.spinSpeed
+                
 
-             console.log("Spinning!?")
+                Transform.getMutable(this.modelEntity).rotation = Quaternion.fromEulerDegrees(xRotation, yRotation, zRotation)
             }
         }
     }
