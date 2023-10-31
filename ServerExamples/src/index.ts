@@ -1,35 +1,59 @@
-import { ReferenceServerController } from "./messaging/ReferenceServerController"
 import { GetUserDataResponse, getUserData } from '~system/UserIdentity'
-import { Scene } from "./Scene"
 import { setupUi } from "./ui"
-import { VegasCityServerComms } from "./messaging/VegasCityServerComms"
+import { RestServerComms } from "./messaging/RestServerComms"
 import { executeTask } from "@dcl/sdk/ecs"
 import { UserData } from "~system/Players"
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
+import { ServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/serverChannel"
+import { ControllerUI } from '@dclu/dclu-liveteach/src/classroom/ui/controllerUI'
 
 export function main() {
-  let userData: GetUserDataResponse | null = null; // Initialize as null
+    let userData: GetUserDataResponse | null = null; // Initialize as null
+    let serverUrl = "ws://localhost:3000"
 
-  executeTask(async () => {
-    try {
-      userData = await getUserData({});
-      setupUi();
-
-      // We can simply change the Url here to inject into the ReferenceServerController to use either the Node implementation or Java
-      let serverUrl = "ws://localhost:3000" //Node
-      //let serverUrl = "ws://localhost:8080/websocket"; //Java
-
-      // Check if userData is not null before accessing its properties
-      let userType = userData?.data?.hasConnectedWeb3 ? "teacher" : "student";
-
-      if (userData) {
-        const ws = new ReferenceServerController(userData.data, userType, serverUrl);
-
-        //enable servcomms if using java
-        const serverComms = new VegasCityServerComms(userData.data,userType);
-        new Scene(ws, serverComms);
+   
+    executeTask(async () => {
+      try {
+        userData = await getUserData({});
+        setupUi()
+        let userType = userData?.data?.hasConnectedWeb3 ? "teacher" : "student";
+      
+        let config = {
+          "classroom": {
+              "guid": "382c74c3-721d-4f34-80e5-57657b6cbc27",
+              "teacherID": "",
+              "teacherName": "",
+              "className": "",
+              "classDescription": "",
+              "location": "classroom_1",
+              "capacity": "20",
+              "duration": "60",
+              "seatingEnabled": true,
+              "videoPlaying": false,
+              "skybox": "default",
+              "displayedImage": {
+                  "src": "",
+                  "caption": ""
+              },
+              "displayedVideo": {
+                  "src": "",
+                  "caption": ""
+              },
+              "displayedModels": [],
+              "students": []
+          }
       }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  });
-}
+
+        const communicationChannel = new ServerChannel(userData.data, userType, serverUrl);
+        if (userData) {
+            ClassroomManager.Initialise(config, communicationChannel, [])
+
+            ControllerUI.Show()
+            //const serverComms = new RestServerComms(userData.data,userType);
+            //new Scene(serverComms)
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    });
+  }
