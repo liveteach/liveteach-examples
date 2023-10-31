@@ -1,7 +1,7 @@
 import { Color4 } from "@dcl/sdk/math";
 import { ScreenContentType } from "../enums";
 import { TransformComponent } from "@dcl/sdk/ecs";
-import { Vector3 } from "~system/EngineApi";
+import { Quaternion, Vector3 } from "~system/EngineApi";
 
 export type ScreenConfig = Partial<ScreenConfigType>;
 export type ScreenConfigType = {
@@ -13,6 +13,7 @@ export type ScreenConfigType = {
     // Model content
     unique: boolean
     overiddenPosition: Vector3
+    overiddenRotation: Quaternion
     modelScale: Vector3
     spin: boolean
     spinSpeed: number

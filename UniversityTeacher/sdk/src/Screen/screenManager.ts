@@ -2,7 +2,7 @@ import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
 import { ScreenContent } from "./content/screenContent";
 import { ScreenDisplay } from "./screenDisplay";
-import { Vector3 } from "@dcl/sdk/math";
+import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import { VideoContent } from "./content/videoContent";
 import { DisplayPanel } from "./displayPanel";
 import { ModelContent } from "./content/modelContent";
@@ -150,8 +150,8 @@ export class ScreenManager {
     }
 
     playContent() {
-        ScreenManager.screenDisplays.forEach(display => {
-            display.startContent(this.currentContent.getContent())
+        ScreenManager.screenDisplays.forEach((display,index) => {
+            display.startContent(this.currentContent.getContent(),index)
         });
     }
 
@@ -162,8 +162,8 @@ export class ScreenManager {
     }
 
     unHideContent() {
-        ScreenManager.screenDisplays.forEach(display => {
-            display.unHideContent()
+        ScreenManager.screenDisplays.forEach((display,index) => {
+            display.unHideContent(index)
         });
     }
 
@@ -183,8 +183,8 @@ export class ScreenManager {
         ], ScreenContentType.video)
 
         this.modelContent = new ContentList([
-            new ModelContent({ sourcePath: "models/LessonModels/pizza.glb", modelScale: Vector3.create(3, 3, 3), unique: false, spin: true, spinSpeed: 4 }),
-            new ModelContent({ sourcePath: "models/LessonModels/cake.glb", modelScale: Vector3.create(0.3, 0.3, 0.3), unique: true, overiddenPosition: Vector3.create(0, 0, 0), spin: true, spinSpeed: 40 })
+            new ModelContent({ sourcePath: "models/LessonModels/cake.glb", modelScale: Vector3.create(0.3, 0.3, 0.3), unique: false, spin: true, spinSpeed: 40 }),
+            new ModelContent({ sourcePath: "models/LessonModels/pizza.glb", modelScale: Vector3.create(8, 8, 8), unique: true, overiddenPosition: Vector3.create(8, 8, 8),overiddenRotation: Quaternion.fromEulerDegrees(90,0,180), spin: true, spinSpeed: 4 })
         ], ScreenContentType.model)
     }
 
