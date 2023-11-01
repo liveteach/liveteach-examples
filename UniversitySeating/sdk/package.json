@@ -10,8 +10,8 @@
     "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "7.3.14",
-    "@dcl/sdk": "7.3.14"
+    "@dcl/js-runtime": "7.3.25",
+    "@dcl/sdk": "^7.3.25"
   },
   "engines": {
     "node": ">=16.0.0",
@@ -25,13 +25,10 @@
   },
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.2",
-    "@dclu/dclu-liveteach": "^1.5.8",
+    "@dclu/dclu-liveteach": "1.5.10",
     "dcl-ui-toolkit": "^0.9.1"
   },
   "bundledDependencies": [
-    "dcl-ui-toolkit"
-  ],
-  "bundleDependencies": [
     "dcl-ui-toolkit"
   ]
 }
