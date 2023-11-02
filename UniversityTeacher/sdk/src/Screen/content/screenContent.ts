@@ -1,13 +1,22 @@
 import { Color4 } from "@dcl/sdk/math";
 import { ScreenContentType } from "../enums";
+import { TransformComponent } from "@dcl/sdk/ecs";
+import { Quaternion, Vector3 } from "~system/EngineApi";
 
 export type ScreenConfig = Partial<ScreenConfigType>;
 export type ScreenConfigType = {
-    sourcePath:string // Path to audio, images and video be it internal or external
+    sourcePath:string // Path to audio, 3d, images and video be it internal or external
 
     length: number // Length in miliseconds to show/play content for. -1 is endless.
-
     ratio: number // Increases width by ratio amount for different sized content
+
+    // Model content
+    unique: boolean
+    overiddenPosition: Vector3
+    overiddenRotation: Quaternion
+    modelScale: Vector3
+    spin: boolean
+    spinSpeed: number
 
     // Text content
     text: string // The text that will appear on the screen
