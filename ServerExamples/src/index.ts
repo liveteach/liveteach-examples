@@ -46,7 +46,7 @@ export function main() {
 
         const communicationChannel = new ServerChannel(userData.data, userType, serverUrl);
         if (userData) {
-            ClassroomManager.Initialise(config, communicationChannel, [])
+            ClassroomManager.Initialise(config, communicationChannel, [],[])
 
             ControllerUI.Show()
             //const serverComms = new RestServerComms(userData.data,userType);
