@@ -7,6 +7,7 @@ import { PodiumButton } from "./podiumButton";
 export class Podium {
     entity: Entity
     buttonsEntity: Entity
+    muteButtonGraphic: Entity
 
     previousButton: PodiumButton
     nextButton: PodiumButton
@@ -15,11 +16,14 @@ export class Podium {
     presentationButton: PodiumButton
     videoButton: PodiumButton
     modelButton: PodiumButton
+    muteButton: PodiumButton
+    playButton: PodiumButton
     powerButton: PodiumButton
 
     constructor() {
         this.entity = engine.addEntity()
         this.buttonsEntity = engine.addEntity()
+        this.muteButtonGraphic = engine.addEntity()
 
         Transform.create(this.entity, {
             position: Vector3.create(8, 0, 3),
@@ -34,6 +38,12 @@ export class Podium {
         })
 
         GltfContainer.create(this.buttonsEntity, {src: "models/podium_buttons_on.glb"})
+
+        Transform.create(this.muteButtonGraphic,{
+            parent:this.entity
+        })
+
+        GltfContainer.create(this.muteButtonGraphic, {src: "models/podium_Mute_on.glb"})
 
 
         // Podium screen
@@ -113,7 +123,7 @@ export class Podium {
 
         this.modelButton = new PodiumButton(
             this.entity,
-            Vector3.create(0.3, 1.6, 0.24),
+            Vector3.create(0.28, 1.56, 0.24),
             Quaternion.fromEulerDegrees(0, 0, 45),
             Vector3.create(0.1, 0.05, 0.1),
             "3D",
@@ -123,6 +133,28 @@ export class Podium {
         )
 
         let self = this
+        this.muteButton = new PodiumButton(
+            this.entity,
+            Vector3.create(0.31, 1.625, 0.26),
+            Quaternion.fromEulerDegrees(0, 0, 45),
+            Vector3.create(0.03, 0.025, 0.04),
+            "Mute",
+            ()=>{
+                ScreenManager.toggleMute(self)
+            }
+        )
+
+        this.playButton = new PodiumButton(
+            this.entity,
+            Vector3.create(0.31, 1.625, 0.22),
+            Quaternion.fromEulerDegrees(0, 0, 45),
+            Vector3.create(0.03, 0.025, 0.04),
+            "Play/Pause",
+            ()=>{
+                ScreenManager.playPause()
+            }
+        )
+
         this.powerButton = new PodiumButton(
             this.entity,
             Vector3.create(0.2, 1.5, 0.24),
