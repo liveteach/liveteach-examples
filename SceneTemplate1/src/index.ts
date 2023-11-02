@@ -14,7 +14,7 @@ export function main() {
 
   let entity = engine.addEntity()
   Transform.create(entity, {
-    position: Vector3.create(0, 0, 32),
+    position: Vector3.create(0, 0.02, 32),
     rotation: Quaternion.fromEulerDegrees(0, 0, 0),
     scale: Vector3.create(1, 1, 1)
   })
