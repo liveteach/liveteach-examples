@@ -1,7 +1,8 @@
-import { ClassPacket, StudentCommInfo, Classroom, ClassContentPacket } from "@dclu/dclu-liveteach/src/classroom/classroomObjects";
+
 import { ServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/serverChannel";
 import { UserData } from "~system/UserIdentity";
 import { RestServerComms } from "./RestServerComms";
+import { ClassContentPacket, ClassPacket, Classroom, StudentCommInfo } from "@dclu/dclu-liveteach/src/classroom/classroomTypes";
 
 export class CustomServerChannel extends ServerChannel{
 

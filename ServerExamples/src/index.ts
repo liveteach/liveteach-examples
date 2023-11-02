@@ -6,11 +6,10 @@ import { UserData } from "~system/Players"
 import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
 import { ServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/serverChannel"
 import { ControllerUI } from '@dclu/dclu-liveteach/src/classroom/ui/controllerUI'
-import { CustomServerChannel } from './messaging/CustomServerChannel'
 
 export function main() {
     let userData: GetUserDataResponse | null = null; // Initialize as null
-    let serverUrl = "ws://localhost:8080/websocket"
+    let serverUrl = "ws://localhost:3000"
 
    
     executeTask(async () => {
@@ -45,13 +44,13 @@ export function main() {
           }
       }
 
-        const communicationChannel = new CustomServerChannel(userData.data, userType, serverUrl);
+        const communicationChannel = new ServerChannel(userData.data, userType, serverUrl);
         if (userData) {
-            ClassroomManager.Initialise(config, communicationChannel, [])
+            ClassroomManager.Initialise(config, communicationChannel, [],[])
 
             ControllerUI.Show()
-            const serverComms = new RestServerComms(userData.data,userType);
-    
+            //const serverComms = new RestServerComms(userData.data,userType);
+            //new Scene(serverComms)
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
