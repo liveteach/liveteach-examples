@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { GltfContainer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs";
-=======
-import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
->>>>>>> 499191c (Teach-143 internal server example implementation)
+import { Entity, GltfContainer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
 import { ScreenDisplay } from "./screenDisplay";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
@@ -13,6 +9,7 @@ import { ScreenContentType } from "./enums";
 import { ContentList } from "./content/contentList";
 import { Toaster } from "../NotificationSystem/Toaster";
 import { Podium } from "../podium";
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom";
 
 export class ScreenManager {
 
@@ -28,6 +25,8 @@ export class ScreenManager {
     poweredOn: boolean = true
 
     static instance: ScreenManager
+    
+    static muted: boolean = false
 
     constructor() {
         this.loadContent()
@@ -107,6 +106,20 @@ export class ScreenManager {
         ScreenManager.instance.playContent()
     }
 
+    static toggleMute(_podium: Podium){
+        ScreenManager.muted = !ScreenManager.muted
+
+        if(ScreenManager.muted){
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_off.glb" })
+        } else {
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_on.glb" })
+        }
+    }
+
+    static playPause(){
+
+    }
+
     static powerToggle(_podium: Podium) {
         let instance = ScreenManager.instance
 
@@ -133,6 +146,7 @@ export class ScreenManager {
 
         if (instance.poweredOn) {
             GltfContainer.createOrReplace(_podium.buttonsEntity, { src: "models/podium_buttons_on.glb" })
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_on.glb" })
             _podium.previousButton.show()
             _podium.nextButton.show()
             _podium.endButton.show()
@@ -140,8 +154,11 @@ export class ScreenManager {
             _podium.presentationButton.show()
             _podium.videoButton.show()
             _podium.modelButton.show()
+            _podium.muteButton.show()
+            _podium.playButton.show()
         } else {
             GltfContainer.createOrReplace(_podium.buttonsEntity, { src: "models/podium_buttons_off.glb" })
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_noPower.glb" })
             _podium.previousButton.hide()
             _podium.nextButton.hide()
             _podium.endButton.hide()
@@ -149,24 +166,16 @@ export class ScreenManager {
             _podium.presentationButton.hide()
             _podium.videoButton.hide()
             _podium.modelButton.hide()
+            _podium.muteButton.hide()
+            _podium.playButton.hide()
+            ScreenManager.muted = false
         }
     }
 
     playContent() {
+        const content = this.currentContent.getContent()
         ScreenManager.screenDisplays.forEach((display,index) => {
-            display.startContent(this.currentContent.getContent(),index)
-        });
-    }
-
-    hideContent() {
-        ScreenManager.screenDisplays.forEach((display,index) => {
-            display.hideContent(index)
-        });
-    }
-
-    unHideContent() {
-        ScreenManager.screenDisplays.forEach((display,index) => {
-            display.unHideContent(index)
+            display.startContent(content,index)
         });
 
         switch (content.contentType) {
@@ -186,6 +195,18 @@ export class ScreenManager {
                 })
                 break
         }
+    }
+
+    hideContent() {
+        ScreenManager.screenDisplays.forEach((display,index) => {
+            display.hideContent(index)
+        });
+    }
+
+    unHideContent() {
+        ScreenManager.screenDisplays.forEach((display,index) => {
+            display.unHideContent(index)
+        });
     }
 
     loadContent() {
