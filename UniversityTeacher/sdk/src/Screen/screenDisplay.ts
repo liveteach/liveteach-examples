@@ -54,17 +54,6 @@ export class ScreenDisplay {
         }
     }
 
-    hideContent(index: number) {
-        console.log("hide content")
-        Transform.getMutable(this.baseEntity).scale = Vector3.Zero()
-
-        if(index==0 && ScreenDisplay.currentContent!=undefined){
-            if(ScreenDisplay.currentContent.configuration.unique){
-                Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
-            }
-        }
-    }
-
     unHideContent(index: number) {
         console.log("unhide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.One()
@@ -174,21 +163,6 @@ export class ScreenDisplay {
 
                 yRotation += _dt * ScreenDisplay.currentContent.configuration.spinSpeed
                 
-
-                Transform.getMutable(this.modelEntity).rotation = Quaternion.fromEulerDegrees(xRotation, yRotation, zRotation)
-            }
-        }
-    }
-
-    update(_dt: number) {
-        if (this.modelEntity != undefined && ScreenDisplay.currentContent.configuration.spin != undefined) {
-            if (ScreenDisplay.currentContent.configuration.spin) {
-                let yRotation: number = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).y
-                let xRotation = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).x
-                let zRotation = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).z
-
-                yRotation += _dt * ScreenDisplay.currentContent.configuration.spinSpeed
-
 
                 Transform.getMutable(this.modelEntity).rotation = Quaternion.fromEulerDegrees(xRotation, yRotation, zRotation)
             }
