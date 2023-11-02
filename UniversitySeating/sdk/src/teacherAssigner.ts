@@ -1,7 +1,8 @@
 import { Entity, InputAction, MeshCollider, MeshRenderer, PointerEvents, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
 import { Vector3 } from "@dcl/sdk/math";
-import { User, UserManager } from "./user";
-import { UserType } from "./enums";
+import { UserType } from "@dclu/dclu-liveteach/src/enums";
+
+import { UserManager } from "@dclu/dclu-liveteach/src/seating/user";
 
 export class TeacherAssigner {
     constructor(){

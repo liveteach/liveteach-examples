@@ -1,5 +1,5 @@
 import { Color3, Quaternion, Vector3 } from "@dcl/sdk/math";
-import { Entity, GltfContainer, Material, MeshRenderer, PBMaterial, TextureUnion, Transform, VideoPlayer, VideoTexture, engine } from "@dcl/sdk/ecs"
+import { Entity, GltfContainer, Material, MeshRenderer, TextureUnion, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs"
 import { ScreenContent } from "./content/screenContent";
 import { ScreenContentType } from "./enums";
 import { VideoContent } from "./content/videoContent";
@@ -41,7 +41,17 @@ export class ScreenDisplay {
         Transform.create(this.entity, { parent: this.baseScreenEntity, scale: _scale })
 
         MeshRenderer.setPlane(this.entity)
+    }
 
+    hideContent(index: number) {
+        console.log("hide content")
+        Transform.getMutable(this.baseEntity).scale = Vector3.Zero()
+
+        if (index == 0 && ScreenDisplay.currentContent != undefined) {
+            if (ScreenDisplay.currentContent.configuration.unique) {
+                Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
+            }
+        }
     }
 
     hideContent(index: number) {
@@ -55,6 +65,14 @@ export class ScreenDisplay {
         }
     }
 
+    unHideContent(index: number) {
+        console.log("unhide content")
+        Transform.getMutable(this.baseEntity).scale = Vector3.One()
+        this.startContent(ScreenDisplay.currentContent, index)
+    }
+
+    startContent(_content: ScreenContent, index: number) {
+        console.log("start content")
     unHideContent(index: number) {
         console.log("unhide content")
         Transform.getMutable(this.baseEntity).scale = Vector3.One()
@@ -130,7 +148,7 @@ export class ScreenDisplay {
                         )
                         GltfContainer.createOrReplace(this.modelEntity, { src: _content.configuration.sourcePath })
                     } else {
-                        if(this.modelEntity !=undefined){
+                        if (this.modelEntity != undefined) {
                             Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
                         }
                     }
@@ -164,6 +182,21 @@ export class ScreenDisplay {
 
                 yRotation += _dt * ScreenDisplay.currentContent.configuration.spinSpeed
                 
+
+                Transform.getMutable(this.modelEntity).rotation = Quaternion.fromEulerDegrees(xRotation, yRotation, zRotation)
+            }
+        }
+    }
+
+    update(_dt: number) {
+        if (this.modelEntity != undefined && ScreenDisplay.currentContent.configuration.spin != undefined) {
+            if (ScreenDisplay.currentContent.configuration.spin) {
+                let yRotation: number = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).y
+                let xRotation = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).x
+                let zRotation = Quaternion.toEulerAngles(Transform.getMutable(this.modelEntity).rotation).z
+
+                yRotation += _dt * ScreenDisplay.currentContent.configuration.spinSpeed
+
 
                 Transform.getMutable(this.modelEntity).rotation = Quaternion.fromEulerDegrees(xRotation, yRotation, zRotation)
             }

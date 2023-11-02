@@ -1,4 +1,4 @@
-import { Entity, Material, PBVideoPlayer, TextureUnion, VideoPlayer, engine } from "@dcl/sdk/ecs";
+import { Entity, Material, TextureUnion, VideoPlayer, engine } from "@dcl/sdk/ecs";
 import { ScreenContentType } from "../enums";
 import { ScreenConfig, ScreenContent } from "./screenContent";
 
@@ -7,7 +7,7 @@ export class VideoContent extends ScreenContent {
     videoEntity: Entity
     videoTexture: TextureUnion
 
-    constructor(_screenConfig:ScreenConfig){
+    constructor(_screenConfig: ScreenConfig) {
         super(ScreenContentType.video, _screenConfig)
 
         this.videoEntity = engine.addEntity()
@@ -31,7 +31,7 @@ export class VideoContent extends ScreenContent {
         throw new Error("Method not implemented.");
     }
 
-    update(_dt:number){
+    update(_dt: number) {
         super.update(_dt)
     }
 
