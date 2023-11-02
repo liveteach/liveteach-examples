@@ -25,13 +25,7 @@ export function main() {
 
     setupUi()
     const communicationChannel = new PeerToPeerChannel()
-    ClassroomManager.Initialise(classroomConfig, communicationChannel, ScreenManager.screenDisplays.map((screenDisplay) => screenDisplay.entity),
-        ScreenManager.instance.videoContent.content.map((content) => {
-            return {
-                src: content.configuration.sourcePath,
-                entity: (content as VideoContent).videoEntity
-            }
-        }))
+   // ClassroomManager.Initialise(classroomConfig, communicationChannel)
 
     ControllerUI.Show()
 }

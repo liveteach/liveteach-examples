@@ -1,4 +1,4 @@
-import { GltfContainer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs";
+import { Entity, GltfContainer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs";
 import { ImageContent } from "./content/imageContent";
 import { ScreenDisplay } from "./screenDisplay";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
@@ -25,6 +25,8 @@ export class ScreenManager {
     poweredOn: boolean = true
 
     static instance: ScreenManager
+    
+    static muted: boolean = false
 
     constructor() {
         this.loadContent()
@@ -104,6 +106,20 @@ export class ScreenManager {
         ScreenManager.instance.playContent()
     }
 
+    static toggleMute(_podium: Podium){
+        ScreenManager.muted = !ScreenManager.muted
+
+        if(ScreenManager.muted){
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_off.glb" })
+        } else {
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_on.glb" })
+        }
+    }
+
+    static playPause(){
+
+    }
+
     static powerToggle(_podium: Podium) {
         let instance = ScreenManager.instance
 
@@ -130,6 +146,7 @@ export class ScreenManager {
 
         if (instance.poweredOn) {
             GltfContainer.createOrReplace(_podium.buttonsEntity, { src: "models/podium_buttons_on.glb" })
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_on.glb" })
             _podium.previousButton.show()
             _podium.nextButton.show()
             _podium.endButton.show()
@@ -137,8 +154,11 @@ export class ScreenManager {
             _podium.presentationButton.show()
             _podium.videoButton.show()
             _podium.modelButton.show()
+            _podium.muteButton.show()
+            _podium.playButton.show()
         } else {
             GltfContainer.createOrReplace(_podium.buttonsEntity, { src: "models/podium_buttons_off.glb" })
+            GltfContainer.createOrReplace(_podium.muteButtonGraphic, { src: "models/podium_mute_noPower.glb" })
             _podium.previousButton.hide()
             _podium.nextButton.hide()
             _podium.endButton.hide()
@@ -146,6 +166,9 @@ export class ScreenManager {
             _podium.presentationButton.hide()
             _podium.videoButton.hide()
             _podium.modelButton.hide()
+            _podium.muteButton.hide()
+            _podium.playButton.hide()
+            ScreenManager.muted = false
         }
     }
 
