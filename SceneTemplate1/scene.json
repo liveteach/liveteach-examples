@@ -16,9 +16,10 @@
 	"tags": [],
 	"scene": {
 		"parcels": [
-			"-8,109","-7,109",
-			"-8,108","-7,108"
-			
+			"-8,109",
+			"-7,109",
+			"-8,108",
+			"-7,108"
 		],
 		"base": "-8,108"
 	},
@@ -49,7 +50,11 @@
 	],
 	"requiredPermissions": [
 		"ALLOW_TO_TRIGGER_AVATAR_EMOTE",
-		"ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE"
+		"ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE",
+		"ALLOW_MEDIA_HOSTNAMES"
+	],
+	"allowedMediaHostnames": [
+		"demo.unified-streaming.com"
 	],
 	"featureToggles": {}
 }
