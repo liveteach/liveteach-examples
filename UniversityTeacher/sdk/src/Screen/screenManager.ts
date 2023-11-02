@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { GltfContainer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs";
+=======
+import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs";
+>>>>>>> 499191c (Teach-143 internal server example implementation)
 import { ImageContent } from "./content/imageContent";
 import { ScreenDisplay } from "./screenDisplay";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";

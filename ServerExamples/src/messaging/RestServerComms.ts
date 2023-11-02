@@ -4,6 +4,7 @@ import { GetCurrentRealmResponse, getCurrentRealm } from "~system/EnvironmentApi
 import { executeTask } from "@dcl/sdk/ecs"
 import { ReferenceServerWebsocketManager } from "@dclu/dclu-liveteach/src/classroom/websocket/ReferenceServerWebsocketManager";
 export class RestServerComms {
+
     static serverUrl: string = "http://localhost:8080/"
     private static realm: GetCurrentRealmResponse | null = null
     public static user: UserData
@@ -17,18 +18,19 @@ export class RestServerComms {
         RestServerComms.user = user
         RestServerComms.userType = userType
         if(userType === "teacher"){
-            this.getGuid()
+            RestServerComms.getGuid()
         }
         
     }
 
-    public sendMessage(message: string, topic: string, from: string) {
+    static sendMessage(topic: string, message: string, payload:object,  from: string) {
         let walletAddress: string = RestServerComms.user.publicKey || "GUEST_" + RestServerComms.user.userId
         return executeTask(async ()=>{
             try {
                 let reqObj = {
                     classId: "b8b3ca99-87d1-4133-90da-529537ef42c9",
                     message:message,
+                    payload: payload,
                     user: walletAddress,
                     guid: ReferenceServerWebsocketManager.guid,
                     topic: topic,
@@ -52,7 +54,7 @@ export class RestServerComms {
         })
     }
 
-    public getGuid() {
+    static getGuid() {
         let walletAddress: string = RestServerComms.user.publicKey || "GUEST_" + RestServerComms.user.userId
         return executeTask(async ()=>{
             try {
