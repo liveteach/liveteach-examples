@@ -1,4 +1,4 @@
-import { GltfContainer, Transform, engine } from "@dcl/sdk/ecs"
+import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Toaster } from "@dclu/dclu-liveteach/src/notifications"
 import { Podium } from "./podium"
@@ -22,26 +22,23 @@ export function main() {
 
   //new Toaster()
   new AudioManager()
-  new Podium()
+  const podium = new Podium()
 
-  new DisplayPanel(Vector3.create(3, 0, 8.1), Vector3.create(0, 180, 0), Vector3.create(0.5, 0.5, 0.5))
-  new DisplayPanel(Vector3.create(8, 0, 8.1), Vector3.create(0, 180, 0), Vector3.create(1, 1, 1))
-  new DisplayPanel(Vector3.create(13.1, 0, 8.1), Vector3.create(0, 225, 0), Vector3.create(1, 1, 1))
+  const screen1 = new DisplayPanel(Vector3.create(23, 1.9, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
+  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.9, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
+  const screen3 = new DisplayPanel(Vector3.create(23.5, 1.9, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
 
   const communicationChannel = new PeerToPeerChannel()
   ClassroomManager.Initialise(classroomConfig, communicationChannel)
 
   ControllerUI.Show()
 
-  addScreens()
+  addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
+  addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
+  addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
+  addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
 }
 
-export function addScreens(): void {
-  // Podium screen
-  ClassroomManager.AddScreen(Vector3.create(8.06, 1.7, 3.35), Quaternion.fromEulerDegrees(45, 0, 0), Vector3.create(0.2, 0.2, 0.2))
-
-  // Main screens
-  ClassroomManager.AddScreen(Vector3.create(3, 1.3, 8.05), Quaternion.fromEulerDegrees(0, 0, 0), Vector3.create(1.42, 1.42, 1.42))
-  ClassroomManager.AddScreen(Vector3.create(8, 2.6, 8), Quaternion.fromEulerDegrees(0, 0, 0), Vector3.create(2.84, 2.84, 2.84))
-  ClassroomManager.AddScreen(Vector3.create(13, 2.6, 8), Quaternion.fromEulerDegrees(0, 45, 0), Vector3.create(2.84, 2.84, 2.84))
+export function addScreen(_position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {
+  ClassroomManager.AddScreen(_position, _rotation, _scale, _parent)
 }
