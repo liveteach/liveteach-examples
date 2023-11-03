@@ -7,9 +7,9 @@
         "classDescription": "",
         "location": "classroom_1",
         "origin": {
-            "x": 0,
-            "y": 0,
-            "z": 0
+            "x": 16,
+            "y": 1,
+            "z": 16
         },
         "volume": {
             "x": 10,
