@@ -42,10 +42,18 @@ export class ScreenDisplay {
 
         MeshRenderer.setPlane(this.entity)
         VideoPlayer.create(this.entity)
-
-        ScreenDisplay.instances.push(this)
-
     }
+
+    hideContent(index: number) { 
+        console.log("hide content") 
+        Transform.getMutable(this.baseEntity).scale = Vector3.Zero() 
+ 
+        if (index == 0 && ScreenDisplay.currentContent != undefined) { 
+            if (ScreenDisplay.currentContent.configuration.unique) { 
+                Transform.getMutable(this.modelEntity).scale = Vector3.Zero() 
+            } 
+        } 
+    } 
 
     unHideContent(index: number) {
         console.log("unhide content")
