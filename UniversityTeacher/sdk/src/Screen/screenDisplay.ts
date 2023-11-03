@@ -41,18 +41,19 @@ export class ScreenDisplay {
         Transform.create(this.entity, { parent: this.baseScreenEntity, scale: _scale })
 
         MeshRenderer.setPlane(this.entity)
+        VideoPlayer.create(this.entity)
     }
 
-    hideContent(index: number) {
-        console.log("hide content")
-        Transform.getMutable(this.baseEntity).scale = Vector3.Zero()
-
-        if (index == 0 && ScreenDisplay.currentContent != undefined) {
-            if (ScreenDisplay.currentContent.configuration.unique) {
-                Transform.getMutable(this.modelEntity).scale = Vector3.Zero()
-            }
-        }
-    }
+    hideContent(index: number) { 
+        console.log("hide content") 
+        Transform.getMutable(this.baseEntity).scale = Vector3.Zero() 
+ 
+        if (index == 0 && ScreenDisplay.currentContent != undefined) { 
+            if (ScreenDisplay.currentContent.configuration.unique) { 
+                Transform.getMutable(this.modelEntity).scale = Vector3.Zero() 
+            } 
+        } 
+    } 
 
     unHideContent(index: number) {
         console.log("unhide content")
