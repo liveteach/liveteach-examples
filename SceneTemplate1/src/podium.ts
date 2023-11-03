@@ -25,7 +25,7 @@ export class Podium {
         this.muteButtonGraphic = engine.addEntity()
 
         Transform.create(this.entity, {
-            position: Vector3.create(21.1, 2, 16),
+            position: Vector3.create(21.1, 1.8, 16),
             rotation: Quaternion.fromEulerDegrees(0, 180, 0),
             scale: Vector3.create(1, 1, 1)
         })

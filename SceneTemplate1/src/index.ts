@@ -32,9 +32,9 @@ export function main() {
   new AudioManager()
   const podium = new Podium()
 
-  const screen1 = new DisplayPanel(Vector3.create(23, 1.9, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
-  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.9, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1)) 
-  const screen3 = new DisplayPanel(Vector3.create(23.5, 1.9, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
+  const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
+  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1)) 
+  const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
 
   const communicationChannel = new PeerToPeerChannel()
   ClassroomManager.Initialise(classroomConfig, communicationChannel)
