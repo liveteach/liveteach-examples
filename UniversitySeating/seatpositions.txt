@@ -1,10 +1,10 @@
 import bpy
 from math import pi
 
-file = open("C:\\UniversitySeating\\sdk\\src\\UniversitySeatingData.ts", "w")
+file = open("W:\\WarpWork\\liveteach-example-scenes\\SceneTemplate1\\src\\UniversitySeatingData.ts", "w")
 file.write("import { Vector3 } from \"@dcl/sdk/math\";\n")
 file.write("export class SeatingData{\n")
-file.write("static seats = [\n")
+file.write("seats = [\n")
 
 index = 0
 
@@ -15,7 +15,8 @@ for obj in sel_objs:
     rot = obj.rotation_euler
     file.write("\t\tid: " + str(index) + ",\n")
     file.write("\t\tposition: Vector3.create(" + str(-pos.x) + ", " + str(pos.z) + ", " + str(-pos.y) + "),\n")
-    file.write("\t\trotation: Vector3.create(" + str(-rot.x * 180 / pi) + ", " + str(-rot.z * 180 / pi) + ", " + str(rot.y * 180 / pi) + ")")
+    file.write("\t\trotation: Vector3.create(" + str(-rot.x * 180 / pi) + ", " + str(-rot.z * 180 / pi) + ", " + str(rot.y * 180 / pi) + "),\n")
+    file.write("\t\tlookAtTarget: Vector3.Zero()")
     file.write("\t},\n")
     index+=1
     
