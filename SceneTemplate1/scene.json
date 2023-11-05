@@ -54,7 +54,8 @@
 		"ALLOW_MEDIA_HOSTNAMES"
 	],
 	"allowedMediaHostnames": [
-		"demo.unified-streaming.com"
+		"demo.unified-streaming.com",
+		"5eb7131de84bb.streamlock.net"
 	],
 	"featureToggles": {}
 }
