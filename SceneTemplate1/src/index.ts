@@ -55,15 +55,16 @@ export function main() {
     seat.lookAtTarget = Vector3.create(29.77,0.90,15.94)
   });
 
-  //Debugging 
+  //Debugging  
   // seatingData.seats.forEach(seat => {
   //   let entity: Entity = engine.addEntity()
   //   Transform.create(entity, {position:seat.position, rotation: Quaternion.fromEulerDegrees(seat.rotation.x,seat.rotation.y,seat.rotation.z)})
   //   MeshRenderer.setBox(entity)
   // });
-
+ 
   
-  new dclu.seating.SeatingController(seatingData,Vector3.create(12,3,19),Vector3.create(10,7,12),false)
+  //new dclu.seating.SeatingController(seatingData,Vector3.create(12,3,19),Vector3.create(10,7,12),true) // removing hide volume until exclude ID's are fully working in DCL
+  new dclu.seating.SeatingController(seatingData,Vector3.create(12,-50,19),Vector3.create(10,7,12),true) // Put the volume underground for now
 }
 
 export function addScreen(_position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {
