@@ -2,15 +2,15 @@
 	"ecs7": true,
 	"runtimeVersion": "7",
 	"display": {
-		"title": "SDK7 Scene Template",
-		"description": "template scene with SDK7",
+		"title": "LiveTeach Server Example",
+		"description": "Example Scene to demonstrate how to use the LiveTeach reference server.",
 		"navmapThumbnail": "images/scene-thumbnail.png",
 		"favicon": "favicon_asset"
 	},
-	"owner": "",
+	"owner": "DCLU",
 	"contact": {
-		"name": "SDK",
-		"email": ""
+		"name": "LiveTeach",
+		"email": "info@liveteach.io"
 	},
 	"main": "bin/index.js",
 	"tags": [],
