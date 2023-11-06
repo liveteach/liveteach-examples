@@ -25,6 +25,6 @@
     "trailingComma": "none"
   },
   "dependencies": {
-    "@dclu/dclu-liveteach": "^1.7.2"
+    "@dclu/dclu-liveteach": "^1.7.4"
   }
 }
