@@ -1,4 +1,4 @@
-import { Entity, GltfContainer, MeshRenderer, Transform, engine } from "@dcl/sdk/ecs"
+import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Toaster } from "@dclu/dclu-liveteach/src/notifications"
 import { Podium } from "./podium"
