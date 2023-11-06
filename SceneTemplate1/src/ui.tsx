@@ -4,7 +4,7 @@ import { Render } from '@dclu/dclu-liveteach/src/setup/ui'
 
 const uiComponent = () => (
     [
-      seatingUIComponent(),
+      //seatingUIComponent(), // Hide seat UI for now
       Render()
     ]
   )
