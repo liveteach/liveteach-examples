@@ -11,6 +11,7 @@ import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 import * as dclu from '@dclu/dclu-liveteach'
 import { SeatingData } from "./UniversitySeatingData"
 import * as ecs from "@dcl/sdk/ecs"
+import { Door } from "./door"
 
 export function main() {
   dclu.setup({
@@ -18,7 +19,7 @@ export function main() {
     Logger: null
   })
   setupUi()
-  
+
 
   let entity = engine.addEntity()
   Transform.create(entity, {
@@ -33,7 +34,7 @@ export function main() {
   const podium = new Podium()
 
   const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
-  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1)) 
+  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
   const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
 
   const communicationChannel = new PeerToPeerChannel()
@@ -47,12 +48,12 @@ export function main() {
   addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
 
   // Add seating 
-  let seatingData :SeatingData = new SeatingData()
+  let seatingData: SeatingData = new SeatingData()
   // Apply offset
   let offset = Vector3.create(0, 0, 32)
-  seatingData.seats.forEach(seat => { 
+  seatingData.seats.forEach(seat => {
     seat.position = Vector3.add(seat.position, offset)
-    seat.lookAtTarget = Vector3.create(29.77,0.90,15.94)
+    seat.lookAtTarget = Vector3.create(29.77, 0.90, 15.94)
   });
 
   //Debugging  
@@ -61,12 +62,28 @@ export function main() {
   //   Transform.create(entity, {position:seat.position, rotation: Quaternion.fromEulerDegrees(seat.rotation.x,seat.rotation.y,seat.rotation.z)})
   //   MeshRenderer.setBox(entity)
   // });
- 
-  
+
+
   //new dclu.seating.SeatingController(seatingData,Vector3.create(12,3,19),Vector3.create(10,7,12),true) // removing hide volume until exclude ID's are fully working in DCL
-  new dclu.seating.SeatingController(seatingData,Vector3.create(12,-50,19),Vector3.create(10,7,12),true) // Put the volume underground for now
+  new dclu.seating.SeatingController(seatingData, Vector3.create(12, -50, 19), Vector3.create(10, 7, 12), true) // Put the volume underground for now
+
+  const doorParent = engine.addEntity()
+  Transform.create(doorParent, {
+    position: Vector3.create(0, 0, 32)
+  })
+
+  addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
 }
 
 export function addScreen(_position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {
   ClassroomManager.AddScreen(_position, _rotation, _scale, _parent)
+}
+
+export function addDoor(_parent: Entity, _model: string, _triggerShape: {
+  type: "sphere",
+  position: Vector3.MutableVector3;
+  radius: number;
+}[]) {
+  const door = new Door(_parent, _model, _triggerShape)
+  return door
 }
