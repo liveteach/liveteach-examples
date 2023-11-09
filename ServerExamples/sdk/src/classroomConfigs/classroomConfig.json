@@ -1,0 +1,42 @@
+{
+    "classroom": {
+        "guid": "382c74c3-721d-4f34-80e5-57657b6cbc27",
+        "teacherID": "0xA34CEbc5957c6a9A0240537FFeA51C94361179B8",
+        "teacherName": "",
+        "className": "",
+        "classDescription": "",
+        "location": "classroom_1",
+        "origin": {
+            "x": 16,
+            "y": 1,
+            "z": 16
+        },
+        "volume": {
+            "x": 10,
+            "y": 10,
+            "z": 10
+        },
+        "autojoin": true,
+        "capacity": "20",
+        "duration": "60",
+        "seatingEnabled": true,
+        "videoPlaying": false,
+        "skybox": "default",
+        "displayedImage": {
+            "src": ""
+        },
+        "displayedVideo": {
+            "src": ""
+        },
+        "displayedModel": {
+            "src": "",
+            "animations": [],
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        },
+        "students": []
+    }
+}
