@@ -197,6 +197,7 @@ export class Podium {
             () => {
                 ClassroomManager.screenManager?.powerToggle()
                 if (ClassroomManager.screenManager?.poweredOn) {
+                    ClassroomManager.StartContentUnit(ClassroomManager.activeContent.contentUnits[0].key, ClassroomManager.activeContent.contentUnits[0].data)
                     GltfContainer.createOrReplace(self.buttonsEntity, { src: "models/podium_buttons_on.glb" })
                     GltfContainer.createOrReplace(self.muteButtonGraphic, { src: "models/podium_mute_on.glb" })
                     GltfContainer.createOrReplace(self.playPauseButtonGraphic, { src: "models/podium_playpause_on.glb" })

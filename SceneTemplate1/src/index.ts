@@ -12,6 +12,7 @@ import * as dclu from '@dclu/dclu-liveteach'
 import { SeatingData } from "./UniversitySeatingData"
 import * as ecs from "@dcl/sdk/ecs"
 import { Door } from "./door"
+import { Poll } from "../contentUnits/poll/poll"
 
 export function main() {
   dclu.setup({
@@ -73,6 +74,9 @@ export function main() {
   })
 
   addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
+
+  //Register content units
+  ClassroomManager.RegisterContentUnit("poll", new Poll())
 }
 
 export function addScreen(_position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {
