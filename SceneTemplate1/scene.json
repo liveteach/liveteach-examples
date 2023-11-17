@@ -54,6 +54,7 @@
 		"ALLOW_MEDIA_HOSTNAMES"
 	],
 	"allowedMediaHostnames": [
+		"decentraland.org",
 		"demo.unified-streaming.com",
 		"5eb7131de84bb.streamlock.net"
 	],
