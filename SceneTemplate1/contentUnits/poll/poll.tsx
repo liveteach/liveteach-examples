@@ -41,9 +41,11 @@ export class Poll implements IContentUnit {
     update(_data: any): void {
         const isStudent = ClassroomManager.classController?.isStudent()
         if (isStudent) {
-            for (let i = 0; i < this.options.length; i++) {
-                this.votes[i] = _data[i]
-                this.voteLabels[i].value = this.votes[i]
+            if (this.votedIndex >= 0) {
+                for (let i = 0; i < this.options.length; i++) {
+                    this.votes[i] = _data[i]
+                    this.voteLabels[i].value = this.votes[i]
+                }
             }
         }
         else {
@@ -61,13 +63,13 @@ export class Poll implements IContentUnit {
             style: ui.PromptStyles.DARK,
             height: height,
             onClose: () => {
-                if(!isStudent) {
+                if (!isStudent) {
                     ClassroomManager.EndContentUnit()
                 }
             }
         })
 
-        if(isStudent) {
+        if (isStudent) {
             this.pollPrompt.closeIcon.width = 0
             this.pollPrompt.closeIcon.height = 0
         }
