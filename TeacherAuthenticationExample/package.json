@@ -1,7 +1,7 @@
 {
-  "name": "dcl-project",
+  "name": "liveteach-teacher-authentication-example",
   "version": "1.0.0",
-  "description": "SDK7 Template scene",
+  "description": "LiveTeach teacher authentication example scene",
   "scripts": {
     "start": "sdk-commands start",
     "deploy": "sdk-commands deploy",
@@ -12,7 +12,7 @@
   "devDependencies": {
     "@dcl/asset-packs": "latest",
     "@dcl/js-runtime": "7.3.28",
-    "@dcl/sdk": "^7.3.28"
+    "@dcl/sdk": "latest"
   },
   "engines": {
     "node": ">=16.0.0",
