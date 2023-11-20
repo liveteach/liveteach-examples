@@ -39,7 +39,7 @@ export function main() {
   const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
 
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(classroomConfig, communicationChannel)
+  ClassroomManager.Initialise(classroomConfig, communicationChannel, true)
 
   ControllerUI.Show()
 
