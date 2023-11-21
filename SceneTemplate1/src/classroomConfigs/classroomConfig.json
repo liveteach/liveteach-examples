@@ -19,7 +19,6 @@
         "capacity": "20",
         "duration": "60",
         "seatingEnabled": true,
-        "videoPlaying": false,
         "displayedImage": {
             "src": ""
         },
