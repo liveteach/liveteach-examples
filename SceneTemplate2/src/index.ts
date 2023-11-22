@@ -1,6 +1,5 @@
 import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
-import { Toaster } from "@dclu/dclu-liveteach/src/notifications"
 import { Podium } from "./podium"
 import { AudioManager } from "./audioManager"
 import { setupUi } from "./ui"
@@ -53,7 +52,7 @@ export function main() {
 
       userData = await getUserData({});
         
-        //Is the user the Teacher
+      //Is the user the Teacher
       let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID.toLocaleLowerCase() ? "teacher" : "student";
       //setup Server Parameters for the Websocket Server
       let params: ServerParams = {

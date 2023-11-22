@@ -2,8 +2,8 @@
 	"ecs7": true,
 	"runtimeVersion": "7",
 	"display": {
-		"title": "LiveTeach Scene Template 1",
-		"description": "An example of a fully featured LiveTeach classroom activated with Peer to Peer comms.",
+		"title": "LiveTeach Scene Template 2",
+		"description": "An example of a fully featured LiveTeach classroom activated with Reference Server comms.",
 		"navmapThumbnail": "images/scene-thumbnail.png",
 		"favicon": "favicon_asset"
 	},
