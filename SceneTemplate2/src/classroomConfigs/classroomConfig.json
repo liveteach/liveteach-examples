@@ -5,7 +5,6 @@
         "teacherName": "",
         "className": "",
         "classDescription": "",
-        "location": "classroom_1",
         "origin": {
             "x": 16,
             "y": 1,
@@ -21,7 +20,6 @@
         "duration": "60",
         "seatingEnabled": true,
         "videoPlaying": false,
-        "skybox": "default",
         "displayedImage": {
             "src": ""
         },
