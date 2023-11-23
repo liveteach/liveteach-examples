@@ -19,21 +19,6 @@
         "capacity": "20",
         "duration": "60",
         "seatingEnabled": true,
-        "displayedImage": {
-            "src": ""
-        },
-        "displayedVideo": {
-            "src": ""
-        },
-        "displayedModel": {
-            "src": "",
-            "animations": [],
-            "position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            }
-        },
         "students": []
     }
 }
