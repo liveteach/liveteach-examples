@@ -1,7 +1,7 @@
 {
-  "name": "liveteach-teacher-authentication-example",
+  "name": "liveteach-teacher-content-example",
   "version": "1.0.0",
-  "description": "LiveTeach teacher authentication example scene",
+  "description": "LiveTeach teacher content example scene",
   "scripts": {
     "start": "sdk-commands start",
     "deploy": "sdk-commands deploy",
