@@ -11,9 +11,9 @@
             "z": 16
         },
         "volume": {
-            "x": 10,
+            "x": 20,
             "y": 10,
-            "z": 10
+            "z": 20
         },
         "autojoin": true,
         "capacity": "20",
