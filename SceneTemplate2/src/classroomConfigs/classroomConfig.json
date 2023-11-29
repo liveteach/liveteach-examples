@@ -11,30 +11,14 @@
             "z": 16
         },
         "volume": {
-            "x": 10,
+            "x": 20,
             "y": 10,
-            "z": 10
+            "z": 20
         },
         "autojoin": true,
         "capacity": "20",
         "duration": "60",
         "seatingEnabled": true,
-        "videoPlaying": false,
-        "displayedImage": {
-            "src": ""
-        },
-        "displayedVideo": {
-            "src": ""
-        },
-        "displayedModel": {
-            "src": "",
-            "animations": [],
-            "position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            }
-        },
         "students": []
     }
 }
