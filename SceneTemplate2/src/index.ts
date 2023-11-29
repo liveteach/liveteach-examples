@@ -57,8 +57,7 @@ export function main() {
       //setup Server Parameters for the Websocket Server
       let params: ServerParams = {
         serverUrl: serverUrl,
-        role: userType,
-        _userData: userData.data
+        role: userType
       }
 
       //Define the Channel to be used

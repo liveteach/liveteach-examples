@@ -38,8 +38,7 @@ export function main() {
         //setup Server Parameters for the Websocket Server
         let params: ServerParams = {
           serverUrl: serverUrl,
-          role: userType,
-          _userData: userData
+          role: userType
         }
 
         //Define the Channel to be used Using the Custom ServerChannel Class
@@ -47,7 +46,8 @@ export function main() {
         //Pass in the Server Parameters
         communicationChannel.serverConfig(params)
         // Initialise the Classroom Manager
-        ClassroomManager.Initialise(classroomConfig, communicationChannel)   
+        ClassroomManager.Initialise(communicationChannel, true)
+        ClassroomManager.RegisterClassroom(classroomConfig) 
         //show Control ui for teacher         
         ControllerUI.Show()
 
