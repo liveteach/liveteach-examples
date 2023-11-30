@@ -13,6 +13,8 @@ import { SeatingData } from "./UniversitySeatingData"
 import * as ecs from "@dcl/sdk/ecs"
 import { Door } from "./door"
 import { Poll } from "../contentUnits/poll/poll"
+import { Quiz } from "../contentUnits/quiz/quiz"
+import { InteractiveModel } from "../contentUnits/interactiveModel/interactiveModel"
 
 export function main() {
   dclu.setup({
@@ -78,6 +80,8 @@ export function main() {
 
   //Register content units
   ClassroomManager.RegisterContentUnit("poll", new Poll())
+  ClassroomManager.RegisterContentUnit("quiz", new Quiz())
+  ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
 }
 
 export function addScreen(_position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {

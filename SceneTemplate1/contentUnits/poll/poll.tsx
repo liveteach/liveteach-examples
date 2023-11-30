@@ -69,10 +69,10 @@ export class Poll implements IContentUnit {
             }
         })
 
-        if (isStudent) {
-            this.pollPrompt.closeIcon.width = 0
-            this.pollPrompt.closeIcon.height = 0
-        }
+        //if (isStudent) {
+        //    this.pollPrompt.closeIcon.width = 0
+        //    this.pollPrompt.closeIcon.height = 0
+        //}
 
         //Title
         this.pollPrompt.addText({
@@ -80,7 +80,7 @@ export class Poll implements IContentUnit {
             xPosition: 0,
             yPosition: startY,
             color: Color4.White(),
-            size: 25,
+            size: 20,
         })
 
         //Options
