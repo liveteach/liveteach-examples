@@ -3,7 +3,7 @@ import { PeerToPeerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/peer
 import { ClassroomManager, ControllerUI } from "@dclu/dclu-liveteach/src/classroom"
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
-import { InteractiveModel } from "../contentUnits/interactiveModel/interactiveModel"
+import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveModel"
 import * as ecs from "@dcl/sdk/ecs"
 import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 import * as dclu from '@dclu/dclu-liveteach'
