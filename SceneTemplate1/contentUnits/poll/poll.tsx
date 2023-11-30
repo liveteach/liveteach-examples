@@ -9,7 +9,7 @@ export class Poll implements IContentUnit {
     selectedIndex: number = -1
     votedIndex: number = -1
 
-    pollPrompt: ui.CustomPrompt
+    pollPrompt?: ui.CustomPrompt
     submitButton: any
     optionButtons: any[] = []
     optionButtonsSelected: any[] = []

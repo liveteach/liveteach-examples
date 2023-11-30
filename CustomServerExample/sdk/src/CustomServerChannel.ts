@@ -1,9 +1,9 @@
 
 import { IServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/IServerChannel";
-import { UserData } from "~system/UserIdentity";
-import { ClassContentPacket, ClassPacket, Classroom, StudentCommInfo, ServerParams } from "@dclu/dclu-liveteach/src/classroom/types/classroomTypes";
+import { ClassContentPacket, ClassPacket, Classroom, StudentCommInfo, ServerParams, ClassroomSharePacket, ContentUnitPacket, DataPacket, StudentDataPacket } from "@dclu/dclu-liveteach/src/classroom/types/classroomTypes";
 
 export class CustomServerChannel implements IServerChannel{
+    
 
     private static myCustomServer;
 
@@ -61,7 +61,7 @@ export class CustomServerChannel implements IServerChannel{
 
         // Handle the Student Leave Class Message
     }
-    emitClassroomConfig(_info: Classroom):void {
+    emitClassroomConfig(_info: ClassroomSharePacket):void {
         
         CustomServerChannel.myCustomServer.handlemessage(_info) 
 
@@ -138,5 +138,22 @@ export class CustomServerChannel implements IServerChannel{
         CustomServerChannel.myCustomServer.handlemessage(_info) 
 
         // Handle the Model Deactivation Message
+    }
+
+    emitContentUnitStart(_info: ContentUnitPacket): void {
+        CustomServerChannel.myCustomServer.handlemessage(_info) 
+
+    }
+    emitContentUnitEnd(_info: ClassPacket): void {
+        CustomServerChannel.myCustomServer.handlemessage(_info) 
+
+    }
+    emitContentUnitTeacherSend(_info: DataPacket): void {
+        CustomServerChannel.myCustomServer.handlemessage(_info) 
+
+    }
+    emitContentUnitStudentSend(_info: StudentDataPacket): void {
+        CustomServerChannel.myCustomServer.handlemessage(_info) 
+
     }
 }
