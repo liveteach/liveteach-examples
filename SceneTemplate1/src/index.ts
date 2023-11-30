@@ -14,7 +14,7 @@ import * as ecs from "@dcl/sdk/ecs"
 import { Door } from "./door"
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
-import { InteractiveModel } from "../contentUnits/interactiveModel/interactiveModel"
+import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveModel"
 
 export function main() {
   dclu.setup({
