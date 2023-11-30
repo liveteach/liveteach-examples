@@ -69,10 +69,10 @@ export class Poll implements IContentUnit {
             }
         })
 
-        if (isStudent) {
-            this.pollPrompt.closeIcon.width = 0
-            this.pollPrompt.closeIcon.height = 0
-        }
+        //if (isStudent) {
+        //    this.pollPrompt.closeIcon.width = 0
+        //    this.pollPrompt.closeIcon.height = 0
+        //}
 
         //Title
         this.pollPrompt.addText({
@@ -80,7 +80,7 @@ export class Poll implements IContentUnit {
             xPosition: 0,
             yPosition: startY,
             color: Color4.White(),
-            size: 25,
+            size: 20,
         })
 
         //Options
@@ -96,7 +96,7 @@ export class Poll implements IContentUnit {
                     }
                 },
             })
-            promptButton.imageElement.uiTransform.width = 350
+            if(promptButton.imageElement.uiTransform) promptButton.imageElement.uiTransform.width = 350
 
             const promptButtonSelected = this.pollPrompt.addButton({
                 style: ui.ButtonStyles.SQUAREWHITE,
@@ -109,7 +109,7 @@ export class Poll implements IContentUnit {
                     }
                 },
             })
-            promptButtonSelected.imageElement.uiTransform.width = 350
+            if(promptButtonSelected.imageElement.uiTransform) promptButtonSelected.imageElement.uiTransform.width = 350
             promptButtonSelected.hide()
 
             this.optionButtons.push(promptButton)
