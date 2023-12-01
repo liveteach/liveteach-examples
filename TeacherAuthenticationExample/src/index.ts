@@ -21,7 +21,8 @@ export function main() {
   })
 
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(classroomConfig, communicationChannel)
+  ClassroomManager.Initialise(communicationChannel)
+  ClassroomManager.RegisterClassroom(classroomConfig)
   createCube(8, 1, 8)
   createCube(8, 1, 24)
 
