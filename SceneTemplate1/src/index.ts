@@ -1,11 +1,11 @@
 import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { Toaster } from "@dclu/dclu-liveteach/src/notifications"
-import { Podium } from "./podium"
+import { Podium } from "./podium/podium"
 import { AudioManager } from "./audioManager"
 import { setupUi } from "./ui"
 import { PeerToPeerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/peerToPeerChannel";
-import { ClassroomManager, ControllerUI } from "@dclu/dclu-liveteach/src/classroom"
+import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom"
 import { DisplayPanel } from "./displayPanel"
 import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 import * as dclu from '@dclu/dclu-liveteach'
@@ -43,8 +43,6 @@ export function main() {
   const communicationChannel = new PeerToPeerChannel()
   ClassroomManager.Initialise(communicationChannel, true)
   ClassroomManager.RegisterClassroom(classroomConfig)
-
-  //ControllerUI.Show()
 
   addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
   addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
