@@ -14,7 +14,7 @@ import * as ecs from "@dcl/sdk/ecs"
 import { Door } from "./door"
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
-import { InteractiveModel } from "../contentUnits/interactiveModel/interactiveModel"
+import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveModel"
 
 export function main() {
   dclu.setup({
@@ -44,7 +44,7 @@ export function main() {
   ClassroomManager.Initialise(communicationChannel, true)
   ClassroomManager.RegisterClassroom(classroomConfig)
 
-  ControllerUI.Show()
+  //ControllerUI.Show()
 
   addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
   addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
