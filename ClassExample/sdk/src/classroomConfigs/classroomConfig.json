@@ -5,21 +5,19 @@
         "teacherName": "",
         "className": "",
         "classDescription": "",
-        "location": "classroom_1",
         "capacity": "20",
         "duration": "60",
         "seatingEnabled": true,
-        "videoPlaying": false,
-        "skybox": "default",
-        "displayedImage": {
-            "src": "",
-            "caption": ""
+        "origin": {
+            "x": 8,
+            "y": 5,
+            "z": 8
         },
-        "displayedVideo": {
-            "src": "",
-            "caption": ""
+        "volume": {
+            "x": 16,
+            "y": 10,
+            "z": 16
         },
-        "displayedModels": [],
         "students": []
     }
 }

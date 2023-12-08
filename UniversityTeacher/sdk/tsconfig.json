@@ -9,7 +9,8 @@
     "strictPropertyInitialization": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "jsx": "react"
   },
   "include": [
     "src/**/*.ts",

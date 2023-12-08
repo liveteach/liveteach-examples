@@ -10,7 +10,7 @@
     "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "7.3.25",
+    "@dcl/js-runtime": "7.3.30",
     "@dcl/sdk": "^7.3.25"
   },
   "engines": {
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.2",
-    "@dclu/dclu-liveteach": "^1.5.8",
+    "@dclu/dclu-liveteach": "^1.8.15",
     "dcl-ui-toolkit": "^0.9.1"
   }
 }
