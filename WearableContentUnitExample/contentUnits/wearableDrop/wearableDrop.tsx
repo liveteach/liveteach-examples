@@ -39,6 +39,9 @@ export class WearableDrop implements IContentUnit {
         Transform.getMutable(this.dispenserEntity).scale = Vector3.One()
     }
     end(): void {
+        const isStudent = ClassroomManager.classController?.isStudent()
+        if (!isStudent) return
+        
         pointerEventsSystem.removeOnPointerDown(this.dispenserEntity)
         Transform.getMutable(this.dispenserEntity).scale = Vector3.Zero()
     }

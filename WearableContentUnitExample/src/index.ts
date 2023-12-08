@@ -22,7 +22,7 @@ export function main() {
   ControllerUI.Show()
 
   //Register content units
-  ClassroomManager.RegisterContentUnit("wearable_drop", new WearableDrop())
+  ClassroomManager.RegisterContentUnit("wearable", new WearableDrop())
 
-  new ContentUnitPlayer(Vector3.create(3, 1, 12), "Wearable Drop", 3)
+  new ContentUnitPlayer(Vector3.create(3, 1, 12), "Wearable", 3)
 }
