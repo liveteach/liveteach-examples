@@ -36,7 +36,7 @@ export class Poll implements IContentUnit {
         this.setupUI()
     }
     end(): void {
-        this.pollPrompt.hide()
+        this.pollPrompt?.hide()
     }
     update(_data: any): void {
         const isStudent = ClassroomManager.classController?.isStudent()
@@ -85,7 +85,7 @@ export class Poll implements IContentUnit {
 
         //Options
         this.options.forEach((option, index) => {
-            const promptButton = this.pollPrompt.addButton({
+            const promptButton = this.pollPrompt?.addButton({
                 style: ui.ButtonStyles.SQUAREBLACK,
                 text: option,
                 xPosition: 90,
@@ -96,9 +96,9 @@ export class Poll implements IContentUnit {
                     }
                 },
             })
-            if(promptButton.imageElement.uiTransform) promptButton.imageElement.uiTransform.width = 350
+            if(promptButton?.imageElement.uiTransform) promptButton.imageElement.uiTransform.width = 350
 
-            const promptButtonSelected = this.pollPrompt.addButton({
+            const promptButtonSelected = this.pollPrompt?.addButton({
                 style: ui.ButtonStyles.SQUAREWHITE,
                 text: option,
                 xPosition: 90,
@@ -109,14 +109,14 @@ export class Poll implements IContentUnit {
                     }
                 },
             })
-            if(promptButtonSelected.imageElement.uiTransform) promptButtonSelected.imageElement.uiTransform.width = 350
-            promptButtonSelected.hide()
+            if(promptButtonSelected?.imageElement.uiTransform) promptButtonSelected.imageElement.uiTransform.width = 350
+            promptButtonSelected?.hide()
 
             this.optionButtons.push(promptButton)
             this.optionButtonsSelected.push(promptButtonSelected)
 
             //Vote Labels
-            const voteLabel = this.pollPrompt.addText({
+            const voteLabel = this.pollPrompt?.addText({
                 value: isStudent ? '' : this.votes[index],
                 xPosition: 148,
                 yPosition: startY - 63 - (index * 55),

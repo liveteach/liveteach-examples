@@ -167,6 +167,6 @@ export class InteractionScreen {
     }
 
     private update(): void {
-        TextShape.getMutable(this.name).text = ClassroomManager.activeContent.contentUnits[this.interactionIndex].name
+        TextShape.getMutable(this.name).text = ClassroomManager.activeContent.contentUnits[this.interactionIndex].name ?? ""
     }
 }

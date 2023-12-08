@@ -17,7 +17,7 @@ export function main() {
   })
 
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(communicationChannel, true)
+  ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
 
   ClassroomManager.RegisterClassroom(config1)
   ClassroomManager.RegisterClassroom(config2)

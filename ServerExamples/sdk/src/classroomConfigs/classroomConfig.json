@@ -5,38 +5,20 @@
         "teacherName": "",
         "className": "",
         "classDescription": "",
-        "location": "classroom_1",
         "origin": {
-            "x": 16,
-            "y": 1,
-            "z": 16
+            "x": 8,
+            "y": 5,
+            "z": 8
         },
         "volume": {
-            "x": 10,
+            "x": 16,
             "y": 10,
-            "z": 10
+            "z": 16
         },
         "autojoin": true,
         "capacity": "20",
         "duration": "60",
         "seatingEnabled": true,
-        "videoPlaying": false,
-        "skybox": "default",
-        "displayedImage": {
-            "src": ""
-        },
-        "displayedVideo": {
-            "src": ""
-        },
-        "displayedModel": {
-            "src": "",
-            "animations": [],
-            "position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            }
-        },
         "students": []
     }
 }

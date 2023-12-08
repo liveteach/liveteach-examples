@@ -41,7 +41,7 @@ export function main() {
   const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
 
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(communicationChannel, true)
+  ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
   ClassroomManager.RegisterClassroom(classroomConfig)
 
   addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)

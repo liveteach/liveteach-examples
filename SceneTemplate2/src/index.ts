@@ -1,6 +1,5 @@
 import { Entity, GltfContainer, Transform, engine } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
-import { Podium } from "./podium"
 import { AudioManager } from "./audioManager"
 import { setupUi } from "./ui"
 import { DefaultServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/DefaultServerChannel";
@@ -14,6 +13,7 @@ import { Door } from "./door"
 import { Poll } from "../contentUnits/poll/poll"
 import { ServerParams } from "@dclu/dclu-liveteach/src/classroom/types/classroomTypes"
 import { GetUserDataResponse, getUserData } from "~system/UserIdentity"
+import { Podium } from "./podium/podium";
 
 export function main() {
 
@@ -21,8 +21,8 @@ export function main() {
 
   // Define the Url for the Webscoket Server
   let serverUrl = "ws://localhost:3000"
-  
-  
+
+
   dclu.setup({
     ecs: ecs,
     Logger: null
@@ -51,7 +51,7 @@ export function main() {
     try {
 
       userData = await getUserData({});
-        
+
       //Is the user the Teacher
       let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID.toLocaleLowerCase() ? "teacher" : "student";
       //setup Server Parameters for the Websocket Server
@@ -65,51 +65,51 @@ export function main() {
       //Pass in the Server Parameters
       communicationChannel.serverConfig(params)
       // Initialise the Classroom Manager
-      ClassroomManager.Initialise(communicationChannel, true)
-      ClassroomManager.RegisterClassroom(classroomConfig)   
-      //show Control ui for teacher         
       
+      ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
+      ClassroomManager.RegisterClassroom(classroomConfig)
+      //show Control ui for teacher
 
-  ControllerUI.Show()
+      ControllerUI.Show()
 
-  addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
-  addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
-  addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
-  addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
+      addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
+      addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
+      addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
+      addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
 
-  // Add seating 
-  let seatingData: SeatingData = new SeatingData()
-  // Apply offset
-  let offset = Vector3.create(0, 0, 32)
-  seatingData.seats.forEach(seat => {
-    seat.position = Vector3.add(seat.position, offset)
-    seat.lookAtTarget = Vector3.create(29.77, 0.90, 15.94)
+      // Add seating 
+      let seatingData: SeatingData = new SeatingData()
+      // Apply offset
+      let offset = Vector3.create(0, 0, 32)
+      seatingData.seats.forEach(seat => {
+        seat.position = Vector3.add(seat.position, offset)
+        seat.lookAtTarget = Vector3.create(29.77, 0.90, 15.94)
+      });
+
+      //Debugging  
+      // seatingData.seats.forEach(seat => {
+      //   let entity: Entity = engine.addEntity()
+      //   Transform.create(entity, {position:seat.position, rotation: Quaternion.fromEulerDegrees(seat.rotation.x,seat.rotation.y,seat.rotation.z)})
+      //   MeshRenderer.setBox(entity)
+      // });
+
+
+      //new dclu.seating.SeatingController(seatingData,Vector3.create(12,3,19),Vector3.create(10,7,12),true) // removing hide volume until exclude ID's are fully working in DCL
+      new dclu.seating.SeatingController(seatingData, Vector3.create(12, -50, 19), Vector3.create(10, 7, 12), true) // Put the volume underground for now
+
+      const doorParent = engine.addEntity()
+      Transform.create(doorParent, {
+        position: Vector3.create(0, 0, 32)
+      })
+
+      addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
+
+      //Register content units
+      ClassroomManager.RegisterContentUnit("poll", new Poll())
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   });
-
-  //Debugging  
-  // seatingData.seats.forEach(seat => {
-  //   let entity: Entity = engine.addEntity()
-  //   Transform.create(entity, {position:seat.position, rotation: Quaternion.fromEulerDegrees(seat.rotation.x,seat.rotation.y,seat.rotation.z)})
-  //   MeshRenderer.setBox(entity)
-  // });
-
-
-  //new dclu.seating.SeatingController(seatingData,Vector3.create(12,3,19),Vector3.create(10,7,12),true) // removing hide volume until exclude ID's are fully working in DCL
-  new dclu.seating.SeatingController(seatingData, Vector3.create(12, -50, 19), Vector3.create(10, 7, 12), true) // Put the volume underground for now
-
-  const doorParent = engine.addEntity()
-  Transform.create(doorParent, {
-    position: Vector3.create(0, 0, 32)
-  })
-
-  addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
-
-  //Register content units
-  ClassroomManager.RegisterContentUnit("poll", new Poll())
-} catch (error) {
-  console.error("Error fetching user data:", error);
-}
-});
 
 
 }
