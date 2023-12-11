@@ -35,11 +35,11 @@ export function main() {
       }
     }
     if (useDev) {
-      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, false)
+      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
     }
     else {
       // default to mainnet
-      ClassroomManager.Initialise(communicationChannel, undefined, undefined, false)
+      ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
     }
 
     ClassroomManager.RegisterClassroom(classroomConfig)
@@ -59,7 +59,7 @@ export function main() {
     ClassroomManager.RegisterContentUnit("quiz", new Quiz())
     ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
 
-    ClassroomManager.AddTestTeacherAddress("0x23fe59b52c65cc1c5233c0d49d5dee2d5b38d9a3")
+    //ClassroomManager.AddTestTeacherAddress("0xfd823021bd4b8b6841bf65448c2cfe2c1cc3af9a")
   })
 
   dclu.setup({

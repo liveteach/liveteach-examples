@@ -84,7 +84,7 @@ export function main() {
       ClassroomManager.RegisterContentUnit("quiz", new Quiz())
       ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
 
-      ClassroomManager.AddTestTeacherAddress("0x23fe59b52c65cc1c5233c0d49d5dee2d5b38d9a3")
+      //ClassroomManager.AddTestTeacherAddress("0x23fe59b52c65cc1c5233c0d49d5dee2d5b38d9a3")
 
       // Add seating 
       let seatingData: SeatingData = new SeatingData()
