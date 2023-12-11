@@ -14,7 +14,7 @@ export function main() {
   setupUi()
 
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(communicationChannel)
+  ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
   ClassroomManager.RegisterClassroom(classroomConfig)
 
   ControllerUI.Show()
