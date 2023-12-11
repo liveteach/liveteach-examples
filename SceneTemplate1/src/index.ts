@@ -35,11 +35,11 @@ export function main() {
       }
     }
     if(useDev) {
-      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, false)
+      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
     }
     else {
       // default to mainnet
-      ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
+      ClassroomManager.Initialise(communicationChannel, undefined, undefined, false)
     }
 
     ClassroomManager.RegisterClassroom(classroomConfig)
