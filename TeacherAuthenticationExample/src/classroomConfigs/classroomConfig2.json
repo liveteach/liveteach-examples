@@ -1,18 +1,18 @@
 {
     "classroom": {
-        "guid": "8cb23bef-b5b0-4461-8ddb-2813b5a802bd",
+        "guid": "d7d6ec2c-5be0-482c-b3c0-843f17a99399",
         "teacherID": "",
         "teacherName": "",
         "className": "",
         "classDescription": "",
         "origin": {
-            "x": 0,
-            "y": 0,
-            "z": 0
+            "x": 24,
+            "y": 5,
+            "z": 8
         },
         "volume": {
             "x": 16,
-            "y": 16,
+            "y": 10,
             "z": 16
         },
         "autojoin": true,
