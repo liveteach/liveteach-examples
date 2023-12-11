@@ -41,7 +41,7 @@ export function main() {
     }
     if (useDev) {
       console.log("tigertest server detected")
-      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
+      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, false)
     }
     else {
       console.log("mainnet server detected")
