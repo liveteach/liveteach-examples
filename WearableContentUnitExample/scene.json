@@ -53,7 +53,11 @@
 	"allowedMediaHostnames": [
 		"decentraland.org",
 		"demo.unified-streaming.com",
-		"5eb7131de84bb.streamlock.net"
+		"5eb7131de84bb.streamlock.net",
+		"rewards.decentraland.org",
+		"rewards.decentraland.io",
+		"poap-api.decentraland.org",
+		"rewards2-assets-prd-05e0ac2.decentraland.org"
 	],
 	"featureToggles": {}
 }
