@@ -13,21 +13,22 @@ export class ContentUnitPlayer {
         })
 
         MeshRenderer.setSphere(entity)
-        MeshCollider.setSphere(entity)
-        Material.setPbrMaterial(entity, {
+        MeshCollider.setSphere(entity) 
+        Material.setPbrMaterial(entity, { 
             albedoColor: Color4.Black()
         })
 
         pointerEventsSystem.onPointerDown(
-            {
+            { 
                 entity: entity,
                 opts: {
                     button: InputAction.IA_POINTER,
                     hoverText: _hoverText,
                     maxDistance: 20
-                }
+                } 
             },
             function () {
+
                 if (this.isOn) {
                     ClassroomManager.StartContentUnit(ClassroomManager.activeContent.contentUnits[_index].key, ClassroomManager.activeContent.contentUnits[_index].data)
                     Material.setPbrMaterial(entity, {

@@ -11,8 +11,8 @@
   },
   "devDependencies": {
     "@dcl/asset-packs": "latest",
-    "@dcl/js-runtime": "7.3.29",
-    "@dcl/sdk": "^7.3.29"
+    "@dcl/js-runtime": "7.3.31",
+    "@dcl/sdk": "^7.3.31"
   },
   "engines": {
     "node": ">=16.0.0",
@@ -25,6 +25,6 @@
     "trailingComma": "none"
   },
   "dependencies": {
-    "@dclu/dclu-liveteach": "^1.8.15"
+    "@dclu/dclu-liveteach": "^1.8.26"
   }
 }
