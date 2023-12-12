@@ -51,22 +51,20 @@ export class Draw {
             }, 900)
         }
     }
-
+ 
     open() {
-        console.log("Opening - blocked:" + this.blocked)
         if (this.topDraw) {
             utils.tweens.startTranslation(this.entity, this.startPos, Vector3.create(this.startPos.x,this.startPos.y,this.startPos.z+0.3), 0.75)
         } else {
-            utils.tweens.startRotation(this.entity, this.startRot, Quaternion.fromEulerDegrees(0,110,0),1)
+            utils.tweens.startRotation(this.entity, this.startRot, Quaternion.fromEulerDegrees(0,90,0),1)
         }
     }
 
     close() {
-        console.log("Closing - blocked:" + this.blocked)
         if (this.topDraw) {
             utils.tweens.startTranslation(this.entity, Vector3.create(this.startPos.x,this.startPos.y,this.startPos.z+0.3), this.startPos, 0.75)
         } else {
-            utils.tweens.startRotation(this.entity, Quaternion.fromEulerDegrees(0,110,0), this.startRot,1)
+            utils.tweens.startRotation(this.entity, Quaternion.fromEulerDegrees(0,90,0), this.startRot,1)
         }
     }
 }

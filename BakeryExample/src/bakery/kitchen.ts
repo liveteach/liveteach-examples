@@ -1,8 +1,10 @@
 import { Entity, GltfContainer, Transform, TransformTypeWithOptionals, engine } from "@dcl/sdk/ecs";
 import { Vector3 } from "@dcl/sdk/math";
 import { Draw } from "./draw";
+import { Oven } from "./oven";
 
 export class Kitchen{
+    oven:Oven
     counterEntity: Entity
     topDrawPositions: number [] = [-0.302,-0.93,-2.327,-2.955]
     bottomDrawPositions: number [] = [-0.04,-0.668,-2.065,-2.693]
@@ -12,6 +14,7 @@ export class Kitchen{
         Transform.create(this.counterEntity, _transform)
         GltfContainer.create(this.counterEntity, {src:"models/bakery/counter.glb"})
 
+        this.oven = new Oven(this.counterEntity)
 
         // Add the top draws
         this.topDrawPositions.forEach(drawPosition => {
@@ -21,9 +24,7 @@ export class Kitchen{
                 position: Vector3.create(drawPosition,0.98,0.01)
             })
             draw.startPos = Transform.get(draw.entity).position
-        });
-
-        
+        });        
 
         this.bottomDrawPositions.forEach(drawPosition => {
             let draw = new Draw("models/bakery/bottomDraw.glb",false)
