@@ -9,18 +9,20 @@ import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveMo
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
 import { SeatingData } from "./UniversitySeatingData"
-import { AudioManager } from "./audioManager"
+
 import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 import { DisplayPanel } from "./displayPanel"
 import { Door } from "./door"
 import { Podium } from "./podium/podium"
 import { setupUi } from "./ui"
 import { BakeryGame } from "./bakery/bakeryGame"
+import { AudioManager } from "./audio/audioManager"
 
 let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
 
 export function main() {
+
   ecs.executeTask(async () => {
     const communicationChannel = new PeerToPeerChannel()
 

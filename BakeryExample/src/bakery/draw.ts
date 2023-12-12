@@ -1,6 +1,7 @@
-import {  Entity, GltfContainer, InputAction, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
+import {  Entity, GltfContainer, InputAction, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
 import * as utils from '@dcl-sdk/utils'
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
+import { AudioManager } from "../audio/audioManager";
 
 export class Draw {
     entity: Entity
@@ -54,17 +55,19 @@ export class Draw {
  
     open() {
         if (this.topDraw) {
-            utils.tweens.startTranslation(this.entity, this.startPos, Vector3.create(this.startPos.x,this.startPos.y,this.startPos.z+0.3), 0.75)
+            utils.tweens.startTranslation(this.entity, this.startPos, Vector3.create(this.startPos.x,this.startPos.y,this.startPos.z+0.3), 0.7)
         } else {
-            utils.tweens.startRotation(this.entity, this.startRot, Quaternion.fromEulerDegrees(0,90,0),1)
+            utils.tweens.startRotation(this.entity, this.startRot, Quaternion.fromEulerDegrees(0,90,0),0.7)
         }
+        AudioManager.playDrawOpen(Transform.get(engine.PlayerEntity).position)
     }
 
     close() {
         if (this.topDraw) {
-            utils.tweens.startTranslation(this.entity, Vector3.create(this.startPos.x,this.startPos.y,this.startPos.z+0.3), this.startPos, 0.75)
+            utils.tweens.startTranslation(this.entity, Vector3.create(this.startPos.x,this.startPos.y,this.startPos.z+0.3), this.startPos, 0.6)
         } else {
-            utils.tweens.startRotation(this.entity, Quaternion.fromEulerDegrees(0,90,0), this.startRot,1)
+            utils.tweens.startRotation(this.entity, Quaternion.fromEulerDegrees(0,90,0), this.startRot,0.5)
         }
+        AudioManager.playDrawClose(Transform.get(engine.PlayerEntity).position)
     }
 }

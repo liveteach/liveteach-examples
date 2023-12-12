@@ -1,0 +1,37 @@
+import { AudioSource, Entity, MeshRenderer, Transform, engine } from "@dcl/sdk/ecs";
+import { Vector3 } from "@dcl/sdk/math";
+import { AudioEntity } from "./audioEntity";
+
+export class AudioManager {
+
+  static drawOpen: AudioEntity
+  static drawClose: AudioEntity
+  static ovenDoorOpen: AudioEntity
+  static ovenDoorClose: AudioEntity
+
+  constructor() {
+
+    AudioManager.drawOpen = new AudioEntity("audio/drawOpen.mp3", 0.75, 2)
+    AudioManager.drawClose = new AudioEntity("audio/drawClose.mp3", 0.75, 2)
+    AudioManager.ovenDoorOpen = new AudioEntity("audio/ovenOpen.mp3", 0.5, 1)
+    AudioManager.ovenDoorClose = new AudioEntity("audio/ovenClose.mp3", 0.5, 1)
+
+  } 
+ 
+  static playDrawOpen(_position: Vector3): void {
+    AudioManager.drawOpen.playSound(_position)
+  }
+
+  static playDrawClose(_position: Vector3): void {
+    AudioManager.drawClose.playSound(_position)
+  }
+
+  static playOvenOpen(_position: Vector3): void {
+    AudioManager.ovenDoorOpen.playSound(_position)
+  }
+
+  static playOvenClose(_position: Vector3): void {
+    AudioManager.ovenDoorClose.playSound(_position)
+  }
+
+} 

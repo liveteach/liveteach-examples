@@ -1,6 +1,7 @@
 import { Entity, GltfContainer, InputAction, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import * as utils from '@dcl-sdk/utils'
+import { AudioManager } from "../audio/audioManager";
 
 export class Oven {
     entity: Entity
@@ -58,10 +59,12 @@ export class Oven {
     } 
  
     openOven() { 
-        utils.tweens.startRotation(this.ovenDoor, Quaternion.fromEulerDegrees(0,0,0), Quaternion.fromEulerDegrees(90,0,0),1)
+        utils.tweens.startRotation(this.ovenDoor, Quaternion.fromEulerDegrees(0,0,0), Quaternion.fromEulerDegrees(90,0,0),1.3)
+        AudioManager.playOvenOpen(Transform.get(engine.PlayerEntity).position)
     } 
 
     closeOven() {
         utils.tweens.startRotation(this.ovenDoor, Quaternion.fromEulerDegrees(90,0,0), Quaternion.fromEulerDegrees(0,0,0),1)
+        AudioManager.playOvenClose(Transform.get(engine.PlayerEntity).position)
     }
 } 
