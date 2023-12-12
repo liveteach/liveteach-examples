@@ -14,7 +14,7 @@ export class ContentUnitPlayer {
 
         MeshRenderer.setSphere(entity)
         MeshCollider.setSphere(entity) 
-        Material.setPbrMaterial(entity, {
+        Material.setPbrMaterial(entity, { 
             albedoColor: Color4.Black()
         })
 
@@ -28,9 +28,8 @@ export class ContentUnitPlayer {
                 } 
             },
             function () {
-                debugger
+
                 if (this.isOn) {
-                    debugger
                     ClassroomManager.StartContentUnit(ClassroomManager.activeContent.contentUnits[_index].key, ClassroomManager.activeContent.contentUnits[_index].data)
                     Material.setPbrMaterial(entity, {
                         albedoColor: Color4.Green()
