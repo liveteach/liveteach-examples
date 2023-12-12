@@ -10,7 +10,7 @@ export class Quiz implements IContentUnit {
     chosenIndex: number = -1
     answerIndex: number = -1
 
-    quizPrompt: ui.CustomPrompt
+    quizPrompt: ui.CustomPrompt | undefined
     submitButton: any
     feedbackText: any
     optionButtons: any[] = []
@@ -37,7 +37,7 @@ export class Quiz implements IContentUnit {
         const isStudent = ClassroomManager.classController?.isStudent()
         if(!isStudent) return
 
-        this.quizPrompt.hide()
+        this.quizPrompt?.hide()
     }
     update(_data: any): void {
         const isStudent = ClassroomManager.classController?.isStudent()
@@ -72,7 +72,7 @@ export class Quiz implements IContentUnit {
 
         //Options
         this.options.forEach((option, index) => {
-            const promptButton = this.quizPrompt.addButton({
+            const promptButton = this.quizPrompt?.addButton({
                 style: ui.ButtonStyles.SQUAREBLACK,
                 text: option,
                 xPosition: 90,
@@ -83,9 +83,9 @@ export class Quiz implements IContentUnit {
                     }
                 },
             })
-            if(promptButton.imageElement.uiTransform) promptButton.imageElement.uiTransform.width = 350
+            if(promptButton?.imageElement.uiTransform) promptButton.imageElement.uiTransform.width = 350
 
-            const promptButtonSelected = this.quizPrompt.addButton({
+            const promptButtonSelected = this.quizPrompt?.addButton({
                 style: ui.ButtonStyles.SQUAREWHITE,
                 text: option,
                 xPosition: 90,
@@ -96,8 +96,8 @@ export class Quiz implements IContentUnit {
                     }
                 },
             })
-            if(promptButtonSelected.imageElement.uiTransform) promptButtonSelected.imageElement.uiTransform.width = 350
-            promptButtonSelected.hide()
+            if(promptButtonSelected?.imageElement.uiTransform) promptButtonSelected.imageElement.uiTransform.width = 350
+            promptButtonSelected?.hide()
 
             this.optionButtons.push(promptButton)
             this.optionButtonsSelected.push(promptButtonSelected)

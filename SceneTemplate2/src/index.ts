@@ -11,6 +11,8 @@ import { SeatingData } from "./UniversitySeatingData"
 import * as ecs from "@dcl/sdk/ecs"
 import { Door } from "./door"
 import { Poll } from "../contentUnits/poll/poll"
+import { Quiz } from "../contentUnits/quiz/quiz"
+import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveModel"
 import { ServerParams } from "@dclu/dclu-liveteach/src/classroom/types/classroomTypes"
 import { GetUserDataResponse, getUserData } from "~system/UserIdentity"
 import { Podium } from "./podium/podium";
@@ -65,17 +67,24 @@ export function main() {
       //Pass in the Server Parameters
       communicationChannel.serverConfig(params)
       // Initialise the Classroom Manager
-      
+
       ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
       ClassroomManager.RegisterClassroom(classroomConfig)
       //show Control ui for teacher
 
       ControllerUI.Show()
 
-      addScreen(Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
-      addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
-      addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
-      addScreen(Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
+      addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
+      addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
+      addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
+      addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
+
+      //Register content units
+      ClassroomManager.RegisterContentUnit("poll", new Poll())
+      ClassroomManager.RegisterContentUnit("quiz", new Quiz())
+      ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
+
+      //ClassroomManager.AddTestTeacherAddress("0x23fe59b52c65cc1c5233c0d49d5dee2d5b38d9a3")
 
       // Add seating 
       let seatingData: SeatingData = new SeatingData()
@@ -113,8 +122,8 @@ export function main() {
 
 
 }
-export function addScreen(_position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {
-  ClassroomManager.AddScreen(_position, _rotation, _scale, _parent)
+export function addScreen(_guid: string, _position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {
+  ClassroomManager.AddScreen(_guid, _position, _rotation, _scale, _parent)
 }
 
 export function addDoor(_parent: Entity, _model: string, _triggerShape: {
