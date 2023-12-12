@@ -2,6 +2,7 @@ import { Entity, GltfContainer, Transform, TransformTypeWithOptionals, engine } 
 import { Vector3 } from "@dcl/sdk/math";
 import { Draw } from "./draw";
 import { Oven } from "./oven";
+import { InteractionManager } from "./interactionManager";
 
 export class Kitchen{
     oven:Oven
@@ -34,6 +35,8 @@ export class Kitchen{
             })
             draw.startRot = Transform.get(draw.entity).rotation
         });
+
+        new InteractionManager(this.counterEntity)
 
     }
 }
