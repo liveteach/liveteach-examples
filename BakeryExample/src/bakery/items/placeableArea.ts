@@ -1,32 +1,46 @@
 import { engine } from "@dcl/ecs/dist/runtime/initialization";
 import { Entity, InputAction, MeshCollider, MeshRenderer, Transform, pointerEventsSystem } from "@dcl/sdk/ecs";
 import { Vector3 } from "@dcl/sdk/math";
+import { CarryItem } from "./carryItem";
+import { Kitchen } from "../kitchen";
 
 export class PlaceableArea {
-    constructor(_parent: Entity, _position:Vector3){
-        let entity = engine.addEntity()
+    entity:Entity
+    carryItem:CarryItem = null
 
-        Transform.create(entity, {
+    debugEntity:Entity
+
+    constructor(_parent: Entity, _position:Vector3){
+        this.entity = engine.addEntity()
+        this.debugEntity = engine.addEntity()
+
+        Transform.create(this.entity, {
             parent: _parent,
             position:_position,
-            scale: Vector3.create(0.25,0.05,0.25)
+            
         }) 
+
+        Transform.create(this.debugEntity, {
+            parent: this.entity,
+            scale: Vector3.create(0.25,0.003,0.25)
+        })
+        
 
         let self = this
         pointerEventsSystem.onPointerDown(
             {
-                entity: entity,
+                entity: this.debugEntity,
                 opts: {
                     button: InputAction.IA_POINTER,
                     hoverText: "Place"
                 }
             },
             function () {
-                //self.interact()
+                Kitchen.placeCarriedItem(self)
             }
         )
 
-        MeshRenderer.setBox(entity)
-        MeshCollider.setBox(entity)
+        MeshRenderer.setBox(this.debugEntity)
+        MeshCollider.setBox(this.debugEntity)
     }
 }
