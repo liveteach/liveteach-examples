@@ -1,8 +1,9 @@
 import { Entity, GltfContainer, Transform, TransformTypeWithOptionals, engine } from "@dcl/sdk/ecs";
-import { Vector3 } from "@dcl/sdk/math";
+import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import { Draw } from "./draw";
 import { Oven } from "./oven";
 import { InteractionManager } from "./interactionManager";
+import { Instructions } from "./instructions";
 
 export class Kitchen{
     oven:Oven
@@ -37,6 +38,11 @@ export class Kitchen{
         });
 
         new InteractionManager(this.counterEntity)
+
+        new Instructions({
+            position: Vector3.create(20.5,4,13.5),
+            rotation: Quaternion.fromEulerDegrees(0,0,0)
+        })
 
     }
 }
