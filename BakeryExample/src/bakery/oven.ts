@@ -1,4 +1,4 @@
-import { Entity, GltfContainer, InputAction, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
+import { Entity, GltfContainer, InputAction, MeshCollider, MeshRenderer, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import * as utils from '@dcl-sdk/utils'
 import { AudioManager } from "../audio/audioManager";
@@ -8,6 +8,8 @@ export class Oven {
     ovenDoor: Entity
     opened: boolean
     blocked: boolean = false
+    timeKnob:Entity
+    tempKnob:Entity
 
     constructor(_parent:Entity){
         this.entity = engine.addEntity()
@@ -32,6 +34,51 @@ export class Oven {
             }, 
             function () {
                 self.interact()
+            }
+        )
+
+        // Set up the knobs
+        this.timeKnob = engine.addEntity()
+        Transform.create(this.timeKnob, {
+            parent: this.entity,
+            position:Vector3.create(-1.46,1,0.01),
+            scale: Vector3.create(0.075,0.075,0.1)
+        })
+        //MeshRenderer.setBox(this.timeKnob)
+        MeshCollider.setBox(this.timeKnob)
+
+        pointerEventsSystem.onPointerDown(
+            {
+                entity: this.timeKnob,
+                opts: {
+                    button: InputAction.IA_POINTER,
+                    hoverText: "Set Timer"
+                }
+            }, 
+            function () {
+                AudioManager.playDialTurn()
+            }
+        )
+
+        this.tempKnob = engine.addEntity()
+        Transform.create(this.tempKnob, {
+            parent: this.entity,
+            position:Vector3.create(-1.83,1,0.01),
+            scale: Vector3.create(0.075,0.075,0.1)
+        })
+        //MeshRenderer.setBox(this.tempKnob)
+        MeshCollider.setBox(this.tempKnob)
+
+        pointerEventsSystem.onPointerDown(
+            {
+                entity: this.tempKnob,
+                opts: {
+                    button: InputAction.IA_POINTER,
+                    hoverText: "Set Temperature"
+                }
+            }, 
+            function () {
+                AudioManager.playDialTurn()
             }
         )
 
