@@ -2,6 +2,7 @@ import { Entity, GltfContainer, InputAction, MeshCollider, MeshRenderer, Transfo
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import * as utils from '@dcl-sdk/utils'
 import { AudioManager } from "../audio/audioManager";
+import { Kitchen } from "./kitchen";
 
 export class Oven {
     entity: Entity
@@ -61,7 +62,7 @@ export class Oven {
         )
 
         this.tempKnob = engine.addEntity()
-        Transform.create(this.tempKnob, {
+        Transform.create(this.tempKnob, { 
             parent: this.entity,
             position:Vector3.create(-1.83,1,0.01),
             scale: Vector3.create(0.075,0.075,0.1)
@@ -78,7 +79,10 @@ export class Oven {
                 }
             }, 
             function () {
-                AudioManager.playDialTurn()
+                if(Kitchen.instance.instructions.currentStep==0){
+                    AudioManager.playDialTurn()
+                    Kitchen.instance.instructions.increaseStep()
+                }
             }
         )
 

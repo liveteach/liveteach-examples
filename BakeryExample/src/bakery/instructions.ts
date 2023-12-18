@@ -6,6 +6,7 @@ export class Instructions {
     text: string [] = []
     display:Entity
     textEntity:Entity
+    currentStep:number = 0
 
     constructor(_transform:TransformTypeWithOptionals){
         // Fill instructions
@@ -33,11 +34,16 @@ export class Instructions {
             scale: Vector3.create(0.25,0.25,0.25)
         })
         TextShape.create(this.textEntity , {
-            text: this.getText(0)
+            text: this.getText(this.currentStep)
         })
     }
 
     getText(_index){
         return this.text[_index]
+    }
+
+    increaseStep(){
+        this.currentStep = this.currentStep + 1
+        TextShape.getMutable(this.textEntity).text = this.getText(this.currentStep)
     }
 }

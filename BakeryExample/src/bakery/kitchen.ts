@@ -13,6 +13,8 @@ export class Kitchen{
     topDrawPositions: number [] = [-0.302,-0.93,-2.327,-2.955]
     bottomDrawPositions: number [] = [-0.04,-0.668,-2.065,-2.693]
     itemManager: ItemManager
+    instructions: Instructions
+    static instance:Kitchen
 
     constructor(_transform:TransformTypeWithOptionals){
         this.counterEntity = engine.addEntity()
@@ -45,11 +47,11 @@ export class Kitchen{
         });
 
         
-
-
-        new Instructions({
+        this.instructions = new Instructions({
             position: Vector3.create(20.5,4,13.5),
             rotation: Quaternion.fromEulerDegrees(0,0,0)
         })
+
+        Kitchen.instance = this
     }
 }
