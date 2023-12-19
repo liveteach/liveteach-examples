@@ -11,9 +11,9 @@ export class Instructions {
     constructor(_transform:TransformTypeWithOptionals){
         // Fill instructions
         this.text.push("Preheat the oven to 180°C")
-        this.text.push("Place the eggs and sugar in a bowl")
-        this.text.push("Whisk on high speed for 12-15 minutes")
-        this.text.push("Sift the flour mixture over the egg mixture")
+        this.text.push("Place the eggs and\nsugar in a bowl")
+        this.text.push("Whisk for 12-15 minutes")
+        this.text.push("Sift the flour over\nthe egg mixture")
         this.text.push("Using a large metal spoon gently fold to\ncombine the flour and the egg mixture")
         this.text.push("Add the butter")
         this.text.push("Gently fold to combine the butter")

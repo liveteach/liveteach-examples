@@ -13,6 +13,9 @@ export class ItemManager {
     static carryItem: CarryItem = null
 
     static instance:ItemManager
+    
+    eggsUsed:boolean = false
+    sugarUsed:boolean = false
 
     constructor(_parent:Entity){
 
@@ -42,8 +45,8 @@ export class ItemManager {
 
         // In the oven
 
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.44,-0.15)))
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.7,-0.15)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.44,-0.2)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.7,-0.2)))
 
         this.spawnIngredients()
  
@@ -77,6 +80,10 @@ export class ItemManager {
         let mixingBowl = new CarryItem("models/bakery/items/mixingBowl.glb", "Mixing Bowl", ItemType.mixingBowl)
         mixingBowl.setPlaceableArea(this.placeableAreas[7],mixingBowl) 
         mixingBowl.setScale(0.75)
+        this.items.push(mixingBowl)
+        let whisk = new CarryItem("models/bakery/items/whisk.glb", "Whisk", ItemType.whisk)
+        whisk.setPlaceableArea(this.placeableAreas[8],whisk) 
+        //whisk.setScale(0.75)
         this.items.push(mixingBowl)
     }
     

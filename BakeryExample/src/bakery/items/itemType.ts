@@ -6,5 +6,6 @@ export enum ItemType {
     flour,
     jam,
     butter,
-    mixingBowl
+    mixingBowl,
+    whisk
 }
