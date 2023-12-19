@@ -11,6 +11,7 @@ export class Oven {
     blocked: boolean = false
     timeKnob:Entity
     tempKnob:Entity
+    heatEffect:Entity
 
     constructor(_parent:Entity){
         this.entity = engine.addEntity()
@@ -82,9 +83,14 @@ export class Oven {
                 if(Kitchen.instance.instructions.currentStep==0){
                     AudioManager.playDialTurn()
                     Kitchen.instance.instructions.increaseStep()
+                    self.turnOn()
                 }
             }
         )
+
+        this.heatEffect = engine.addEntity()
+        Transform.create(this.heatEffect,{parent:_parent,scale:Vector3.Zero()}) 
+        GltfContainer.create(this.heatEffect, {src:"models/bakery/OvenHeat.glb"})
 
     }
 
@@ -107,7 +113,15 @@ export class Oven {
                 self.blocked = false
             }, 900)
         } 
-    } 
+    }
+    
+    turnOn(){
+        Transform.getMutable(this.heatEffect).scale = Vector3.One()
+    }
+
+    turnOff(){
+        Transform.getMutable(this.heatEffect).scale = Vector3.Zero()
+    }
  
     openOven() { 
         utils.tweens.startRotation(this.ovenDoor, Quaternion.fromEulerDegrees(0,0,0), Quaternion.fromEulerDegrees(90,0,0),1.3)

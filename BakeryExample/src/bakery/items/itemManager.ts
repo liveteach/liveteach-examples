@@ -46,7 +46,7 @@ export class ItemManager {
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.7,-0.15)))
 
         this.spawnIngredients()
-
+ 
         ItemManager.instance = this
          
     }
