@@ -83,6 +83,7 @@ export class Oven {
                 if(Kitchen.instance.instructions.currentStep==0){
                     AudioManager.playDialTurn()
                     Kitchen.instance.instructions.increaseStep()
+                    AudioManager.playSuccess()
                     self.turnOn()
                 }
             }

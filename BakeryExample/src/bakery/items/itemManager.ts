@@ -48,6 +48,12 @@ export class ItemManager {
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.44,-0.2)))
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.7,-0.2)))
 
+        // Oven hobs
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.445,1.135,-0.165)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.445,1.135,-0.43)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.83,1.135,-0.165)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.83,1.135,-0.43)))
+
         this.spawnIngredients()
  
         ItemManager.instance = this
@@ -74,7 +80,7 @@ export class ItemManager {
         jam.setPlaceableArea(this.placeableAreas[5],jam) 
         this.items.push(jam)
         let butter = new CarryItem("models/bakery/items/butter.glb", "Butter", ItemType.butter)
-        butter.setPlaceableArea(this.placeableAreas[6],jam) 
+        butter.setPlaceableArea(this.placeableAreas[6],butter) 
         this.items.push(butter)
 
         let mixingBowl = new CarryItem("models/bakery/items/mixingBowl.glb", "Mixing Bowl", ItemType.mixingBowl)
@@ -83,8 +89,14 @@ export class ItemManager {
         this.items.push(mixingBowl)
         let whisk = new CarryItem("models/bakery/items/whisk.glb", "Whisk", ItemType.whisk)
         whisk.setPlaceableArea(this.placeableAreas[8],whisk) 
-        //whisk.setScale(0.75)
-        this.items.push(mixingBowl)
+        this.items.push(whisk)
+        let spatula = new CarryItem("models/bakery/items/spatula.glb", "Spatula", ItemType.spatula)
+        spatula.setPlaceableArea(this.placeableAreas[9],spatula) 
+        this.items.push(spatula)
+        let bakingTin = new CarryItem("models/bakery/items/bakingTin.glb", "Baking Tin", ItemType.bakingTin)
+        bakingTin.setPlaceableArea(this.placeableAreas[10],bakingTin)
+        bakingTin.setScale(0.75)
+        this.items.push(bakingTin)
     }
     
     static addPickupPointers(){

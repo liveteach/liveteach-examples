@@ -5,6 +5,7 @@ import { Vector3 } from "@dcl/sdk/math";
 import { ItemType } from "./itemType";
 import { Kitchen } from "../kitchen";
 import * as utils from '@dcl-sdk/utils'
+import { AudioManager } from "../../audio/audioManager";
 
 export class CarryItem {
     entity: Entity
@@ -60,7 +61,52 @@ export class CarryItem {
                 if(Kitchen.instance.instructions.currentStep==2 && self.itemType == ItemType.whisk){
                     // Turn on bowl combing
                     Kitchen.instance.itemManager.items.forEach(item => {
+                        if(item.itemType==ItemType.mixingBowl){ 
+                            item.addCombinePointer()
+                        }
+                    });  
+                }
+
+                if(Kitchen.instance.instructions.currentStep==3 && self.itemType == ItemType.flour){
+                    // Turn on bowl combing
+                    Kitchen.instance.itemManager.items.forEach(item => {
                         if(item.itemType==ItemType.mixingBowl){
+                            item.addCombinePointer()
+                        }
+                    }); 
+                }
+
+                if(Kitchen.instance.instructions.currentStep==4 && self.itemType == ItemType.spatula){
+                    // Turn on bowl combing
+                    Kitchen.instance.itemManager.items.forEach(item => {
+                        if(item.itemType==ItemType.mixingBowl){
+                            item.addCombinePointer()
+                        }
+                    }); 
+                }
+
+                if(Kitchen.instance.instructions.currentStep==5 && self.itemType == ItemType.butter){
+                    // Turn on bowl combing
+                    Kitchen.instance.itemManager.items.forEach(item => {
+                        if(item.itemType==ItemType.mixingBowl){
+                            item.addCombinePointer()
+                        }
+                    }); 
+                }
+
+                if(Kitchen.instance.instructions.currentStep==6 && self.itemType == ItemType.spatula){
+                    // Turn on bowl combing
+                    Kitchen.instance.itemManager.items.forEach(item => {
+                        if(item.itemType==ItemType.mixingBowl){
+                            item.addCombinePointer()
+                        }
+                    }); 
+                }
+
+                if(Kitchen.instance.instructions.currentStep==7 && self.itemType == ItemType.mixingBowl){
+                    // Turn on bowl combing
+                    Kitchen.instance.itemManager.items.forEach(item => {
+                        if(item.itemType==ItemType.bakingTin){
                             item.addCombinePointer()
                         }
                     }); 
@@ -85,16 +131,6 @@ export class CarryItem {
                 } 
             },  
             function () {
-                // ItemManager.setCarriedItem(self)
-                // self.removeCollider()
-                // if(self.placedArea!=null){
-                //     self.placedArea.carryItem = null
-                //     self.placedArea = null
-                // }
-                // ItemManager.removePickupPointers()
-                // ItemManager.addPlaceableAreaPointers()
-                
-                debugger
                 if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 1){
                     if(ItemManager.carryItem.itemType == ItemType.eggs){
                         if(ItemManager.instance.sugarUsed){
@@ -114,32 +150,72 @@ export class CarryItem {
                         }                       
                         ItemManager.instance.sugarUsed = true
                         self.combined()
-                    } 
+                    }  
                 } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 2){
                     if(ItemManager.carryItem.itemType == ItemType.whisk){
                         GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlWhisked.glb"})
+                        AudioManager.playSuccess()
+                        Kitchen.instance.instructions.increaseStep()
+                        self.combined()
+                    }
+                } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 3){
+                    if(ItemManager.carryItem.itemType == ItemType.flour){
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlFloured.glb"})
+                        AudioManager.playSuccess()
+                        Kitchen.instance.instructions.increaseStep()
+                        self.combined()
+                    }
+                } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 4){
+                    if(ItemManager.carryItem.itemType == ItemType.spatula){
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlFolded.glb"})
+                        AudioManager.playSuccess()
+                        Kitchen.instance.instructions.increaseStep()
+                        self.combined(false)
+                    }
+                } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 5){
+                    if(ItemManager.carryItem.itemType == ItemType.butter){
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlButtered.glb"})
+                        AudioManager.playSuccess()
+                        Kitchen.instance.instructions.increaseStep()
+                        self.combined()
+                    }
+                } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 6){
+                    if(ItemManager.carryItem.itemType == ItemType.spatula){
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlDough.glb"})
+                        AudioManager.playSuccess()
+                        Kitchen.instance.instructions.increaseStep()
+                        self.combined()
+                    }
+                } else if(self.itemType == ItemType.bakingTin && Kitchen.instance.instructions.currentStep == 7){
+                    if(ItemManager.carryItem.itemType == ItemType.mixingBowl){
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/bakingTinDough.glb"})
+                        AudioManager.playSuccess()
+                        Kitchen.instance.instructions.increaseStep()
+                        self.combined()
                     }
                 }
-
                 
-                
+                 
                 
             }
         ) 
     }
 
-    combined(){
+    combined(_remove:boolean = true){
+        AudioManager.playSuccess()
         // Remove what ever I was carrying
-        ItemManager.carryItem.remove()
-        ItemManager.carryItem = null
+        if(_remove){
+            ItemManager.carryItem.remove()
+            ItemManager.carryItem = null
+            ItemManager.removePlaceableAreaPointers()
+            utils.timers.setTimeout(()=>{
+                ItemManager.addPickupPointers()
+            },250)
+        }
         this.removeCombinePointer()
-        ItemManager.removePlaceableAreaPointers()
 
-        // To stop picking up what you are combinging with
-        utils.timers.setTimeout(()=>{
-            ItemManager.addPickupPointers()
-        },250)
-    }
+        
+    } 
 
     removeCombinePointer(){
         pointerEventsSystem.removeOnPointerDown(this.collider)
@@ -155,7 +231,7 @@ export class CarryItem {
 
     setPlaceableArea(_placeableArea:PlaceableArea, _carryItem:CarryItem = null){
         this.placedArea = _placeableArea
-
+ 
         if(_carryItem!=null){
             this.placedArea.carryItem =_carryItem
         }

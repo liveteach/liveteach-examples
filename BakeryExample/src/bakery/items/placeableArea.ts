@@ -47,7 +47,7 @@ export class PlaceableArea {
                     ItemManager.placeCarriedItem(self)
                 }
             )
-            Transform.getMutable(this.debugEntity).scale = Vector3.create(0.25,0,0.25)
+            Transform.getMutable(this.debugEntity).scale = Vector3.create(0.22,0,0.22)
         }
     }
 

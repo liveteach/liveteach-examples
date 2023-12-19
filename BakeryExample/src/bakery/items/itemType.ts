@@ -7,5 +7,7 @@ export enum ItemType {
     jam,
     butter,
     mixingBowl,
-    whisk
+    whisk,
+    spatula,
+    bakingTin
 }
