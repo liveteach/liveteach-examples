@@ -16,6 +16,8 @@ export class ItemManager {
     
     eggsUsed:boolean = false
     sugarUsed:boolean = false
+    creamUsed:boolean = false
+    jamUsed:boolean = false
 
     constructor(_parent:Entity){
 

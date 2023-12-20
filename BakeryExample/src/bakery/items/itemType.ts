@@ -10,5 +10,6 @@ export enum ItemType {
     whisk,
     spatula,
     bakingTin,
-    cakeStand
+    cakeStand,
+    cake
 }

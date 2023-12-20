@@ -65,6 +65,14 @@ export class Oven {
                     AudioManager.playDialTurn()
                     Kitchen.instance.instructions.increaseStep()
                     AudioManager.playSuccess()
+                    // Update the baking tin to a sponge cake
+                    ItemManager.instance.items.forEach(item => {
+                        if(item.itemType == ItemType.bakingTin){
+                            item.itemType = ItemType.cake
+                            GltfContainer.createOrReplace(item.entity, {src:"models/bakery/items/cookedSponges.glb"})
+                            item.hover = "Cake"
+                        }
+                    });
                 }
             }
         )

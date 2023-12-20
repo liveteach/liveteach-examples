@@ -5,6 +5,7 @@ import { CarryItem } from "./carryItem";
 import { Kitchen } from "../kitchen";
 import { ItemManager } from "./itemManager";
 import { ItemType } from "./itemType";
+import { AudioManager } from "../../audio/audioManager";
 
 export class PlaceableArea {
     entity:Entity
@@ -61,6 +62,10 @@ export class PlaceableArea {
                         ItemManager.instance.items.forEach(item => {
                             if(item.itemType == ItemType.cakeStand){
                                 item.childItem = ItemManager.carryItem
+                                if(Kitchen.instance.instructions.currentStep == 10 && ItemManager.carryItem.itemType == ItemType.cake){
+                                    Kitchen.instance.instructions.increaseStep()
+                                    AudioManager.playSuccess()
+                                }
                             }
                         }); 
                     }
