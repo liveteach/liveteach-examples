@@ -19,7 +19,7 @@ export class Instructions {
         this.text.push("Gently fold to\ncombine the butter")
         this.text.push("Add the dough\nto a baking tin")
         this.text.push("Put the tin into the oven")
-        this.text.push("Bake for 14-8 minutes")
+        this.text.push("Bake for 14-18 minutes")
         this.text.push("Display the baked cake")
         this.text.push("Choose a topping\nChocolate or Jam and Cream")
         this.text.push("Congratulations")
@@ -52,5 +52,6 @@ export class Instructions {
     destroy(){
         TextShape.deleteFrom(this.textEntity)
         engine.removeEntity(this.textEntity)
+        engine.removeEntity(this.display)
     }
 }
