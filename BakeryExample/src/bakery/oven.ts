@@ -166,4 +166,12 @@ export class Oven {
             }
         });
     }
+
+    destroy(){
+        engine.removeEntity(this.entity)
+        engine.removeEntity(this.ovenDoor)
+        engine.removeEntity(this.timeKnob)
+        engine.removeEntity(this.heatEffect)
+        engine.removeEntity(this.tempKnob)
+    }
 } 

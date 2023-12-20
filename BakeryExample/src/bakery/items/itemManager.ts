@@ -113,6 +113,23 @@ export class ItemManager {
         cakeStandPlaceableArea.cakeStandArea = true
         this.placeableAreas.push(cakeStandPlaceableArea)
     }
+
+    destroy(){
+        this.placeableAreas.forEach(area => {
+           if(area.carryItem!=null){
+            if(area.carryItem.childItem != null){
+                engine.removeEntity(area.carryItem.childItem.collider)
+                engine.removeEntity(area.carryItem.childItem.entity)
+            }
+            engine.removeEntity(area.carryItem.collider)
+            engine.removeEntity(area.carryItem.entity)
+           }
+           engine.removeEntity(area.entity)
+           engine.removeEntity(area.debugEntity)
+        });
+
+        
+    }
     
     static addPickupPointers(){
         ItemManager.instance.items.forEach(item => {

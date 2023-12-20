@@ -3,7 +3,6 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import { Draw } from "./draw";
 import { Oven } from "./oven";
 import { Instructions } from "./instructions";
-import { CarryItem } from "./items/carryItem";
 import { PlaceableArea } from "./items/placeableArea";
 import { ItemManager } from "./items/itemManager";
 
@@ -50,10 +49,17 @@ export class Kitchen{
         this.instructions = new Instructions({
             position: Vector3.create(20.5,4,13.5),
             rotation: Quaternion.fromEulerDegrees(0,0,0)
-        })
+        }) 
 
         this.itemManager.spawnIngredients()
 
         Kitchen.instance = this
+    }
+
+    destroy(){
+        this.itemManager.destroy()
+        this.instructions.destroy()
+        this.oven.destroy()
+        engine.removeEntity(this.counterEntity)
     }
 }

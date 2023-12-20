@@ -48,4 +48,9 @@ export class Instructions {
         this.currentStep = this.currentStep + 1
         TextShape.getMutable(this.textEntity).text = this.getText(this.currentStep)
     }
+
+    destroy(){
+        TextShape.deleteFrom(this.textEntity)
+        engine.removeEntity(this.textEntity)
+    }
 }
