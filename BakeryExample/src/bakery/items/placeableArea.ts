@@ -3,6 +3,7 @@ import { Entity, InputAction, MeshCollider, MeshRenderer, Transform, pointerEven
 import { Vector3 } from "@dcl/sdk/math";
 import { CarryItem } from "./carryItem";
 import { Kitchen } from "../kitchen";
+import { ItemManager } from "./itemManager";
 
 export class PlaceableArea {
     entity:Entity
@@ -36,11 +37,11 @@ export class PlaceableArea {
                 }
             },
             function () {
-                Kitchen.placeCarriedItem(self)
+                ItemManager.placeCarriedItem(self)
             }
         )
 
-        MeshRenderer.setBox(this.debugEntity)
+        //MeshRenderer.setBox(this.debugEntity)
         MeshCollider.setBox(this.debugEntity)
     }
 }

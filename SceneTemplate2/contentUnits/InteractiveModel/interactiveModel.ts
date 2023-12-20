@@ -1,4 +1,4 @@
-import { Billboard, BillboardMode, Entity, GltfContainer, InputAction, MeshCollider, TextShape, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
+import { Billboard, BillboardMode, Entity, GltfContainer, InputAction, MeshCollider, MeshRenderer, TextShape, Transform, engine, pointerEventsSystem } from "@dcl/sdk/ecs";
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom";
 import { IContentUnit } from "@dclu/dclu-liveteach/src/contentUnits";
