@@ -128,6 +128,11 @@ export class ItemManager {
            engine.removeEntity(area.debugEntity)
         });
 
+        if(ItemManager.carryItem!=null){
+            engine.removeEntity(ItemManager.carryItem.collider)
+            engine.removeEntity(ItemManager.carryItem.entity)
+            ItemManager.carryItem = null
+        }
         
     }
     
