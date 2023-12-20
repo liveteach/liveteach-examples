@@ -34,6 +34,17 @@ export class ItemManager {
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-0.2 -2.1,1.13,-0.48)))
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-0.6 -2.1,1.13,-0.48)))
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1 -2.1,1.13,-0.48))) 
+
+        // Oven hobs
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.445,1.135,-0.165)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.445,1.135,-0.43)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.83,1.135,-0.165)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.83,1.135,-0.43)))
+
+        // The top 12 placeable areas + 4 oven hobs can all allow the cakestand.
+        this.placeableAreas.forEach(area => {
+            area.allowCakeStand = true
+        });
  
         // Bottom cupboards
         this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-0.3,0.185,-0.15)))
@@ -45,14 +56,8 @@ export class ItemManager {
 
         // In the oven
 
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.44,-0.2)))
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.7,-0.2)))
-
-        // Oven hobs
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.445,1.135,-0.165)))
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.445,1.135,-0.43)))
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.83,1.135,-0.165)))
-        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.83,1.135,-0.43)))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.44,-0.2),true))
+        this.placeableAreas.push(new PlaceableArea(_parent, Vector3.create(-1.65,0.7,-0.2),true))
 
         this.spawnIngredients()
  
@@ -97,6 +102,16 @@ export class ItemManager {
         bakingTin.setPlaceableArea(this.placeableAreas[10],bakingTin)
         bakingTin.setScale(0.75)
         this.items.push(bakingTin)
+
+        let cakeStand = new CarryItem("models/bakery/items/cakeStand.glb", "Cake Stand", ItemType.cakeStand)
+        cakeStand.setPlaceableArea(this.placeableAreas[11],cakeStand)
+        //cakeStand.setScale(0.75) 
+        this.items.push(cakeStand) 
+
+        // Add a placeable area ontop of the cake stand.
+        let cakeStandPlaceableArea = new PlaceableArea(cakeStand.entity, Vector3.create(0,0.16,0))
+        cakeStandPlaceableArea.cakeStandArea = true
+        this.placeableAreas.push(cakeStandPlaceableArea)
     }
     
     static addPickupPointers(){
@@ -139,6 +154,11 @@ export class ItemManager {
         // Check that the placeable area doesn't already have an item and I am carrying one
         if(_placeableArea.carryItem == null && ItemManager.carryItem != null){
             _placeableArea.carryItem = ItemManager.carryItem
+
+            if(_placeableArea.carryItem.childItem != null){
+                _placeableArea.carryItem.childItem.addCollider() // Give my child a collider again
+            }
+
             ItemManager.carryItem = null
             _placeableArea.carryItem.setPlaceableArea(_placeableArea)
             _placeableArea.carryItem.addCollider()

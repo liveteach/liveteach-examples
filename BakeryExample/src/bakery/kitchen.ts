@@ -34,7 +34,7 @@ export class Kitchen{
             })
             draw.startPos = Transform.get(draw.entity).position
 
-            this.itemManager.placeableAreas.push(new PlaceableArea(draw.entity,Vector3.create(0,-0.12,-0.15)))
+            this.itemManager.placeableAreas.push(new PlaceableArea(draw.entity,Vector3.create(0,-0.12,-0.2)))
         });        
 
         this.bottomDrawPositions.forEach(drawPosition => {

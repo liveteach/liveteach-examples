@@ -13,6 +13,7 @@ export class CarryItem {
     placedArea: PlaceableArea = null
     hover: string = ""
     itemType: ItemType
+    childItem: CarryItem // So the cake stand can remove its carried items collider when needed
     
     constructor(_modelPath:string,_hover:string, _itemType:ItemType){
         this.hover = _hover
@@ -41,6 +42,11 @@ export class CarryItem {
             function () {
                 ItemManager.setCarriedItem(self)
                 self.removeCollider()
+
+                if(self.childItem != null){
+                    self.childItem.removeCollider() // Take off my childs collider too
+                }
+
                 if(self.placedArea!=null){
                     self.placedArea.carryItem = null 
                     self.placedArea = null

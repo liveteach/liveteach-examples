@@ -21,6 +21,8 @@ export class Instructions {
         this.text.push("Put the tin into the oven")
         this.text.push("Bake for 14-8 minutes")
         this.text.push("Display the baked cake")
+        this.text.push("Choose a topping\nChocolate, Jam or Double Cream")
+        this.text.push("Congratulations")
 
         this.display = engine.addEntity()
         Transform.create(this.display,_transform)

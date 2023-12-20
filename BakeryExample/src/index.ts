@@ -64,6 +64,13 @@ export function main() {
     ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
 
     ClassroomManager.AddTestTeacherAddress("0x89baf22213da14faaad00aba1609cecbc62e44a4")
+
+    const doorParent = engine.addEntity()
+    Transform.create(doorParent, {
+      position: Vector3.create(0, 0, 32)
+    })
+  
+    addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
   })
 
 
@@ -105,12 +112,6 @@ export function main() {
   //new dclu.seating.SeatingController(seatingData,Vector3.create(12,3,19),Vector3.create(10,7,12),true) // removing hide volume until exclude ID's are fully working in DCL
   new dclu.seating.SeatingController(seatingData, Vector3.create(12, -50, 19), Vector3.create(10, 7, 12), true) // Put the volume underground for now
 
-  const doorParent = engine.addEntity()
-  Transform.create(doorParent, {
-    position: Vector3.create(0, 0, 32)
-  })
-
-  addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
 }
 
 export function addScreen(_guid: string, _position: Vector3, _rotation: Quaternion, _scale: Vector3, _parent: Entity): void {

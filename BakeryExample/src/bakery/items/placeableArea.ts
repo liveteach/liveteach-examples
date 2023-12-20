@@ -4,21 +4,26 @@ import { Vector3 } from "@dcl/sdk/math";
 import { CarryItem } from "./carryItem";
 import { Kitchen } from "../kitchen";
 import { ItemManager } from "./itemManager";
+import { ItemType } from "./itemType";
 
 export class PlaceableArea {
     entity:Entity
     carryItem:CarryItem = null
 
     debugEntity:Entity
+    ovenArea:boolean = false
+    cakeStandArea:boolean = false
+    allowCakeStand:boolean = false
 
-    constructor(_parent: Entity, _position:Vector3){
+    constructor(_parent: Entity, _position:Vector3, _ovenArea:boolean = false){
         this.entity = engine.addEntity()
         this.debugEntity = engine.addEntity()
+
+        this.ovenArea = _ovenArea
 
         Transform.create(this.entity, {
             parent: _parent,
             position:_position,
-            
         }) 
 
         Transform.create(this.debugEntity, {
@@ -35,6 +40,13 @@ export class PlaceableArea {
     addPointerPlacement(){
         let self = this
         if(this.carryItem==null){
+            if(this.cakeStandArea && ItemManager.carryItem.itemType == ItemType.cakeStand){
+                return // So you can't put the cake stand on top of itself
+            }
+
+            if(ItemManager.carryItem.itemType == ItemType.cakeStand && !this.allowCakeStand){
+                return // Don't allow the cake stand to go on anything other than the top of the counter
+            }
             pointerEventsSystem.onPointerDown(
                 {
                     entity: this.debugEntity,
@@ -44,6 +56,14 @@ export class PlaceableArea {
                     }
                 },
                 function () {
+                    if(self.cakeStandArea){
+                        // Get cake stand
+                        ItemManager.instance.items.forEach(item => {
+                            if(item.itemType == ItemType.cakeStand){
+                                item.childItem = ItemManager.carryItem
+                            }
+                        }); 
+                    }
                     ItemManager.placeCarriedItem(self)
                 }
             )
