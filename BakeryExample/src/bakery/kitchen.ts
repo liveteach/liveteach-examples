@@ -52,6 +52,8 @@ export class Kitchen{
             rotation: Quaternion.fromEulerDegrees(0,0,0)
         })
 
+        this.itemManager.spawnIngredients()
+
         Kitchen.instance = this
     }
 }
