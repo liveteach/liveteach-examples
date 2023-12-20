@@ -6,16 +6,6 @@ export class BakeryGame implements IContentUnit{
     kitchen:Kitchen = null
     
     constructor() { 
-
-        if(this.kitchen!=null){
-            this.kitchen.destroy()
-        }
-
-        this.kitchen = new Kitchen({
-            position:Vector3.create(18,1.2,15),
-            rotation: Quaternion.fromEulerDegrees(0,-90,0)
-        })
-
         this.start({})
     }
 

@@ -14,6 +14,7 @@ export class Kitchen{
     itemManager: ItemManager
     instructions: Instructions
     static instance:Kitchen
+    draws:Draw[] = []
 
     constructor(_transform:TransformTypeWithOptionals){
         this.counterEntity = engine.addEntity()
@@ -32,7 +33,7 @@ export class Kitchen{
                 position: Vector3.create(drawPosition,0.98,0.01)
             })
             draw.startPos = Transform.get(draw.entity).position
-
+            this.draws.push(draw)
             this.itemManager.placeableAreas.push(new PlaceableArea(draw.entity,Vector3.create(0,-0.12,-0.2)))
         });        
 
@@ -43,6 +44,7 @@ export class Kitchen{
                 position: Vector3.create(drawPosition,0.46,0.03)
             })
             draw.startRot = Transform.get(draw.entity).rotation
+            this.draws.push(draw)
         });
 
         
@@ -60,6 +62,10 @@ export class Kitchen{
         this.itemManager.destroy()
         this.instructions.destroy()
         this.oven.destroy()
+        this.draws.forEach(draw => {
+            engine.removeEntity(draw.entity)
+        });
+        this.draws = []
         engine.removeEntity(this.counterEntity)
     }
 }
