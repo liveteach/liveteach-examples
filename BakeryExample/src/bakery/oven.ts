@@ -2,6 +2,9 @@ import { Entity, GltfContainer, InputAction, MeshCollider, MeshRenderer, Transfo
 import { Quaternion, Vector3 } from "@dcl/sdk/math";
 import * as utils from '@dcl-sdk/utils'
 import { AudioManager } from "../audio/audioManager";
+import { Kitchen } from "./kitchen";
+import { ItemManager } from "./items/itemManager";
+import { ItemType } from "./items/itemType";
 
 export class Oven {
     entity: Entity
@@ -10,6 +13,8 @@ export class Oven {
     blocked: boolean = false
     timeKnob:Entity
     tempKnob:Entity
+    heatEffect:Entity
+    ovenOn:boolean = false
 
     constructor(_parent:Entity){
         this.entity = engine.addEntity()
@@ -56,12 +61,24 @@ export class Oven {
                 }
             }, 
             function () {
-                AudioManager.playDialTurn()
+                if(Kitchen.instance.instructions.currentStep==9 && !self.opened && self.ovenOn){
+                    AudioManager.playDialTurn()
+                    Kitchen.instance.instructions.increaseStep()
+                    AudioManager.playSuccess()
+                    // Update the baking tin to a sponge cake
+                    ItemManager.instance.items.forEach(item => {
+                        if(item.itemType == ItemType.bakingTin){
+                            item.itemType = ItemType.cake
+                            GltfContainer.createOrReplace(item.entity, {src:"models/bakery/items/cookedSponges.gltf"})
+                            item.hover = "Cake"
+                        }
+                    });
+                }
             }
         )
 
         this.tempKnob = engine.addEntity()
-        Transform.create(this.tempKnob, {
+        Transform.create(this.tempKnob, {  
             parent: this.entity,
             position:Vector3.create(-1.83,1,0.01),
             scale: Vector3.create(0.075,0.075,0.1)
@@ -78,9 +95,24 @@ export class Oven {
                 }
             }, 
             function () {
-                AudioManager.playDialTurn()
+                if(Kitchen.instance.instructions.currentStep==0){
+                    AudioManager.playDialTurn()
+                    Kitchen.instance.instructions.increaseStep()
+                    AudioManager.playSuccess()
+                    self.turnOn()
+                } else {
+                    if(self.ovenOn){
+                        self.turnOff()
+                    } else {
+                        self.turnOn()
+                    }
+                }
             }
         )
+
+        this.heatEffect = engine.addEntity()
+        Transform.create(this.heatEffect,{parent:_parent,scale:Vector3.Zero()}) 
+        GltfContainer.create(this.heatEffect, {src:"models/bakery/OvenHeat.glb"})
 
     }
 
@@ -103,7 +135,17 @@ export class Oven {
                 self.blocked = false
             }, 900)
         } 
-    } 
+    }
+    
+    turnOn(){
+        Transform.getMutable(this.heatEffect).scale = Vector3.One()
+        this.ovenOn = true
+    }
+
+    turnOff(){
+        Transform.getMutable(this.heatEffect).scale = Vector3.Zero()
+        this.ovenOn = false
+    }
  
     openOven() { 
         utils.tweens.startRotation(this.ovenDoor, Quaternion.fromEulerDegrees(0,0,0), Quaternion.fromEulerDegrees(90,0,0),1.3)
@@ -113,5 +155,23 @@ export class Oven {
     closeOven() {
         utils.tweens.startRotation(this.ovenDoor, Quaternion.fromEulerDegrees(90,0,0), Quaternion.fromEulerDegrees(0,0,0),1)
         AudioManager.playOvenClose(Transform.get(engine.PlayerEntity).position)
+
+        // Did we just put raw dough in?
+        ItemManager.instance.placeableAreas.forEach(area => {
+            if(area.carryItem!=null){
+                if(area.carryItem.itemType == ItemType.bakingTin && Kitchen.instance.instructions.currentStep == 8){
+                    Kitchen.instance.instructions.increaseStep()
+                    AudioManager.playSuccess()
+                }
+            }
+        });
+    }
+
+    destroy(){
+        engine.removeEntity(this.entity)
+        engine.removeEntity(this.ovenDoor)
+        engine.removeEntity(this.timeKnob)
+        engine.removeEntity(this.heatEffect)
+        engine.removeEntity(this.tempKnob)
     }
 } 
