@@ -30,39 +30,29 @@ export function main() {
   
   ecs.executeTask(async () => {
 
-      userData = await getUserData({});
-        
-      //Is the user the Teacher
-      let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID.toLocaleLowerCase() ? "teacher" : "student";
-      //setup Server Parameters for the Websocket Server
-      let params: ServerParams = {
-        serverUrl: serverUrl,
-        role: userType,
-        wallet: userData?.data?.publicKey || 'GUEST' + userData.data?.userId
-      }
-
-      //Define the Channel to be used
-      const communicationChannel = new DefaultServerChannel();
-      //Pass in the Server Parameters
-      communicationChannel.serverConfig(params)
-      // Initialise the Classroom Manager
-    
-    // Initialise the ClassroomManager asynchronously as it depends on getCurrentRealm
-    let getCurrentRealmResponse: GetCurrentRealmResponse = await getCurrentRealm({})
-    let useDev = false;
-    // detect tigertest realm
-    if (getCurrentRealmResponse &&
-      getCurrentRealmResponse.currentRealm &&
-      getCurrentRealmResponse.currentRealm.serverName) {
-      if (getCurrentRealmResponse.currentRealm.serverName.toLocaleLowerCase().indexOf("tigertest") != -1) {
-        useDev = true;
-      }
+    userData = await getUserData({});
+      
+    //Is the user the Teacher
+    let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID.toLocaleLowerCase() ? "teacher" : "student";
+    //setup Server Parameters for the Websocket Server
+    let params: ServerParams = {
+      serverUrl: serverUrl,
+      role: userType,
+      wallet: userData?.data?.publicKey || 'GUEST' + userData.data?.userId
     }
+
+    //Define the Channel to be used
+    const communicationChannel = new DefaultServerChannel();
+    //Pass in the Server Parameters
+    communicationChannel.serverConfig(params)
+    // Initialise the Classroom Manager
+    
+    let useDev = false;
     if (useDev) {
       ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
     }
     else {
-      // default to mainnet
+      // mainnet
       ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
     }
 

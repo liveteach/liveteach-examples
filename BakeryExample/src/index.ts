@@ -4,7 +4,6 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as dclu from '@dclu/dclu-liveteach'
 import { ClassroomManager, ControllerUI } from "@dclu/dclu-liveteach/src/classroom"
 import { PeerToPeerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/peerToPeerChannel"
-import { GetCurrentRealmResponse, getCurrentRealm } from "~system/EnvironmentApi"
 import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveModel"
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
@@ -22,57 +21,43 @@ let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
 
 export function main() {
+  const communicationChannel = new PeerToPeerChannel()
+  let useDev = false;
 
-  ecs.executeTask(async () => {
-    const communicationChannel = new PeerToPeerChannel()
+  if (useDev) {
+    ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
+  }
+  else {
+    // mainnet
+    ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
+  }
 
-    // Initialise the ClassroomManager asynchronously as it depends on getCurrentRealm
-    let getCurrentRealmResponse: GetCurrentRealmResponse = await getCurrentRealm({})
-    let useDev = false;
-    // detect tigertest realm
-    if (getCurrentRealmResponse &&
-      getCurrentRealmResponse.currentRealm &&
-      getCurrentRealmResponse.currentRealm.serverName) {
-      if (getCurrentRealmResponse.currentRealm.serverName.toLocaleLowerCase().indexOf("tigertest") != -1) {
-        useDev = true;
-      }
-    }
-    if (useDev) {
-      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
-    }
-    else {
-      // default to mainnet
-      ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
-    }
+  ClassroomManager.RegisterClassroom(classroomConfig)
 
-    ClassroomManager.RegisterClassroom(classroomConfig)
+  const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
+  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
+  const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
+  const podium = new Podium()
 
-    const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
-    const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
-    const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
-    const podium = new Podium()
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
 
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
+  //Register content units
+  ClassroomManager.RegisterContentUnit("poll", new Poll())
+  ClassroomManager.RegisterContentUnit("quiz", new Quiz())
+  ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
+  ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
 
-    //Register content units
-    ClassroomManager.RegisterContentUnit("poll", new Poll())
-    ClassroomManager.RegisterContentUnit("quiz", new Quiz())
-    ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
-    ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
+  ClassroomManager.AddTestTeacherAddress("0x89baf22213da14faaad00aba1609cecbc62e44a4")
 
-    ClassroomManager.AddTestTeacherAddress("0x89baf22213da14faaad00aba1609cecbc62e44a4")
-
-    const doorParent = engine.addEntity()
-    Transform.create(doorParent, {
-      position: Vector3.create(0, 0, 32)
-    })
-  
-    addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
+  const doorParent = engine.addEntity()
+  Transform.create(doorParent, {
+    position: Vector3.create(0, 0, 32)
   })
 
+  addDoor(doorParent, "models/doors.glb", [{ type: "sphere" as const, position: Vector3.create(-6, 0, 21), radius: 4 }])
 
   dclu.setup({
     ecs: ecs,

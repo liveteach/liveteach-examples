@@ -4,7 +4,6 @@ import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import * as dclu from '@dclu/dclu-liveteach'
 import { ClassroomManager, ControllerUI } from "@dclu/dclu-liveteach/src/classroom"
 import { PeerToPeerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/peerToPeerChannel"
-import { GetCurrentRealmResponse, getCurrentRealm } from "~system/EnvironmentApi"
 import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveModel"
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
@@ -20,25 +19,15 @@ let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
 
 export function main() {
-  ecs.executeTask(async () => {
+
     const communicationChannel = new PeerToPeerChannel()
 
-    // Initialise the ClassroomManager asynchronously as it depends on getCurrentRealm
-    let getCurrentRealmResponse: GetCurrentRealmResponse = await getCurrentRealm({})
     let useDev = false;
-    // detect tigertest realm
-    if (getCurrentRealmResponse &&
-      getCurrentRealmResponse.currentRealm &&
-      getCurrentRealmResponse.currentRealm.serverName) {
-      if (getCurrentRealmResponse.currentRealm.serverName.toLocaleLowerCase().indexOf("tigertest") != -1) {
-        useDev = true;
-      }
-    }
     if (useDev) {
       ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
     }
     else {
-      // default to mainnet
+      // mainnet
       ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
     }
 
@@ -60,7 +49,6 @@ export function main() {
     ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
 
     //ClassroomManager.AddTestTeacherAddress("0xfd823021bd4b8b6841bf65448c2cfe2c1cc3af9a")
-  })
 
   dclu.setup({
     ecs: ecs,

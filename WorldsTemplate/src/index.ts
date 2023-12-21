@@ -20,47 +20,35 @@ let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
 
 export function main() {
-  ecs.executeTask(async () => {
-    const communicationChannel = new PeerToPeerChannel()
+  const communicationChannel = new PeerToPeerChannel()
+  let useDev = false;
 
-    // Initialise the ClassroomManager asynchronously as it depends on getCurrentRealm
-    let getCurrentRealmResponse: GetCurrentRealmResponse = await getCurrentRealm({})
-    let useDev = false;
-    // detect tigertest realm
-    if (getCurrentRealmResponse &&
-      getCurrentRealmResponse.currentRealm &&
-      getCurrentRealmResponse.currentRealm.serverName) {
-      if (getCurrentRealmResponse.currentRealm.serverName.toLocaleLowerCase().indexOf("tigertest") != -1) {
-        useDev = true;
-      }
-    }
-    if (useDev) {
-      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
-    }
-    else {
-      // default to mainnet
-      ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
-    }
+  if (useDev) {
+    ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
+  }
+  else {
+    // mainnet
+    ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
+  }
 
-    ClassroomManager.RegisterClassroom(classroomConfig)
+  ClassroomManager.RegisterClassroom(classroomConfig)
 
-    const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
-    const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
-    const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
-    const podium = new Podium()
+  const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
+  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
+  const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
+  const podium = new Podium()
 
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
 
-    //Register content units
-    ClassroomManager.RegisterContentUnit("poll", new Poll())
-    ClassroomManager.RegisterContentUnit("quiz", new Quiz())
-    ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
+  //Register content units
+  ClassroomManager.RegisterContentUnit("poll", new Poll())
+  ClassroomManager.RegisterContentUnit("quiz", new Quiz())
+  ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
 
-    //ClassroomManager.AddTestTeacherAddress("0xfd823021bd4b8b6841bf65448c2cfe2c1cc3af9a")
-  })
+  //ClassroomManager.AddTestTeacherAddress("0xfd823021bd4b8b6841bf65448c2cfe2c1cc3af9a")
 
   dclu.setup({
     ecs: ecs,
