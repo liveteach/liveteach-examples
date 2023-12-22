@@ -19,7 +19,7 @@
 			"-8,109",
 			"-7,109",
 			"-8,108",
-			"-7,108"
+			"-7,108" 
 		],
 		"base": "-8,108"
 	},
@@ -56,7 +56,8 @@
 	"allowedMediaHostnames": [
 		"decentraland.org",
 		"demo.unified-streaming.com",
-		"5eb7131de84bb.streamlock.net"
+		"5eb7131de84bb.streamlock.net",
+		"gateway.pinata.cloud"
 	],
 	"featureToggles": {}
 }

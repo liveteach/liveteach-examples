@@ -8,12 +8,13 @@ import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveMo
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
 import { SeatingData } from "./UniversitySeatingData"
-import { AudioManager } from "./audioManager"
 import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 import { DisplayPanel } from "./displayPanel"
 import { Door } from "./door"
 import { Podium } from "./podium/podium"
 import { setupUi } from "./ui"
+import { AudioManager } from "./audio/audioManager"
+import { BakeryGame } from "./bakery/bakeryGame"
 
 let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
@@ -47,23 +48,24 @@ export function main() {
     ClassroomManager.RegisterContentUnit("poll", new Poll())
     ClassroomManager.RegisterContentUnit("quiz", new Quiz())
     ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
+    ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
 
-    //ClassroomManager.AddTestTeacherAddress("0xfd823021bd4b8b6841bf65448c2cfe2c1cc3af9a")
+    //ClassroomManager.AddTestTeacherAddress("0x7528f320bd916d2fe0ea4c3d3ba88f1dbc454f52")
 
   dclu.setup({
     ecs: ecs,
-    Logger: null
+    Logger: null 
   })
   setupUi()
 
 
-  let entity = engine.addEntity()
+  let entity = engine.addEntity() 
   Transform.create(entity, {
     position: Vector3.create(0, 0.02, 32),
     rotation: Quaternion.fromEulerDegrees(0, 0, 0),
     scale: Vector3.create(1, 1, 1)
   })
-  GltfContainer.create(entity, { src: "models/LiveTeachExampleClassRoom.glb" })
+  GltfContainer.create(entity, { src: "models/LiveTeachExampleClassRoom.glb" }) 
 
   //new Toaster()
   new AudioManager()
