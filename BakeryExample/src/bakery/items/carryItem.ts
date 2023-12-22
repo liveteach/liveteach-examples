@@ -23,7 +23,7 @@ export class CarryItem {
         Transform.create(this.entity,{})
         
         this.collider =  engine.addEntity()
-        GltfContainer.create(this.collider, {src:_modelPath.replace(".gltf","_Collider.glb")})
+        GltfContainer.create(this.collider, {src:_modelPath.replace(".glb","_Collider.glb")})
         Transform.create(this.collider,{parent:this.entity})
 
         this.addOnPointerPickup()
@@ -148,85 +148,85 @@ export class CarryItem {
                 if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 1){
                     if(ItemManager.carryItem.itemType == ItemType.eggs){
                         if(ItemManager.instance.sugarUsed){
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlSugarEggs.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlSugarEggs.glb"})
                             Kitchen.instance.instructions.increaseStep()
                         } else {
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlEggs.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlEggs.glb"})
                         }                         
                         ItemManager.instance.eggsUsed = true
                         self.combined()
                     } else if (ItemManager.carryItem.itemType == ItemType.sugar){
                         if(ItemManager.instance.eggsUsed){
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlSugarEggs.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlSugarEggs.glb"})
                             Kitchen.instance.instructions.increaseStep()
                         } else {
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlSugar.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlSugar.glb"})
                         }                       
                         ItemManager.instance.sugarUsed = true
                         self.combined()
                     }  
                 } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 2){
                     if(ItemManager.carryItem.itemType == ItemType.whisk){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlWhisked.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlWhisked.glb"})
                         AudioManager.playSuccess()
                         Kitchen.instance.instructions.increaseStep()
                         self.combined()
                     }
                 } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 3){
                     if(ItemManager.carryItem.itemType == ItemType.flour){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlFloured.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlFloured.glb"})
                         AudioManager.playSuccess()
                         Kitchen.instance.instructions.increaseStep()
                         self.combined()
                     }
                 } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 4){
                     if(ItemManager.carryItem.itemType == ItemType.spatula){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlFolded.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlFolded.glb"})
                         AudioManager.playSuccess()
                         Kitchen.instance.instructions.increaseStep()
                         self.combined(false)
                     }
                 } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 5){
                     if(ItemManager.carryItem.itemType == ItemType.butter){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlButtered.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlButtered.glb"})
                         AudioManager.playSuccess()
                         Kitchen.instance.instructions.increaseStep()
                         self.combined()
                     }
                 } else if(self.itemType == ItemType.mixingBowl && Kitchen.instance.instructions.currentStep == 6){
                     if(ItemManager.carryItem.itemType == ItemType.spatula){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlDough.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/mixingBowlDough.glb"})
                         AudioManager.playSuccess()
                         Kitchen.instance.instructions.increaseStep()
                         self.combined()
                     }
                 } else if(self.itemType == ItemType.bakingTin && Kitchen.instance.instructions.currentStep == 7){
                     if(ItemManager.carryItem.itemType == ItemType.mixingBowl){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/bakingTinDough.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/bakingTinDough.glb"})
                         AudioManager.playSuccess()
                         Kitchen.instance.instructions.increaseStep()
                         self.combined()
                     }
                 } else if(Kitchen.instance.instructions.currentStep == 11 && self.itemType == ItemType.cake){
                     if(ItemManager.carryItem.itemType == ItemType.chocolate){
-                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/chocolateCake.gltf"})
+                        GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/chocolateCake.glb"})
                         Kitchen.instance.instructions.increaseStep()
                     } else if(ItemManager.carryItem.itemType == ItemType.cream){
                         ItemManager.instance.creamUsed = true
                         if(ItemManager.instance.jamUsed){
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/jamCreamCake.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/jamCreamCake.glb"})
                             Kitchen.instance.instructions.increaseStep()
-                        } else { 
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/creamCake.gltf"})
+                        } else {
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/creamCake.glb"})
                         }
 
                     } else if(ItemManager.carryItem.itemType == ItemType.jam){
                         ItemManager.instance.jamUsed = true
                         if(ItemManager.instance.creamUsed){
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/jamCreamCake.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/jamCreamCake.glb"})
                             Kitchen.instance.instructions.increaseStep()
                         } else {
-                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/jamCake.gltf"})
+                            GltfContainer.createOrReplace(self.entity, {src:"models/bakery/items/jamCake.glb"})
                         }
                     }
                     AudioManager.playSuccess()

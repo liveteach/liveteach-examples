@@ -69,7 +69,7 @@ export class Oven {
                     ItemManager.instance.items.forEach(item => {
                         if(item.itemType == ItemType.bakingTin){
                             item.itemType = ItemType.cake
-                            GltfContainer.createOrReplace(item.entity, {src:"models/bakery/items/cookedSponges.gltf"})
+                            GltfContainer.createOrReplace(item.entity, {src:"models/bakery/items/cookedSponges.glb"})
                             item.hover = "Cake"
                         }
                     });
