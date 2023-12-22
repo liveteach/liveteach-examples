@@ -8,7 +8,6 @@ import { InteractiveModel } from "../contentUnits/InteractiveModel/interactiveMo
 import { Poll } from "../contentUnits/poll/poll"
 import { Quiz } from "../contentUnits/quiz/quiz"
 import { SeatingData } from "./UniversitySeatingData"
-import { AudioManager } from "./audioManager"
 import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
 import { DisplayPanel } from "./displayPanel"
 import { Door } from "./door"
@@ -17,6 +16,8 @@ import { setupUi } from "./ui"
 import { GetUserDataResponse, getUserData } from "~system/UserIdentity"
 import { DefaultServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/DefaultServerChannel";
 import { ServerParams } from "@dclu/dclu-liveteach/src/classroom/types/classroomTypes"
+import { BakeryGame } from "./bakery/bakeryGame"
+import { AudioManager } from "./audio/audioManager"
 
 let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
@@ -72,8 +73,9 @@ export function main() {
     ClassroomManager.RegisterContentUnit("poll", new Poll())
     ClassroomManager.RegisterContentUnit("quiz", new Quiz())
     ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
+    ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
 
-    //ClassroomManager.AddTestTeacherAddress("0xfd823021bd4b8b6841bf65448c2cfe2c1cc3af9a")
+    //ClassroomManager.AddTestTeacherAddress("0xdc99ae0de05335994b4b9d95129ea83926168c9d")
 
   })
 
@@ -86,7 +88,7 @@ export function main() {
 
   let entity = engine.addEntity()
   Transform.create(entity, {
-    position: Vector3.create(0, 0.02, 32),
+    position: Vector3.create(0, 0.02, 32), 
     rotation: Quaternion.fromEulerDegrees(0, 0, 0),
     scale: Vector3.create(1, 1, 1)
   })

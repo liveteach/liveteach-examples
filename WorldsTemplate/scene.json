@@ -42,7 +42,8 @@
   "allowedMediaHostnames": [
     "decentraland.org",
     "demo.unified-streaming.com",
-    "5eb7131de84bb.streamlock.net"
+    "5eb7131de84bb.streamlock.net",
+		"gateway.pinata.cloud"
   ],
   "ecs7": true,
   "runtimeVersion": "7",
