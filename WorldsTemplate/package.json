@@ -15,7 +15,7 @@
     "@dcl/sdk": "^7.3.35"
   },
   "dependencies": {
-    "@dclu/dclu-liveteach": "^1.8.38"
+    "@dclu/dclu-liveteach": "^1.8.39"
   },
   "engines": {
     "node": ">=16.0.0",

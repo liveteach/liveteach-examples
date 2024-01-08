@@ -26,6 +26,6 @@
   },
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.3",
-    "@dclu/dclu-liveteach": "^1.8.27"
+    "@dclu/dclu-liveteach": "^1.8.39"
   }
 }
