@@ -1,10 +1,6 @@
 {
     "classroom": {
         "guid": "left",
-        "teacherID": "",
-        "teacherName": "",
-        "className": "",
-        "classDescription": "",
         "origin": {
             "x": 8,
             "y": 1,
@@ -15,11 +11,6 @@
             "y": 4,
             "z": 16
         },
-        "autojoin": true,
-        "capacity": "1",
-        "duration": "1",
-        "seatingEnabled": true,
-        "videoPlaying": false,
-        "students": []
+        "autojoin": true
     }
 }

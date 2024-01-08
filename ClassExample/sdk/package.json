@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.2",
-    "@dclu/dclu-liveteach": "^1.8.26",
+    "@dclu/dclu-liveteach": "^1.8.39",
     "core-js": "^3.32.0",
     "eth-connect": "^6.2.1",
     "text-encoding": "^0.7.0"
