@@ -21,51 +21,51 @@ let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d2
 
 export function main() {
 
-    const communicationChannel = new PeerToPeerChannel()
+  const communicationChannel = new PeerToPeerChannel()
 
-    let useDev = true;
-    if (useDev) {
-      ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
-    }
-    else {
-      // mainnet
-      ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
-    }
+  let useDev = true;
+  if (useDev) {
+    ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
+  }
+  else {
+    // mainnet
+    ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
+  }
 
-    ClassroomManager.RegisterClassroom(classroomConfig)
+  ClassroomManager.RegisterClassroom(classroomConfig)
 
-    const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
-    const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
-    const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
-    const podium = new Podium()
+  const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
+  const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
+  const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
+  const podium = new Podium(Vector3.create(21.1, 1.8, 16), Vector3.create(0, 180, 0))
 
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
-    addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen2.entity)
+  addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(2.84, 2.84, 2.84), screen3.entity)
 
-    //Register content units
-    ClassroomManager.RegisterContentUnit("poll", new Poll())
-    ClassroomManager.RegisterContentUnit("quiz", new Quiz())
-    ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
-    ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
+  //Register content units
+  ClassroomManager.RegisterContentUnit("poll", new Poll())
+  ClassroomManager.RegisterContentUnit("quiz", new Quiz())
+  ClassroomManager.RegisterContentUnit("interactive_model", new InteractiveModel())
+  ClassroomManager.RegisterContentUnit("bakery", new BakeryGame())
 
-    //ClassroomManager.AddTestTeacherAddress("0x7528f320bd916d2fe0ea4c3d3ba88f1dbc454f52")
+  //ClassroomManager.AddTestTeacherAddress("0x454cfee2e96a2c5ea2a8974e8f4f02cb8ab87af2")
 
   dclu.setup({
     ecs: ecs,
-    Logger: null 
+    Logger: null
   })
   setupUi()
 
 
-  let entity = engine.addEntity() 
+  let entity = engine.addEntity()
   Transform.create(entity, {
     position: Vector3.create(0, 0.02, 32),
     rotation: Quaternion.fromEulerDegrees(0, 0, 0),
     scale: Vector3.create(1, 1, 1)
   })
-  GltfContainer.create(entity, { src: "models/LiveTeachExampleClassRoom.glb" }) 
+  GltfContainer.create(entity, { src: "models/LiveTeachExampleClassRoom.glb" })
 
   //new Toaster()
   new AudioManager()

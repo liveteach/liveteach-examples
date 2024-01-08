@@ -118,22 +118,14 @@ export class ControllerScreen {
         )
     }
 
-    toggle(_prevButton: PodiumButton, _nextButton: PodiumButton, _prevNextButtonsGraphic: Entity): void {
+    toggle(): void {
         this.open = !this.open
         if (this.open) {
             TextShape.getMutable(this.className).text = ClassroomManager.classController ? ClassroomManager.classController.classList[ClassroomManager.classController.selectedClassIndex].name : ""
-            GltfContainer.createOrReplace(_prevNextButtonsGraphic, { src: "models/podium/prevNext_on.glb" })
             GltfContainer.createOrReplace(this.buttonGraphicReference, { src: "models/podium/teacher_selected.glb" })
             Transform.getMutable(this.entity).scale = Vector3.create(0.44, 0.33, 1)
-            _prevButton.show()
-            _nextButton.show()
         }
         else {
-            if (ClassroomManager.screenManager?.poweredOn == false) {
-                GltfContainer.createOrReplace(_prevNextButtonsGraphic, { src: "models/podium/prevNext_off.glb" })
-                _prevButton.hide()
-                _nextButton.hide()
-            }
             if (ClassroomManager.classController?.inSession) {
                 GltfContainer.createOrReplace(this.buttonGraphicReference, { src: "models/podium/teacher_on.glb" })
             }
@@ -162,6 +154,28 @@ export class ControllerScreen {
             }
             this.update()
         }
+    }
+
+    toStart(): void {
+        if (ClassroomManager.classController) {
+            ClassroomManager.classController.selectedClassIndex = 0
+            this.update()
+        }
+    }
+
+    toEnd(): void {
+        if (ClassroomManager.classController) {
+            ClassroomManager.classController.selectedClassIndex = ClassroomManager.classController.classList.length - 1
+            this.update()
+        }
+    }
+
+    hasNext(): boolean {
+        return ClassroomManager.classController?.selectedClassIndex < ClassroomManager.classController.classList.length - 1
+    }
+
+    hasPrevious(): boolean {
+        return ClassroomManager.classController?.selectedClassIndex > 0
     }
 
     hide(): void {
