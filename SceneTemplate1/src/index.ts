@@ -23,7 +23,7 @@ export function main() {
 
     const communicationChannel = new PeerToPeerChannel()
 
-    let useDev = false;
+    let useDev = true;
     if (useDev) {
       ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
     }
