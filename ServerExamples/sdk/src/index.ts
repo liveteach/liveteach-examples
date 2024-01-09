@@ -31,13 +31,11 @@ export function main() {
 
         userData = await getUserData({});
           
-          //Is the user the Teacher
-        let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID ? "teacher" : "student";
         
         //setup Server Parameters for the Websocket Server
         let params: ServerParams = {
           serverUrl: serverUrl,
-          role: userType
+          wallet: userData?.data?.publicKey || 'GUEST' + userData.data?.userId
         }
 
         //Define the Channel to be used
