@@ -40,7 +40,6 @@ export function main() {
     //setup Server Parameters for the Websocket Server
     let params: ServerParams = {
       serverUrl: serverUrl,
-      role: userType,
       wallet: userData?.data?.publicKey || 'GUEST' + userData.data?.userId
     }
 
