@@ -16,8 +16,7 @@ import { setupUi } from "./ui"
 import { GetUserDataResponse, getUserData } from "~system/UserIdentity"
 import { DefaultServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/DefaultServerChannel";
 import { ServerParams } from "@dclu/dclu-liveteach/src/classroom/types/classroomTypes"
-import { BakeryGame } from "./bakery/bakeryGame"
-import { AudioManager } from "./audio/audioManager"
+import { BakeryGame } from "../contentUnits/Bakery/bakeryGame"
 
 let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
@@ -30,11 +29,14 @@ export function main() {
   let serverUrl = "ws://localhost:3000"
   
   ecs.executeTask(async () => {
-
+ 
     userData = await getUserData({});
       
     //Is the user the Teacher
-    let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID.toLocaleLowerCase() ? "teacher" : "student";
+    //let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID.toLocaleLowerCase() ? "teacher" : "student";
+
+    let userType = "student" // This needs fixing
+
     //setup Server Parameters for the Websocket Server
     let params: ServerParams = {
       serverUrl: serverUrl,
@@ -93,9 +95,6 @@ export function main() {
     scale: Vector3.create(1, 1, 1)
   })
   GltfContainer.create(entity, { src: "models/LiveTeachExampleClassRoom.glb" })
-
-  //new Toaster()
-  new AudioManager()
 
   // Add seating 
   let seatingData: SeatingData = new SeatingData()
