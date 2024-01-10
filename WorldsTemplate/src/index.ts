@@ -13,22 +13,22 @@ import { DisplayPanel } from "./displayPanel"
 import { Door } from "./door"
 import { Podium } from "./podium/podium"
 import { setupUi } from "./ui"
-import { AudioManager } from "./audio/audioManager"
-import { BakeryGame } from "./bakery/bakeryGame"
+import { BakeryGame } from "../contentUnits/Bakery/bakeryGame"
 
-let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
+// let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
 let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
+let devWorldsContractAddress: string = "0x4d999180fbdf91419e41fa5ada1b13bf864c0605"
 
 export function main() {
   const communicationChannel = new PeerToPeerChannel()
-  let useDev = false;
+  let useDev = true;
 
   if (useDev) {
-    ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, true)
+    ClassroomManager.Initialise(communicationChannel, devWorldsContractAddress, devTeachersContractAddress, true, true)
   }
   else {
     // mainnet
-    ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
+    ClassroomManager.Initialise(communicationChannel, undefined, undefined, true, true)
   }
 
   ClassroomManager.RegisterClassroom(classroomConfig)
@@ -65,9 +65,6 @@ export function main() {
     scale: Vector3.create(1, 1, 1)
   })
   GltfContainer.create(entity, { src: "models/LiveTeachExampleClassRoom.glb" })
-
-  //new Toaster()
-  new AudioManager()
 
   // Add seating 
   let seatingData: SeatingData = new SeatingData()
