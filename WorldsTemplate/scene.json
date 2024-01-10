@@ -1,0 +1,56 @@
+{
+  "display": {
+    "title": "Live Teach Worlds Template",
+    "favicon": "favicon_asset",
+    "navmapThumbnail": "scene-thumbnail.png"
+  },
+  "owner": "LiveTeach",
+  "contact": {
+    "name": "LiveTeach",
+    "email": ""
+  },
+  "main": "bin/index.js",
+  "tags": [],
+  "scene": {
+    "parcels": [
+      "0,0",
+      "0,1",
+      "1,0",
+      "1,1"
+    ],
+    "base": "0,0"
+  },
+  "source": {
+    "version": 1,
+    "origin": "builder",
+    "projectId": "e2bc8277-28e7-4159-8c27-ac5af3bf6d41",
+    "point": {
+      "x": 0,
+      "y": 0
+    },
+    "rotation": "east",
+    "layout": {
+      "rows": 2,
+      "cols": 2
+    }
+  },
+  "requiredPermissions": [
+    "ALLOW_TO_TRIGGER_AVATAR_EMOTE",
+    "ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE",
+    "ALLOW_MEDIA_HOSTNAMES"
+  ],
+  "allowedMediaHostnames": [
+    "decentraland.org",
+    "demo.unified-streaming.com",
+    "5eb7131de84bb.streamlock.net",
+		"gateway.pinata.cloud"
+  ],
+  "ecs7": true,
+  "runtimeVersion": "7",
+  "worldConfiguration": {
+    "name": "liveteach.dcl.eth",
+    "placesConfig": {
+      "optOut": true
+    }
+  }
+}

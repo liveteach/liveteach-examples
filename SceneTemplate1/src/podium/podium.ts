@@ -9,7 +9,8 @@ import { InteractionScreen } from "./interactionScreen";
 export class Podium {
     entity: Entity
     powerButtonGraphic: Entity
-    prevNextButtonsGraphic: Entity
+    prevButtonsGraphic: Entity
+    nextButtonsGraphic: Entity
     muteButtonGraphic: Entity
     playPauseButtonGraphic: Entity
     imageButtonGraphic: Entity
@@ -32,10 +33,11 @@ export class Podium {
     controllerScreen: ControllerScreen
     interactionScreen: InteractionScreen
 
-    constructor() {
+    constructor(_position: Vector3, _rotation: Vector3) {
         this.entity = engine.addEntity()
         this.powerButtonGraphic = engine.addEntity()
-        this.prevNextButtonsGraphic = engine.addEntity()
+        this.prevButtonsGraphic = engine.addEntity()
+        this.nextButtonsGraphic = engine.addEntity()
         this.muteButtonGraphic = engine.addEntity()
         this.playPauseButtonGraphic = engine.addEntity()
         this.imageButtonGraphic = engine.addEntity()
@@ -45,8 +47,8 @@ export class Podium {
         this.controllerGraphic = engine.addEntity()
 
         Transform.create(this.entity, {
-            position: Vector3.create(21.1, 1.8, 16),
-            rotation: Quaternion.fromEulerDegrees(0, 180, 0),
+            position: _position,
+            rotation: Quaternion.fromEulerDegrees(_rotation.x, _rotation.y, _rotation.z),
             scale: Vector3.create(1, 1, 1)
         })
 
@@ -58,11 +60,17 @@ export class Podium {
 
         GltfContainer.create(this.powerButtonGraphic, { src: "models/podium/power_off.glb" })
 
-        Transform.create(this.prevNextButtonsGraphic, {
+        Transform.create(this.prevButtonsGraphic, {
             parent: this.entity
         })
 
-        GltfContainer.create(this.prevNextButtonsGraphic, { src: "models/podium/prevNext_off.glb" })
+        GltfContainer.create(this.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+
+        Transform.create(this.nextButtonsGraphic, {
+            parent: this.entity
+        })
+
+        GltfContainer.create(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
 
         Transform.create(this.muteButtonGraphic, {
             parent: this.entity
@@ -106,7 +114,6 @@ export class Podium {
 
         GltfContainer.create(this.controllerGraphic, { src: "models/podium/teacher_off.glb" })
 
-
         // Podium controls
         this.previousButton = new PodiumButton(
             this.entity,
@@ -123,9 +130,22 @@ export class Podium {
                 }
                 else {
                     ClassroomManager.screenManager?.previous()
-                    self.updateButtonGraphics()
                 }
-            }
+                self.updateButtonGraphics()
+            },
+            function () {
+                if (self.controllerScreen.open) {
+                    self.controllerScreen.toStart()
+                }
+                else if (self.interactionScreen.open) {
+                    self.interactionScreen.toStart()
+                }
+                else {
+                    ClassroomManager.screenManager?.toStart()
+                }
+                self.updateButtonGraphics()
+            },
+            true
         )
 
         this.nextButton = new PodiumButton(
@@ -134,7 +154,7 @@ export class Podium {
             Quaternion.fromEulerDegrees(0, 0, 45),
             Vector3.create(0.1, 0.05, 0.1),
             "Next",
-            () => {
+            function () {
                 if (self.controllerScreen.open) {
                     self.controllerScreen.next()
                 }
@@ -143,9 +163,22 @@ export class Podium {
                 }
                 else {
                     ClassroomManager.screenManager?.next()
-                    self.updateButtonGraphics()
                 }
-            }
+                self.updateButtonGraphics()
+            },
+            function () {
+                if (self.controllerScreen.open) {
+                    self.controllerScreen.toEnd()
+                }
+                else if (self.interactionScreen.open) {
+                    self.interactionScreen.toEnd()
+                }
+                else {
+                    ClassroomManager.screenManager?.toEnd()
+                }
+                self.updateButtonGraphics()
+            },
+            true
         )
 
         const self = this
@@ -158,6 +191,7 @@ export class Podium {
             () => {
                 self.hideControllerScreen()
                 self.interactionScreen.toggle()
+                self.updateButtonGraphics()
             }
         )
 
@@ -171,7 +205,8 @@ export class Podium {
                 if (!ClassroomManager.classController || ClassroomManager.classController.isStudent()) return
 
                 self.hideInteractionScreen()
-                self.controllerScreen.toggle(self.previousButton, self.nextButton, self.prevNextButtonsGraphic)
+                self.controllerScreen.toggle()
+                self.updateButtonGraphics()
             }
         )
 
@@ -259,7 +294,8 @@ export class Podium {
                 ClassroomManager.screenManager?.powerToggle()
                 if (ClassroomManager.screenManager?.poweredOn) {
                     GltfContainer.createOrReplace(this.powerButtonGraphic, { src: "models/podium/power_on.glb" })
-                    GltfContainer.createOrReplace(self.prevNextButtonsGraphic, { src: "models/podium/prevNext_on.glb" })
+                    GltfContainer.createOrReplace(self.prevButtonsGraphic, { src: "models/podium/prev_on.glb" })
+                    GltfContainer.createOrReplace(self.nextButtonsGraphic, { src: "models/podium/next_on.glb" })
                     GltfContainer.createOrReplace(self.muteButtonGraphic, { src: "models/podium/mute_on.glb" })
                     GltfContainer.createOrReplace(self.playPauseButtonGraphic, { src: "models/podium/playpause_on.glb" })
                     GltfContainer.createOrReplace(self.imageButtonGraphic, { src: "models/podium/image_on.glb" })
@@ -277,7 +313,8 @@ export class Podium {
                     self.updateButtonGraphics()
                 } else {
                     if (!self.controllerScreen.open) {
-                        GltfContainer.createOrReplace(self.prevNextButtonsGraphic, { src: "models/podium/prevNext_off.glb" })
+                        GltfContainer.createOrReplace(self.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+                        GltfContainer.createOrReplace(self.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
                         self.previousButton.hide()
                         self.nextButton.hide()
                     }
@@ -314,30 +351,95 @@ export class Podium {
     }
 
     updateButtonGraphics(): void {
-        if (ClassroomManager.screenManager?.currentContent?.getContent().getContentType() == MediaContentType.image) {
-            GltfContainer.createOrReplace(this.imageButtonGraphic, { src: "models/podium/image_selected.glb" })
-        } else {
-            GltfContainer.createOrReplace(this.imageButtonGraphic, { src: "models/podium/image_on.glb" })
+        if (ClassroomManager.screenManager?.poweredOn == true) {
+            if (ClassroomManager.screenManager?.currentContent?.getContent().getContentType() == MediaContentType.image) {
+                GltfContainer.createOrReplace(this.imageButtonGraphic, { src: "models/podium/image_selected.glb" })
+            } else {
+                GltfContainer.createOrReplace(this.imageButtonGraphic, { src: "models/podium/image_on.glb" })
+            }
+            if (ClassroomManager.screenManager?.currentContent?.getContent().getContentType() == MediaContentType.video) {
+                GltfContainer.createOrReplace(this.videoButtonGraphic, { src: "models/podium/video_selected.glb" })
+            } else {
+                GltfContainer.createOrReplace(this.videoButtonGraphic, { src: "models/podium/video_on.glb" })
+            }
+            if (ClassroomManager.screenManager?.currentContent?.getContent().getContentType() == MediaContentType.model) {
+                GltfContainer.createOrReplace(this.modelButtonGraphic, { src: "models/podium/3d_selected.glb" })
+            } else {
+                GltfContainer.createOrReplace(this.modelButtonGraphic, { src: "models/podium/3d_on.glb" })
+            }
+            if (ClassroomManager.screenManager?.muted) {
+                GltfContainer.createOrReplace(this.muteButtonGraphic, { src: "models/podium/mute_on.glb" })
+            } else {
+                GltfContainer.createOrReplace(this.muteButtonGraphic, { src: "models/podium/mute_off.glb" })
+            }
+            if (ClassroomManager.screenManager?.isPaused()) {
+                GltfContainer.createOrReplace(this.playPauseButtonGraphic, { src: "models/podium/playpause_selected.glb" })
+            } else {
+                GltfContainer.createOrReplace(this.playPauseButtonGraphic, { src: "models/podium/playpause_on.glb" })
+            }
         }
-        if (ClassroomManager.screenManager?.currentContent?.getContent().getContentType() == MediaContentType.video) {
-            GltfContainer.createOrReplace(this.videoButtonGraphic, { src: "models/podium/video_selected.glb" })
-        } else {
-            GltfContainer.createOrReplace(this.videoButtonGraphic, { src: "models/podium/video_on.glb" })
+
+
+        if (this.controllerScreen.open) {
+            if (this.controllerScreen.hasPrevious()) {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_on.glb" })
+                this.previousButton.show()
+            }
+            else {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+                this.previousButton.hide()
+            }
+            if (this.controllerScreen.hasNext()) {
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_on.glb" })
+                this.nextButton.show()
+            }
+            else {
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
+                this.nextButton.hide()
+            }
         }
-        if (ClassroomManager.screenManager?.currentContent?.getContent().getContentType() == MediaContentType.model) {
-            GltfContainer.createOrReplace(this.modelButtonGraphic, { src: "models/podium/3d_selected.glb" })
-        } else {
-            GltfContainer.createOrReplace(this.modelButtonGraphic, { src: "models/podium/3d_on.glb" })
+        else if (this.interactionScreen.open) {
+            if (this.interactionScreen.hasPrevious()) {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_on.glb" })
+                this.previousButton.show()
+            }
+            else {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+                this.previousButton.hide()
+            }
+            if (this.interactionScreen.hasNext()) {
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_on.glb" })
+                this.nextButton.show()
+            }
+            else {
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
+                this.nextButton.hide()
+            }
         }
-        if (ClassroomManager.screenManager?.muted) {
-            GltfContainer.createOrReplace(this.muteButtonGraphic, { src: "models/podium/mute_on.glb" })
-        } else {
-            GltfContainer.createOrReplace(this.muteButtonGraphic, { src: "models/podium/mute_off.glb" })
-        }
-        if (ClassroomManager.screenManager?.isPaused()) {
-            GltfContainer.createOrReplace(this.playPauseButtonGraphic, { src: "models/podium/playpause_selected.glb" })
-        } else {
-            GltfContainer.createOrReplace(this.playPauseButtonGraphic, { src: "models/podium/playpause_on.glb" })
+        else {
+            if (ClassroomManager.screenManager?.currentContent?.index <= 0) {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+                this.previousButton.hide()
+            }
+            else {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_on.glb" })
+                this.previousButton.show()
+            }
+            if (ClassroomManager.screenManager?.currentContent?.index >= ClassroomManager.screenManager?.currentContent?.content.length - 1) {
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
+                this.nextButton.hide()
+            }
+            else {
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_on.glb" })
+                this.nextButton.show()
+            }
+
+            if (ClassroomManager.screenManager?.poweredOn == false) {
+                GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+                GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
+                this.previousButton.hide()
+                this.nextButton.hide()
+            }
         }
     }
 
@@ -363,7 +465,8 @@ export class Podium {
 
     private hideControllerScreen(): void {
         if (ClassroomManager.screenManager?.poweredOn == false) {
-            GltfContainer.createOrReplace(this.prevNextButtonsGraphic, { src: "models/podium/prevNext_off.glb" })
+            GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_off.glb" })
+            GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
             this.previousButton.hide()
             this.nextButton.hide()
         }

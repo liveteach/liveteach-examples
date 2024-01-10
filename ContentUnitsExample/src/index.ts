@@ -18,8 +18,10 @@ export function main() {
   setupUi()
 
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(communicationChannel, true)
+  ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
   ClassroomManager.RegisterClassroom(classroomConfig)
+
+  ClassroomManager.AddTestTeacherAddress("0xb93e3eadad85e12d4c10e30db5969152acb3b7c0")
 
   ControllerUI.Show()
 

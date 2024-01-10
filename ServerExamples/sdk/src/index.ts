@@ -1,7 +1,6 @@
 import { GetUserDataResponse, getUserData } from '~system/UserIdentity'
 import { setupUi } from "./ui"
 import { executeTask } from "@dcl/sdk/ecs"
-import { UserData } from "~system/Players"
 import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom/classroomManager";
 import { DefaultServerChannel } from "@dclu/dclu-liveteach/src/classroom/comms/DefaultServerChannel"
 import { ControllerUI } from '@dclu/dclu-liveteach/src/classroom/ui/controllerUI'
@@ -32,13 +31,11 @@ export function main() {
 
         userData = await getUserData({});
           
-          //Is the user the Teacher
-        let userType = userData?.data?.publicKey === classroomConfig.classroom.teacherID ? "teacher" : "student";
         
         //setup Server Parameters for the Websocket Server
         let params: ServerParams = {
           serverUrl: serverUrl,
-          role: userType
+          wallet: userData?.data?.publicKey || 'GUEST' + userData.data?.userId
         }
 
         //Define the Channel to be used
@@ -46,7 +43,7 @@ export function main() {
         //Pass in the Server Parameters
         communicationChannel.serverConfig(params)
         // Initialise the Classroom Manager
-        ClassroomManager.Initialise(communicationChannel, true)
+        ClassroomManager.Initialise(communicationChannel, undefined, undefined, true)
         ClassroomManager.RegisterClassroom(classroomConfig)   
         //show Control ui for teacher         
         ControllerUI.Show()

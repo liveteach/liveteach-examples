@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "strict": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
     "resolveJsonModule": true
   },
   "include": [

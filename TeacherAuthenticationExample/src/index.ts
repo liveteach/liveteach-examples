@@ -6,7 +6,8 @@ import { ClassroomManager } from "@dclu/dclu-liveteach/src/classroom"
 import { GetSceneResponse, getSceneInfo } from '~system/Scene';
 import * as ecs from "@dcl/sdk/ecs"
 import * as dclu from '@dclu/dclu-liveteach'
-import * as classroomConfig from "./classroomConfigs/classroomConfig.json"
+import * as classroomConfig1 from "./classroomConfigs/classroomConfig1.json"
+import * as classroomConfig2 from "./classroomConfigs/classroomConfig2.json"
 
 const cubes: Entity[] = []
 var sceneBaseX: number = 0
@@ -20,12 +21,25 @@ export function main() {
     Logger: null
   })
 
+  let devLiveTeachContractAddress: string = "0xf44b11C7c7248c592d0Cc1fACFd8a41e48C52762"
+  let devTeachersContractAddress: string = "0x15eD220A421FD58A66188103A3a3411dA9d22295"
+
   const communicationChannel = new PeerToPeerChannel()
-  ClassroomManager.Initialise(communicationChannel)
-  ClassroomManager.RegisterClassroom(classroomConfig)
+
+  // Initialise the ClassroomManager asynchronously as it depends on getCurrentRealm
+  let useDev = false
+  if (useDev) {
+    ClassroomManager.Initialise(communicationChannel, devLiveTeachContractAddress, devTeachersContractAddress, false)
+  }
+  else {
+    // mainnet
+    ClassroomManager.Initialise(communicationChannel, undefined, undefined, false)
+  }
+
+  ClassroomManager.RegisterClassroom(classroomConfig1)
+  ClassroomManager.RegisterClassroom(classroomConfig2)
   createCube(8, 1, 8)
   createCube(8, 1, 24)
-
   engine.addSystem(update)
 }
 
@@ -48,11 +62,10 @@ function update(): void {
 
   cubes.forEach(cube => {
     const cubeParcel = getEntityParcel(cube)
-    if (cubeParcel[0] == userParcel[0] && cubeParcel[1] == userParcel[1]) {
-      Material.setPbrMaterial(cube, {
-        albedoColor: authenticated ? Color4.Green() : Color4.Red()
-      })
-    }
+    const shouldBeGreen = authenticated && cubeParcel[0] == userParcel[0] && cubeParcel[1] == userParcel[1]
+    Material.setPbrMaterial(cube, {
+      albedoColor: shouldBeGreen ? Color4.Green() : Color4.Red()
+    })
   });
 }
 
