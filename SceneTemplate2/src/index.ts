@@ -25,7 +25,7 @@ export function main() {
 
   let userData: GetUserDataResponse | null = null; // Initialize as null
 
-  // Define the Url for the Webscoket Server
+  // Define the Url for the Websocket Server
   let serverUrl = "ws://localhost:3000"
   
   ecs.executeTask(async () => {
@@ -63,7 +63,7 @@ export function main() {
     const screen1 = new DisplayPanel(Vector3.create(23, 1.85, 21), Vector3.create(0, -135, 0), Vector3.create(0.5, 0.5, 0.5))
     const screen2 = new DisplayPanel(Vector3.create(24.5, 1.85, 16), Vector3.create(0, -90, 0), Vector3.create(1, 1, 1))
     const screen3 = new DisplayPanel(Vector3.create(23.5, 1.85, 10.5), Vector3.create(0, -45, 0), Vector3.create(1, 1, 1))
-    const podium = new Podium()
+    const podium = new Podium(Vector3.create(21.1, 1.8, 16), Vector3.create(0, 180, 0))
 
     addScreen(classroomConfig.classroom.guid, Vector3.create(0.35, 1.7, -0.06), Quaternion.fromEulerDegrees(45, 90, 0), Vector3.create(0.2, 0.2, 0.2), podium.entity)
     addScreen(classroomConfig.classroom.guid, Vector3.create(0, 2.6, 0.1), Quaternion.fromEulerDegrees(0, -180, 0), Vector3.create(1.42 * 2, 1.42 * 2, 1.42 * 2), screen1.entity)
