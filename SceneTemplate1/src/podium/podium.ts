@@ -397,7 +397,7 @@ export class Podium {
                 GltfContainer.createOrReplace(this.nextButtonsGraphic, { src: "models/podium/next_off.glb" })
                 this.nextButton.hide()
             }
-        }
+        } 
         else if (this.interactionScreen.open) {
             if (this.interactionScreen.hasPrevious()) {
                 GltfContainer.createOrReplace(this.prevButtonsGraphic, { src: "models/podium/prev_on.glb" })
